@@ -71,8 +71,8 @@ export default function BasicTabs() {
   const [price, setPrice] = useState(0);
   const [category, setCategory] = useState("");
   const initial = useRef(false);
+
   const [addons, setAddons] = useState([]);
-  const [optionGroups, setOptionGroups] = useState([]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -136,22 +136,10 @@ export default function BasicTabs() {
       }
     }
 
-    async function fetchOptions() {
-      try {
-        const res = await fetch("http://localhost:5000/optiongroups");
-        const data = await res.json();
-        setOptionGroups(data);
-        console.log(data);
-      } catch (error) {
-        console.error("Error fetching Addons:", error);
-      }
-    }
-
     if (!initial.current) {
       initial.current = true;
       console.log(initial.current);
       fetchAddons();
-      fetchOptions();
     }
   }, []);
 
@@ -237,11 +225,6 @@ export default function BasicTabs() {
           ))}
           <br/>
           <h1>ตัวเลือก</h1>
-          {optionGroups.map((optionGroup) => (
-            <FormGroup key={optionGroup._id}>
-              <FormControlLabel control={<Checkbox defaultChecked />} label={optionGroup.name} />
-            </FormGroup>
-          ))}
         </CustomTabPanel>
       </Box>
     </DashboardLayout>

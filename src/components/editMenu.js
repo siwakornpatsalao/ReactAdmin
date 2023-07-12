@@ -63,7 +63,8 @@ function a11yProps(index) {
   };
 }
 
-export default function BasicTabs() {
+export default function BasicTabs(props) {
+  const {menu} = props;
   const [value, setValue] = useState(0);
   const [image, setImage] = useState(null);
   const [name, setName] = useState("");
@@ -71,14 +72,14 @@ export default function BasicTabs() {
   const [price, setPrice] = useState(0);
   const [category, setCategory] = useState("");
   const initial = useRef(false);
+
   const [addons, setAddons] = useState([]);
-  const [optionGroups, setOptionGroups] = useState([]);
 
   async function handleSubmit(e) {
     e.preventDefault();
     try {
       const response = await fetch("http://localhost:5000/menus", {
-        method: "POST",
+        method: "PUT",
         body: JSON.stringify({
           name: name,
           thumbnail: image,
@@ -136,22 +137,16 @@ export default function BasicTabs() {
       }
     }
 
-    async function fetchOptions() {
-      try {
-        const res = await fetch("http://localhost:5000/optiongroups");
-        const data = await res.json();
-        setOptionGroups(data);
-        console.log(data);
-      } catch (error) {
-        console.error("Error fetching Addons:", error);
-      }
-    }
+    setImage(menu.thumbnail);
+    setName(menu.name);
+    setDescription(menu.description);
+    setPrice(menu.price);
+    setCategory(menu.category);
 
     if (!initial.current) {
       initial.current = true;
       console.log(initial.current);
       fetchAddons();
-      fetchOptions();
     }
   }, []);
 
@@ -237,11 +232,6 @@ export default function BasicTabs() {
           ))}
           <br/>
           <h1>ตัวเลือก</h1>
-          {optionGroups.map((optionGroup) => (
-            <FormGroup key={optionGroup._id}>
-              <FormControlLabel control={<Checkbox defaultChecked />} label={optionGroup.name} />
-            </FormGroup>
-          ))}
         </CustomTabPanel>
       </Box>
     </DashboardLayout>

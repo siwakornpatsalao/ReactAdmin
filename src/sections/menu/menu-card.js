@@ -1,10 +1,14 @@
 import PropTypes from 'prop-types';
 import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
 import ClockIcon from '@heroicons/react/24/solid/ClockIcon';
-import { Avatar, Box, Card, CardContent, Divider, Stack, SvgIcon, Typography } from '@mui/material';
+import { Avatar, Box, Button, Card, CardContent, Divider, Stack, SvgIcon, Typography } from '@mui/material';
 
 export const MenuCard = (props) => {
   const { menu } = props;
+
+  function handleEdit(menu){
+    // call edit menu component
+  }
 
   return (
     <Card
@@ -28,6 +32,7 @@ export const MenuCard = (props) => {
             height="200px"
           />
         </Box>
+        <Button onClick={handleEdit(menu)}>Edit</Button>
         <Typography
           align="center"
           gutterBottom

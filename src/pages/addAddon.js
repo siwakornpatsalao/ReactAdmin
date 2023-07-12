@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-import { useState } from 'react';
-import { TextField, MenuItem, Button } from '@mui/material';
+import { useState, useEffect, useRef } from 'react';
+import { TextField, MenuItem, Button, Radio, RadioGroup} from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import Swal from "sweetalert2";
 
 const menus = [
   {
@@ -68,8 +69,20 @@ export default function BasicTabs() {
   const [amount, setAmount] = useState(0);
   const [editAmount, setEditAmount] = useState(0);
   const [unit, setUnit] = useState('');
-
+  const [options, setOptions] = useState([]);
+  const initial = useRef(false);
   const [optionGroupName, setOptionGroupName] = useState('');
+  const [isRequired, setIsRequired] = useState(true);
+  const [isRequired2, setIsRequired2] = useState(true);
+
+  const handleIsRequiredChange = (event) => {
+    setIsRequired(event.target.value === 'necessary');
+  };
+
+  const handleIsRequiredChange2 = (event) => {
+    setIsRequired2(event.target.value === 'one');
+  };
+
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -118,9 +131,130 @@ export default function BasicTabs() {
     reader.readAsDataURL(file);
   }
 
+  function handleAddOption(){
+    Swal.fire({
+      title: "เพิ่มตัวเลือก",
+      html: '<input id="swal-input1" class="swal2-input" placeholder="ชื่อตัวเลือก">' +
+      '<input id="swal-input2" class="swal2-input" placeholder="ราคา">',
+      showDenyButton: true,
+      confirmButtonText: "ยืนยัน",
+      denyButtonText: `ยกเลิก`,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const input1Value = document.getElementById('swal-input1').value;
+        const input2Value = document.getElementById('swal-input2').value;
+
+        console.log(input1Value)
+        console.log(input2Value)
+
+      if (input1Value !== "" && input2Value !== "") {
+        Swal.fire(`เพิ่ม Option แล้ว`, "", "success");
+
+        const response = await fetch("http://localhost:5000/options", {
+          method: "POST",
+          body: JSON.stringify({
+            name: input1Value,
+            price: input2Value,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (!response.ok) {
+          throw new Error("Failed to add new option");
+        }
+        const resJson = await response.json();
+        console.log(resJson);
+      }
+    }});
+  }
+
+  function handleEditOption(option){
+    Swal.fire({
+      title: "แก้ไขตัวเลือก",
+      html: `<input id="swal-input1" class="swal2-input" placeholder="ชื่อตัวเลือก" value=${option.name}>` +
+      `<input id="swal-input2" class="swal2-input" placeholder="ราคา" value=${option.price}>`,
+      showDenyButton: true,
+      confirmButtonText: "ยืนยัน",
+      denyButtonText: `ยกเลิก`,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const input1Value = document.getElementById('swal-input1').value;
+        const input2Value = document.getElementById('swal-input2').value;
+
+        console.log(input1Value)
+        console.log(input2Value)
+
+      if (input1Value !== "" && input2Value !== "") {
+        Swal.fire(`เพิ่ม Option แล้ว`, "", "success");
+
+        const response = await fetch("http://localhost:5000/options", {
+          method: "PUT",
+          body: JSON.stringify({
+            name: input1Value,
+            price: input2Value,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (!response.ok) {
+          throw new Error("Failed to edit option");
+        }
+        const resJson = await response.json();
+        console.log(resJson);
+      }
+    }});
+  }
+
+  async function handleSubmitOption(e){
+    e.preventDefault();
+    try {
+      console.log(optionGroupName)
+      const response = await fetch('http://localhost:5000/optiongroups', {
+        method: 'POST',
+        body: JSON.stringify({
+          name: optionGroupName,
+          necessary: isRequired ? 'necessary' : 'not',
+          amount: isRequired2 ? 'one' : 'many',
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to add new menu');
+      }
+      const resJson = await response.json();
+      console.log(resJson);
+      setOptionGroupName('');
+    } catch (error) {
+      console.log('Error:', error.message);
+    }
+  }
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  useEffect(() => {
+    async function fetchOptions() {
+      try {
+        const res = await fetch("http://localhost:5000/options");
+        const data = await res.json();
+        setOptions(data);
+        console.log(data);
+      } catch (error) {
+        console.error("Error fetching options:", error);
+      }
+    }
+
+    if (!initial.current) {
+      initial.current = true;
+      console.log(initial.current);
+      fetchOptions();
+    }
+  }, []);
 
   return (
     <DashboardLayout>
@@ -232,6 +366,7 @@ export default function BasicTabs() {
       </CustomTabPanel>
 
       <CustomTabPanel value={value} index={1}>
+        <form onSubmit={handleSubmitOption}>
         <h1>ชื่อกลุ่มตัวเลือก</h1>
         <TextField
               label="ชื่อกลุ่มตัวเลือก"
@@ -241,14 +376,26 @@ export default function BasicTabs() {
               onChange={(e) => setOptionGroupName(e.target.value)}
         />
         <br/>
-        <Button>เพิ่มตัวเลือก</Button>
+        <Button onClick={handleAddOption}>เพิ่มตัวเลือก</Button>
+        {options.map((option) => (
+              <MenuItem onClick={() => handleEditOption(option)} key={option._id}>
+                {option.name} +{option.price} บาท
+              </MenuItem>
+            ))}
         <h1>ลูกค้าต้องเลือกตัวเลือกนี้หรือไม่</h1>
-        <FormGroup>
-            <FormControlLabel control={<Checkbox defaultChecked />} label="จำเป็น" />
-            <FormControlLabel required control={<Checkbox />} label="ไม่บังคับ" />
-        </FormGroup>
+        <RadioGroup value={isRequired ? 'necessary' : 'not'} onChange={handleIsRequiredChange}>
+          <FormControlLabel value="necessary" control={<Radio />} label="จำเป็น" />
+          <FormControlLabel value="not" control={<Radio />} label="ไม่บังคับ" />
+        </RadioGroup>
+        <h1>ลูกค้าสามารถเลือกตัวเลือกได้กี่อย่าง</h1>
+        <RadioGroup value={isRequired2 ? 'one' : 'many'} onChange={handleIsRequiredChange2}>
+          <FormControlLabel value="one" control={<Radio />} label="1 อย่าง" />
+          <FormControlLabel value="many" control={<Radio />} label="หลายอย่าง" />
+        </RadioGroup>
+        <br/>
 
-        <Button variant='contained'>สร้างตัวเลือกใหม่</Button>
+        <Button variant='contained' type="submit">สร้างตัวเลือกใหม่</Button>
+        </form>
       </CustomTabPanel>
     </Box>
     </DashboardLayout>

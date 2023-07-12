@@ -1,10 +1,14 @@
 import PropTypes from 'prop-types';
 import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
 import ClockIcon from '@heroicons/react/24/solid/ClockIcon';
-import { Avatar, Box, Card, CardContent, Divider, Stack, SvgIcon, Typography } from '@mui/material';
+import { Avatar, Box, Card, CardContent, Divider, Stack, SvgIcon, Typography, Button } from '@mui/material';
 
 export const AddonCard = (props) => {
   const { Addon } = props;
+
+  function handleEdit(Addon){
+    // call edit menu component
+  }
 
   return (
     <Card
@@ -28,6 +32,7 @@ export const AddonCard = (props) => {
             height="200px"
           />
         </Box>
+        <Button onClick={handleEdit(Addon)}>Edit</Button>
         <Typography
           align="center"
           gutterBottom
