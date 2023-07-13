@@ -4,12 +4,8 @@ import ClockIcon from '@heroicons/react/24/solid/ClockIcon';
 import { Avatar, Box, Card, CardContent, Divider, Stack, SvgIcon, Typography, Button } from '@mui/material';
 import Link from 'next/link';
 
-export const AddonCard = (props) => {
-  const { Addon } = props;
-
-  function handleEdit(Addon){
-    // call edit menu component
-  }
+export const OptionCard = (props) => {
+  const { OptionGroups } = props;
 
   return (
     <Card
@@ -20,35 +16,25 @@ export const AddonCard = (props) => {
       }}
     >
       <CardContent>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            pb: 3
-          }}
-        >
-          <img
-            src={Addon.thumbnail}
-            variant="square"
-            height="200px"
-          />
-        </Box>
-        <Link href={`/editAddon?id=${Addon._id}`} >
+        <Link href={`/editAddon?id=${OptionGroups._id}`} >
         <Button>Edit</Button>
         </Link>
         <Typography
           align="center"
           gutterBottom
-          variant="h5"
+          variant="h4"
         >
-          {Addon.name}
+          {OptionGroups.name}
         </Typography>
         <Typography
-          align="center"
-          variant="body1"
-        >
-          {Addon.description}
-        </Typography>
+            color="text.secondary"
+            gutterBottom
+            variant="h5"
+          >
+            Options:<br/> {OptionGroups.options.map((option) => (
+            <span key={option._id}>{option.name}<br/> </span>
+          ))}
+          </Typography>
       </CardContent>
       <Box sx={{ flexGrow: 1 }} />
       <Divider />
@@ -75,7 +61,7 @@ export const AddonCard = (props) => {
             display="inline"
             variant="body2"
           >
-            Updated: {new Date(Addon.updated_at).toDateString()}
+            Updated: {new Date(OptionGroups.updated_at).toDateString()}
           </Typography>
         </Stack>
         <Stack
@@ -102,6 +88,6 @@ export const AddonCard = (props) => {
   );
 };
 
-AddonCard.propTypes = {
-  Addon: PropTypes.object.isRequired
+OptionCard.propTypes = {
+  OptionGroups: PropTypes.object.isRequired
 };

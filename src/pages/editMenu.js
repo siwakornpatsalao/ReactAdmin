@@ -9,24 +9,7 @@ import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-
-const menus = [
-  {
-    id: 1,
-    value: "เครื่องดื่ม",
-    label: "เครื่องดื่ม",
-  },
-  {
-    id: 2,
-    value: "ของทานเล่น",
-    label: "ของทานเล่น",
-  },
-  {
-    id: 3,
-    value: "ขนมปัง",
-    label: "ขนมปัง",
-  },
-];
+import { useRouter } from 'next/router';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -63,8 +46,7 @@ function a11yProps(index) {
   };
 }
 
-export default function BasicTabs(props) {
-  const {menu} = props;
+export default function BasicTabs() {
   const [value, setValue] = useState(0);
   const [image, setImage] = useState(null);
   const [name, setName] = useState("");
@@ -72,13 +54,17 @@ export default function BasicTabs(props) {
   const [price, setPrice] = useState(0);
   const [category, setCategory] = useState("");
   const initial = useRef(false);
-
   const [addons, setAddons] = useState([]);
+  const [optionGroups, setOptionGroups] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const router = useRouter();
+  const { id } = router.query;
+  const [menu, setMenu] = useState([]);
 
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5000/menus", {
+      const response = await fetch(`http://localhost:5000/menus/${id}`, {
         method: "PUT",
         body: JSON.stringify({
           name: name,
@@ -92,17 +78,17 @@ export default function BasicTabs(props) {
         },
       });
       if (!response.ok) {
-        throw new Error("Failed to add new menu");
+        throw new Error("Failed to Edit this menu");
       }
       const resJson = await response.json();
       console.log(resJson);
-      // Reset form fields
+
       setImage(null);
       setName("");
       setDescription("");
       setPrice(0);
       setCategory("");
-      // Reset file input
+
       document.getElementById("file-input").value = "";
     } catch (error) {
       console.log("Error:", error.message);
@@ -126,6 +112,26 @@ export default function BasicTabs(props) {
   };
 
   useEffect(() => {
+
+    if (id) {
+        fetchMenuData();
+    }
+    
+    async function fetchMenuData(){
+        try {
+          const response = await fetch(`http://localhost:5000/menus/${id}`);
+          const data = await response.json();
+          setMenu(data);
+          setName(data.name);
+          setDescription(data.description);
+          setPrice(data.price);
+          setCategory(data.category);
+          setImage(data.thumbnail);
+        } catch (error) {
+          console.error('Error fetching menu:', error);
+        }
+      };
+
     async function fetchAddons() {
       try {
         const res = await fetch("http://localhost:5000/addons");
@@ -137,18 +143,38 @@ export default function BasicTabs(props) {
       }
     }
 
-    setImage(menu.thumbnail);
-    setName(menu.name);
-    setDescription(menu.description);
-    setPrice(menu.price);
-    setCategory(menu.category);
+    async function fetchOptions() {
+      try {
+        const res = await fetch("http://localhost:5000/optiongroups");
+        const data = await res.json();
+        setOptionGroups(data);
+        console.log(data);
+      } catch (error) {
+        console.error("Error fetching Options:", error);
+      }
+    }
+
+    async function fetchCategories() {
+      try {
+        const res = await fetch("http://localhost:5000/category");
+        const data = await res.json();
+        setCategories(data);
+        console.log(data);
+      } catch (error) {
+        console.error("Error fetching Menu:", error);
+      }
+    }
 
     if (!initial.current) {
       initial.current = true;
       console.log(initial.current);
       fetchAddons();
+      fetchOptions();
+      fetchCategories();
+      fetchMenuData();
     }
-  }, []);
+
+  }, [id]);
 
   return (
     <DashboardLayout>
@@ -210,15 +236,15 @@ export default function BasicTabs(props) {
               helperText="Please select your category"
               onChange={(e) => setCategory(e.target.value)}
             >
-              {menus.map((option) => (
-                <MenuItem key={option.id} value={option.value}>
-                  {option.label}
+              {categories.map((option) => (
+                <MenuItem key={option._id} value={option.name}>
+                  {option.name}
                 </MenuItem>
               ))}
             </TextField>
             <br/>
 
-            <Button type="submit">Add New Menu</Button>
+            <Button type="submit">Edit This Menu</Button>
           </form>
         </CustomTabPanel>
 
@@ -232,6 +258,11 @@ export default function BasicTabs(props) {
           ))}
           <br/>
           <h1>ตัวเลือก</h1>
+          {optionGroups.map((optionGroup) => (
+            <FormGroup key={optionGroup._id}>
+              <FormControlLabel control={<Checkbox defaultChecked />} label={optionGroup.name} />
+            </FormGroup>
+          ))}
         </CustomTabPanel>
       </Box>
     </DashboardLayout>

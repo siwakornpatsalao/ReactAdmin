@@ -17,6 +17,8 @@ import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { AddonSearch } from 'src/sections/adds/addon-search';
 import { useEffect , useState, useRef} from 'react';
 import { AddonCard } from 'src/sections/adds/addon-card';
+import { OptionCard } from 'src/sections/adds/option-card';
+import { OptionSearch } from 'src/sections/adds/option-search';
 import Link from 'next/link';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -76,7 +78,7 @@ function Addon(){
           }
         }
 
-        async function fetchOptions() {
+        async function fetchOptionGroups() {
           try {
             const res = await fetch("http://localhost:5000/optiongroups");
             const data = await res.json();
@@ -91,7 +93,7 @@ function Addon(){
           initial.current = true;
           console.log(initial.current);
           fetchAddons();
-          fetchOptions();
+          fetchOptionGroups();
         }
       }, []);
     return (
@@ -216,7 +218,7 @@ function Addon(){
                 lg={4}
                 key={optionGroup._id}
               >
-                {/* <AddonCard Addon={optionGroup} /> */}
+                <OptionCard OptionGroups={optionGroup} />
               </Grid>
             ))}
           </Grid>

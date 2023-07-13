@@ -73,6 +73,7 @@ export default function BasicTabs() {
   const initial = useRef(false);
   const [addons, setAddons] = useState([]);
   const [optionGroups, setOptionGroups] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -143,7 +144,18 @@ export default function BasicTabs() {
         setOptionGroups(data);
         console.log(data);
       } catch (error) {
-        console.error("Error fetching Addons:", error);
+        console.error("Error fetching Options:", error);
+      }
+    }
+
+    async function fetchCategories() {
+      try {
+        const res = await fetch("http://localhost:5000/category");
+        const data = await res.json();
+        setCategories(data);
+        console.log(data);
+      } catch (error) {
+        console.error("Error fetching Menu:", error);
       }
     }
 
@@ -152,6 +164,7 @@ export default function BasicTabs() {
       console.log(initial.current);
       fetchAddons();
       fetchOptions();
+      fetchCategories();
     }
   }, []);
 
@@ -215,9 +228,9 @@ export default function BasicTabs() {
               helperText="Please select your category"
               onChange={(e) => setCategory(e.target.value)}
             >
-              {menus.map((option) => (
-                <MenuItem key={option.id} value={option.value}>
-                  {option.label}
+              {categories.map((option) => (
+                <MenuItem key={option._id} value={option.name}>
+                  {option.name}
                 </MenuItem>
               ))}
             </TextField>

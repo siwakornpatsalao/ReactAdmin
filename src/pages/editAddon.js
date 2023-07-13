@@ -10,6 +10,7 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Swal from "sweetalert2";
+import { useRouter } from 'next/router';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -48,28 +49,31 @@ export default function BasicTabs() {
   const [value, setValue] = useState(0);
   const [image, setImage] = useState(null);
   const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
   const [price, setPrice] = useState(0);
-  const [category, setCategory] = useState('');
   const [amount, setAmount] = useState(0);
   const [editAmount, setEditAmount] = useState(0);
   const [unit, setUnit] = useState('');
-  const [options, setOptions] = useState([]);
   const initial = useRef(false);
   const [optionGroupName, setOptionGroupName] = useState('');
+  const [options, setOptions] = useState([]);
   const [isRequired, setIsRequired] = useState(true);
   const [isRequired2, setIsRequired2] = useState(true);
+  const router = useRouter();
+  const { id } = router.query;
+  const [addon, setAddon] = useState([]);
+  const [optionGroup, setOptionGroup] = useState(null);
+
 
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/addons', {
-        method: 'POST',
+      const response = await fetch(`http://localhost:5000/addons/${id}`, {
+        method: 'PUT',
         body: JSON.stringify({
           name: name,
           thumbnail: image,
           price: price,
-          amount: amount,
+          amount: parseInt(amount) + parseInt(editAmount),
           editAmount: editAmount,
           unit: unit,
         }),
@@ -82,13 +86,13 @@ export default function BasicTabs() {
       }
       const resJson = await response.json();
       console.log(resJson);
-      // Reset form fields
       setImage(null);
       setName('');
       setDescription('');
       setPrice(0);
-      setCategory('');
-      // Reset file input
+      setAmount('');
+      setEditAmount('');
+      setUnit('');
       document.getElementById('file-input').value = '';
     } catch (error) {
       console.log('Error:', error.message);
@@ -107,7 +111,7 @@ export default function BasicTabs() {
     reader.readAsDataURL(file);
   }
 
-  //---------------------------------------------------------------------------------------------------------
+   //---------------------------------------------------------------------------------------------------------
 
   const handleIsRequiredChange = (event) => {
     setIsRequired(event.target.value === 'necessary');
@@ -185,8 +189,8 @@ export default function BasicTabs() {
     e.preventDefault();
     try {
       console.log(optionGroupName)
-      const response = await fetch('http://localhost:5000/optiongroups', {
-        method: 'POST',
+      const response = await fetch(`http://localhost:5000/optiongroups/${id}`, {
+        method: 'PUT',
         body: JSON.stringify({
           name: optionGroupName,
           options: options,
@@ -214,11 +218,67 @@ export default function BasicTabs() {
 
   useEffect(() => {
 
+    if (id) {
+        fetchAddonData();
+        fetchOptionGroup();
+    }
+
+    //if from addon do fetchAddonData **BUT** if from option do fetchOptionGroup
+    
+    async function fetchAddonData(){
+        try {
+          const response = await fetch(`http://localhost:5000/addons/${id}`);
+          const data = await response.json();
+          setAddon(data);
+          setName(data.name);
+          setPrice(data.price);
+          setAmount(data.amount);
+          setEditAmount(data.editAmount);
+          setImage(data.thumbnail);
+          setUnit(data.unit);
+        } catch (error) {
+          console.error('Error fetching menu:', error);
+        }
+      };
+
+    async function fetchOptionGroup() {
+      try {
+        const res = await fetch(`http://localhost:5000/optiongroups/${id}`);
+        const data = await res.json();
+        setOptionGroup(data);
+        setOptionGroupName(data.name);
+        setOptions(data.options);
+        console.log(data);
+      } catch (error) {
+        console.error("Error fetching options:", error);
+      }
+    }
+
+    /* if(options==null){
+        const optionFirst = [
+            {
+              name: 'test1',
+              price: 0
+            },
+            {
+                name: 'test2',
+                price: 0
+            },
+            {
+                name: 'test3',
+                price: 0
+            },
+          ];
+        setOptions(optionFirst)
+    } */
+
     if (!initial.current) {
       initial.current = true;
       console.log(initial.current);
+      fetchOptionGroup();
+      fetchAddonData();
     }
-  }, []);
+  }, [id]);
 
   return (
     <DashboardLayout>
@@ -269,14 +329,6 @@ export default function BasicTabs() {
             />
             <br/>
             <TextField
-              label="คำอธิบาย"
-              value={description}
-              color="secondary"
-              focused
-              onChange={(e) => setDescription(e.target.value)}
-            />
-            <br/>
-            <TextField
               label="ราคา"
               value={price}
               color="secondary"
@@ -286,14 +338,14 @@ export default function BasicTabs() {
             <br/>
             <TextField
               label="จำนวน"
+              disabled
               value={amount}
               color="secondary"
               focused
               onChange={(e) => setAmount(e.target.value)}
             />
             <TextField
-              label="แก้ไขจำนวน"
-              disabled
+              label="เพิ่มจำนวน"
               value={editAmount}
               color="secondary"
               focused
@@ -310,7 +362,7 @@ export default function BasicTabs() {
           </Box>
           <br/>
 
-          <Button type="submit">Add New Addon</Button>
+          <Button type="submit">Edit This Addon</Button>
         </form>
       </CustomTabPanel>
 
@@ -326,8 +378,9 @@ export default function BasicTabs() {
         />
         <br/>
         <Button onClick={handleAddOption}>เพิ่มตัวเลือก</Button>
-        {options.map((option,index) => (
-              <MenuItem onClick={() => handleEditOption(option,index)} key={option._id}>
+        {/* If edit addon disable */}
+        {options.map((option) => (
+              <MenuItem onClick={() => handleEditOption(option)} key={option._id}>
                 {option.name} +{option.price} บาท
               </MenuItem>
             ))}
