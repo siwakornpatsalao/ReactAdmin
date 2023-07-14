@@ -10,6 +10,7 @@ import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { useRouter } from 'next/router';
+import Swal from 'sweetalert2';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -60,40 +61,78 @@ export default function BasicTabs() {
   const router = useRouter();
   const { id } = router.query;
   const [menu, setMenu] = useState([]);
+  
+  const isNameValid = (name) => name == "";
+  const isDesValid = (description) => description == "" ;
+  const isPriceValid = (price) => price<=0;
+  const isCategoryValid = (category) => category == "";
 
   async function handleSubmit(e) {
     e.preventDefault();
-    try {
-      const response = await fetch(`http://localhost:5000/menus/${id}`, {
-        method: "PUT",
-        body: JSON.stringify({
-          name: name,
-          thumbnail: image,
-          description: description,
-          price: price,
-          category: category,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (!response.ok) {
-        throw new Error("Failed to Edit this menu");
-      }
-      const resJson = await response.json();
-      console.log(resJson);
+    Swal.fire({
+      title: "ยืนยันการแก้ไขสินค้านี้หรือไม่",
+      confirmButtonText: "ยืนยัน",
+      showDenyButton: true,
+      denyButtonText: "ยกเลิก",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        Swal.fire(`แก้ไขสินค้าชิ้นนี้แล้ว`, "", "success");
+        try {
+          const response = await fetch(`http://localhost:5000/menus/${id}`, {
+            method: "PUT",
+            body: JSON.stringify({
+              name: name,
+              thumbnail: image,
+              description: description,
+              price: price,
+              category: category,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          if (!response.ok) {
+            throw new Error("Failed to Edit this menu");
+          }
+          const resJson = await response.json();
+          console.log(resJson);
 
-      setImage(null);
-      setName("");
-      setDescription("");
-      setPrice(0);
-      setCategory("");
-
-      document.getElementById("file-input").value = "";
-    } catch (error) {
-      console.log("Error:", error.message);
-    }
+        } catch (error) {
+          console.log("Error:", error.message);
+        }
+      }})
+    
   }
+
+  async function handleDeleteMenu(e) {
+    e.preventDefault();
+    Swal.fire({
+      title: "ต้องการลบสินค้านี้หรือไม่",
+      confirmButtonText: "ยืนยัน",
+      showDenyButton: true, // Add cancel button
+      denyButtonText: "ยกเลิก", // Text for cancel button
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        Swal.fire(`ลบสินค้าชิ้นนี้แล้ว`, "", "success");
+        try {
+          const response = await fetch(`http://localhost:5000/menus/${id}`, {
+            method: "DELETE",
+          });
+          if (!response.ok) {
+            throw new Error("Failed to delete this menu");
+          }
+          setImage(null);
+          setName("");
+          setDescription("");
+          setPrice(0);
+          setCategory("");
+        } catch (error) {
+          console.log("Error:", error.message);
+        }
+      }
+    })
+  }
+  
 
   function handleChangeFile(e) {
     const file = e.target.files[0];
@@ -195,18 +234,26 @@ export default function BasicTabs() {
 
         <CustomTabPanel value={value} index={0}>
           <form onSubmit={handleSubmit}>
+          <Button style={{ background: 'red' }} variant="contained" onClick={handleDeleteMenu}>ลบสินค้า</Button>
+          <Box sx={{ display: 'flex',marginLeft: '300px' }}>
+            <Box sx={{ m: 1 }}>
             <input id="file-input" type="file" onChange={handleChangeFile} accept="image/*" />
             <br/>
             <br/>
             {image && (
               <img src={image} style={{ maxWidth: "100%", height: "500px" }} alt="Preview" />
             )}
+            </Box>
 
-            <Box sx={{ "& > :not(style)": { m: 1, width: "25ch" } }} noValidate autoComplete="off">
+            <Box sx={{
+                "& > :not(style)": { m: 1, width: "25ch", marginLeft:'50px' },
+              }} noValidate autoComplete="off">
               <TextField
                 label="ชื่อเมนู"
                 value={name}
                 color="secondary"
+                error={isNameValid(name)}
+                helperText="กรุณาใส่ชื่อสินค้า"
                 focused
                 onChange={(e) => setName(e.target.value)}
               />
@@ -215,6 +262,8 @@ export default function BasicTabs() {
                 label="คำอธิบาย"
                 value={description}
                 color="secondary"
+                error={isDesValid(description)}
+                helperText="กรุณาใส่คำอธิบาย"
                 focused
                 onChange={(e) => setDescription(e.target.value)}
               />
@@ -223,16 +272,18 @@ export default function BasicTabs() {
                 label="ราคา"
                 value={price}
                 color="secondary"
+                error={isPriceValid(price)}
+                helperText="กรุณาใส่ราคา"
                 focused
                 onChange={(e) => setPrice(e.target.value)}
               />
-            </Box>
 
             <TextField
               value={category}
               select
               label="หมวดหมู่"
               defaultValue="เครื่องดื่ม"
+              error={isCategoryValid(category)}
               helperText="Please select your category"
               onChange={(e) => setCategory(e.target.value)}
             >
@@ -244,7 +295,9 @@ export default function BasicTabs() {
             </TextField>
             <br/>
 
-            <Button type="submit">Edit This Menu</Button>
+            <Button variant="contained" type="submit">สร้างเมนูใหม่</Button>
+            </Box>
+            </Box>
           </form>
         </CustomTabPanel>
 

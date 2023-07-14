@@ -9,6 +9,7 @@ import XCircleIcon from '@heroicons/react/24/solid/XCircleIcon';
 import { SvgIcon } from '@mui/material';
 import BuildingStorefrontIcon from '@heroicons/react/24/solid/BuildingStorefrontIcon';
 import CakeIcon from '@heroicons/react/24/solid/CakeIcon';
+import PhotoIcon from '@heroicons/react/24/solid/PhotoIcon';
 
 
 export const items = [
@@ -54,6 +55,15 @@ export const items = [
     icon: (
       <SvgIcon fontSize="small">
         <CakeIcon />
+      </SvgIcon>
+    )
+  },
+  {
+    title: 'Promotion',
+    path: '/promotion',
+    icon: (
+      <SvgIcon fontSize="small">
+        <PhotoIcon />
       </SvgIcon>
     )
   },

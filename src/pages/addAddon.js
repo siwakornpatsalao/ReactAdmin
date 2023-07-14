@@ -60,39 +60,57 @@ export default function BasicTabs() {
   const [isRequired, setIsRequired] = useState(true);
   const [isRequired2, setIsRequired2] = useState(true);
 
+  const isNameValid = (name) => name == "";
+  const isPriceValid = (price) => price<=0;
+  const isAmountValid = (amount) => amount<=0;
+  const isUnitValid = (unit) => unit =="";
+
+  const isOptionGroupNameValid = (optionGroupName) => optionGroupName == "";
+
   async function handleSubmit(e) {
     e.preventDefault();
-    try {
-      const response = await fetch('http://localhost:5000/addons', {
-        method: 'POST',
-        body: JSON.stringify({
-          name: name,
-          thumbnail: image,
-          price: price,
-          amount: amount,
-          editAmount: editAmount,
-          unit: unit,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      if (!response.ok) {
-        throw new Error('Failed to add new menu');
-      }
-      const resJson = await response.json();
-      console.log(resJson);
-      // Reset form fields
-      setImage(null);
-      setName('');
-      setDescription('');
-      setPrice(0);
-      setCategory('');
-      // Reset file input
-      document.getElementById('file-input').value = '';
-    } catch (error) {
-      console.log('Error:', error.message);
+    if (!image || isNameValid(name) || isPriceValid(price) || isAmountValid(amount) || isUnitValid(unit)) {
+      Swal.fire("Error", "กรุณากรอกข้อมูลให้ถูกต้อง", "error");
+      return;
     }
+    Swal.fire({
+      title: "ต้องการเพิ่มเมนูเพิ่มเติมนี้หรือไม่",
+      confirmButtonText: "ยืนยัน",
+      showDenyButton: true,
+      denyButtonText: "ยกเลิก", 
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        Swal.fire(`เพิ่มเมนูเพิ่มเติมชิ้นนี้แล้ว`, "", "success");
+        try {
+          const response = await fetch('http://localhost:5000/addons', {
+            method: 'POST',
+            body: JSON.stringify({
+              name: name,
+              thumbnail: image,
+              price: price,
+              amount: amount,
+              editAmount: editAmount,
+              unit: unit,
+            }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          if (!response.ok) {
+            throw new Error('Failed to add new menu');
+          }
+          const resJson = await response.json();
+          console.log(resJson);
+          setImage(null);
+          setName('');
+          setPrice(0);
+          setAmount(0);
+          setUnit("");
+          document.getElementById('file-input').value = '';
+        } catch (error) {
+          console.log('Error:', error.message);
+        }
+      }})
   }
 
   function handleChangeFile(e) {
@@ -156,7 +174,12 @@ export default function BasicTabs() {
       `<input id="swal-input2" class="swal2-input" placeholder="ราคา" value=${option.price}>`,
       showDenyButton: true,
       confirmButtonText: "ยืนยัน",
-      denyButtonText: `ยกเลิก`,
+      showCancelButton: true, // Add cancel button
+      cancelButtonText: "ยกเลิก", // Text for cancel button
+      denyButtonText: `ลบตัวเลือก`,
+      customClass: {
+        content: "custom-swal-content", // Custom class for the Swal content
+      },
     }).then(async (result) => {
       if (result.isConfirmed) {
         const inputName = document.getElementById('swal-input1').value;
@@ -165,47 +188,68 @@ export default function BasicTabs() {
         console.log(inputName)
         console.log(inputPrice)
 
-      if (inputName !== "" && inputPrice !== "") {
-        Swal.fire(`แก้ไข Option แล้ว`, "", "success");
-        const editOption = {
-          ...selectedOption,
-          name: inputName,
-          price: inputPrice,
-        };     
+        if (inputName !== "" && inputPrice !== "") {
+          Swal.fire(`แก้ไข Option แล้ว`, "", "success");
+          const editOption = {
+            ...selectedOption,
+            name: inputName,
+            price: inputPrice,
+          };     
+          const updatedOptions = [...options];
+          updatedOptions[index] = editOption;
+          setOptions(updatedOptions);
+          console.log(options);
+          // edit and store in array
+        }
+      }else if(result.isDenied){
+        Swal.fire("ตัวเลือกถูกลบ", "", "success");
         const updatedOptions = [...options];
-        updatedOptions[index] = editOption;
+        updatedOptions.splice(index, 1); // Remove the option from the array
         setOptions(updatedOptions);
         console.log(options);
-        // edit and store in array
       }
-    }});
+  });
   }
 
   async function handleSubmitOption(e){
     e.preventDefault();
-    try {
-      console.log(optionGroupName)
-      const response = await fetch('http://localhost:5000/optiongroups', {
-        method: 'POST',
-        body: JSON.stringify({
-          name: optionGroupName,
-          options: options,
-          require: isRequired ? 'necessary' : 'not',
-          selection: isRequired2 ? 'one' : 'many',
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      if (!response.ok) {
-        throw new Error('Failed to add new optionGroups');
-      }
-      const resJson = await response.json();
-      console.log(resJson);
-      setOptionGroupName('');
-    } catch (error) {
-      console.log('Error:', error.message);
+    if (isOptionGroupNameValid(optionGroupName)) {
+      Swal.fire("Error", "กรุณากรอกข้อมูลให้ถูกต้อง", "error");
+      return;
     }
+    Swal.fire({
+      title: "ต้องการเพิ่มกลุ่มตัวเลือกนี้หรือไม่",
+      confirmButtonText: "ยืนยัน",
+      showDenyButton: true,
+      denyButtonText: "ยกเลิก", 
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        Swal.fire(`เพิ่มกลุ่มตัวเลือกแล้ว`, "", "success");
+        try {
+          console.log(optionGroupName)
+          const response = await fetch('http://localhost:5000/optiongroups', {
+            method: 'POST',
+            body: JSON.stringify({
+              name: optionGroupName,
+              options: options,
+              require: isRequired ? 'necessary' : 'not',
+              selection: isRequired2 ? 'one' : 'many',
+            }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          if (!response.ok) {
+            throw new Error('Failed to add new optionGroups');
+          }
+          const resJson = await response.json();
+          console.log(resJson);
+          setOptionGroupName('');
+          setOptions([]);
+        } catch (error) {
+          console.log('Error:', error.message);
+        }
+      }})
   }
 
   const handleChange = (event, newValue) => {
@@ -239,6 +283,8 @@ export default function BasicTabs() {
 
       <CustomTabPanel value={value} index={0}>
         <form onSubmit={handleSubmit}>
+        <Box sx={{ display: 'flex',marginLeft: '300px'  }}>
+          <Box sx={{ m: 1 }}>
           <input
             id="file-input"
             type="file"
@@ -254,9 +300,10 @@ export default function BasicTabs() {
               alt="Preview"
             />
           )}
+          </Box>
 
           <Box
-            sx={{ '& > :not(style)': { m: 1, width: '25ch' } }}
+            sx={{ '& > :not(style)': { m: 1, width: '25ch', marginLeft:'50px' } }}
             noValidate
             autoComplete="off"
           >
@@ -264,22 +311,18 @@ export default function BasicTabs() {
               label="ชื่อเมนู"
               value={name}
               color="secondary"
+              error={isNameValid(name)}
+              helperText="กรุณาใส่ชื่อสินค้า"
               focused
               onChange={(e) => setName(e.target.value)}
-            />
-            <br/>
-            <TextField
-              label="คำอธิบาย"
-              value={description}
-              color="secondary"
-              focused
-              onChange={(e) => setDescription(e.target.value)}
             />
             <br/>
             <TextField
               label="ราคา"
               value={price}
               color="secondary"
+              error={isPriceValid(price)}
+              helperText="ราคาควรมีค่า 0 ขึ้นไป"
               focused
               onChange={(e) => setPrice(e.target.value)}
             />
@@ -288,6 +331,8 @@ export default function BasicTabs() {
               label="จำนวน"
               value={amount}
               color="secondary"
+              error={isAmountValid(amount)}
+              helperText="จำนวนควรมีค่า 0 ขึ้นไป"
               focused
               onChange={(e) => setAmount(e.target.value)}
             />
@@ -304,23 +349,30 @@ export default function BasicTabs() {
               label="หน่วย"
               value={unit}
               color="secondary"
+              error={isUnitValid(unit)}
+              helperText="กรุณาใส่หน่วย"
               focused
               onChange={(e) => setUnit(e.target.value)}
             />
-          </Box>
           <br/>
 
-          <Button type="submit">Add New Addon</Button>
+          <Button variant="contained" type="submit">สร้างเมนูเพิ่มเติมใหม่</Button>
+          </Box>
+        </Box>
         </form>
       </CustomTabPanel>
 
       <CustomTabPanel value={value} index={1}>
         <form onSubmit={handleSubmitOption}>
+          <Box sx={{display:'flex',marginLeft: '400px' }}>   
+          <Box sx={{ m: 1 }}>
         <h1>ชื่อกลุ่มตัวเลือก</h1>
         <TextField
               label="ชื่อกลุ่มตัวเลือก"
               value={optionGroupName}
               color="secondary"
+              error={isOptionGroupNameValid(optionGroupName)}
+              helperText="กรุณาชื่อกลุ่มตัวเลือก"
               focused
               onChange={(e) => setOptionGroupName(e.target.value)}
         />
@@ -344,6 +396,8 @@ export default function BasicTabs() {
         <br/>
 
         <Button variant='contained' type="submit">สร้างตัวเลือกใหม่</Button>
+        </Box>
+        </Box>
         </form>
       </CustomTabPanel>
     </Box>

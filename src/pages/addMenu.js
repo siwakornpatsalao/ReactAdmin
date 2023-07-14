@@ -9,24 +9,7 @@ import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-
-const menus = [
-  {
-    id: 1,
-    value: "เครื่องดื่ม",
-    label: "เครื่องดื่ม",
-  },
-  {
-    id: 2,
-    value: "ของทานเล่น",
-    label: "ของทานเล่น",
-  },
-  {
-    id: 3,
-    value: "ขนมปัง",
-    label: "ขนมปัง",
-  },
-];
+import Swal from "sweetalert2";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -75,38 +58,78 @@ export default function BasicTabs() {
   const [optionGroups, setOptionGroups] = useState([]);
   const [categories, setCategories] = useState([]);
 
+  const isNameValid = (name) => name == "";
+  const isDesValid = (description) => description == "" ;
+  const isPriceValid = (price) => price<=0;
+  const isCategoryValid = (category) => category == "";
+
   async function handleSubmit(e) {
     e.preventDefault();
-    try {
-      const response = await fetch("http://localhost:5000/menus", {
-        method: "POST",
-        body: JSON.stringify({
-          name: name,
-          thumbnail: image,
-          description: description,
-          price: price,
-          category: category,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (!response.ok) {
-        throw new Error("Failed to add new menu");
-      }
-      const resJson = await response.json();
-      console.log(resJson);
-      // Reset form fields
-      setImage(null);
-      setName("");
-      setDescription("");
-      setPrice(0);
-      setCategory("");
-      // Reset file input
-      document.getElementById("file-input").value = "";
-    } catch (error) {
-      console.log("Error:", error.message);
+    if (!image || isNameValid(name) || isDesValid(description) || isPriceValid(price) || isCategoryValid(category)) {
+      Swal.fire("Error", "กรุณากรอกข้อมูลให้ถูกต้อง", "error");
+      return;
     }
+
+    /*
+    if (!image) {
+    Swal.fire("Error", "กรุณาใส่รูปภาพ", "error");
+    return;
+    }
+    if (isNameValid(name)) {
+      Swal.fire("Error", "ชื่อควรยาว 4 ตัวอักษรขึ้นไป", "error");
+      return;
+    }
+    if (isDesValid(description)) {
+      Swal.fire("Error", "กรุณาใส่คำอธิบาย", "error");
+      return;
+    }
+    if (isPriceValid(price)) {
+      Swal.fire("Error", "กรุณาใส่ราคา", "error");
+      return;
+    }
+    if (isCategoryValid(category)) {
+      Swal.fire("Error", "กรุณาเลือกหมวดหมู่", "error");
+      return;
+    }
+    */
+
+    Swal.fire({
+      title: "ต้องการเพิ่มสินค้านี้หรือไม่",
+      confirmButtonText: "ยืนยัน",
+      showDenyButton: true,
+      denyButtonText: "ยกเลิก", 
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        Swal.fire(`เพิ่มสินค้าชิ้นนี้แล้ว`, "", "success");
+        try {
+          const response = await fetch("http://localhost:5000/menus", {
+            method: "POST",
+            body: JSON.stringify({
+              name: name,
+              thumbnail: image,
+              description: description,
+              price: price,
+              category: category,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          if (!response.ok) {
+            throw new Error("Failed to add new menu");
+          }
+          const resJson = await response.json();
+          console.log(resJson);
+          setImage(null);
+          setName("");
+          setDescription("");
+          setPrice(0);
+          setCategory("");
+          document.getElementById("file-input").value = "";
+        } catch (error) {
+          console.log("Error:", error.message);
+        }
+      }})
   }
 
   function handleChangeFile(e) {
@@ -170,7 +193,7 @@ export default function BasicTabs() {
 
   return (
     <DashboardLayout>
-      <Box sx={{ width: "100%" }}>
+      <Box sx={{ width: "100%"}}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <Tabs
             textColor="secondary"
@@ -187,18 +210,25 @@ export default function BasicTabs() {
 
         <CustomTabPanel value={value} index={0}>
           <form onSubmit={handleSubmit}>
+          <Box sx={{ display: 'flex',marginLeft: '300px' }}>
+            <Box sx={{ m: 1 }}>
             <input id="file-input" type="file" onChange={handleChangeFile} accept="image/*" />
             <br/>
             <br/>
             {image && (
               <img src={image} style={{ maxWidth: "100%", height: "500px" }} alt="Preview" />
             )}
+            </Box>
 
-            <Box sx={{ "& > :not(style)": { m: 1, width: "25ch" } }} noValidate autoComplete="off">
+            <Box sx={{
+                "& > :not(style)": { m: 1, width: "25ch", marginLeft:'50px' },
+              }} noValidate autoComplete="off">
               <TextField
                 label="ชื่อเมนู"
                 value={name}
                 color="secondary"
+                error={isNameValid(name)}
+                helperText="กรุณาใส่ชื่อสินค้า"
                 focused
                 onChange={(e) => setName(e.target.value)}
               />
@@ -207,6 +237,8 @@ export default function BasicTabs() {
                 label="คำอธิบาย"
                 value={description}
                 color="secondary"
+                error={isDesValid(description)}
+                helperText="กรุณาใส่คำอธิบาย"
                 focused
                 onChange={(e) => setDescription(e.target.value)}
               />
@@ -215,16 +247,18 @@ export default function BasicTabs() {
                 label="ราคา"
                 value={price}
                 color="secondary"
+                error={isPriceValid(price)}
+                helperText="กรุณาใส่ราคา"
                 focused
                 onChange={(e) => setPrice(e.target.value)}
               />
-            </Box>
 
             <TextField
               value={category}
               select
               label="หมวดหมู่"
               defaultValue="เครื่องดื่ม"
+              error={isCategoryValid(category)}
               helperText="Please select your category"
               onChange={(e) => setCategory(e.target.value)}
             >
@@ -236,7 +270,9 @@ export default function BasicTabs() {
             </TextField>
             <br/>
 
-            <Button type="submit">Add New Menu</Button>
+            <Button variant="contained" type="submit">สร้างเมนูใหม่</Button>
+            </Box>
+            </Box>
           </form>
         </CustomTabPanel>
 

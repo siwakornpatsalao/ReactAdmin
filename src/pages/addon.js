@@ -66,6 +66,19 @@ function Addon(){
       setValue(newValue);
     };
 
+    //filter search
+    const handleSearchAddon = (searchValue) => {
+      if (searchValue !== '') {
+        const filteredAddons = Addons.filter((addon) =>
+          addon.name.toLowerCase().includes(searchValue.toLowerCase())
+        );
+        setAddons(filteredAddons);
+      } else {
+        // Reset to show all addons when search value is empty
+        setAddons(Addons)
+      }
+    };
+
     useEffect(() => {
         async function fetchAddons() {
           try {
@@ -95,6 +108,7 @@ function Addon(){
           fetchAddons();
           fetchOptionGroups();
         }
+        
       }, []);
     return (
         <>
@@ -165,7 +179,6 @@ function Addon(){
               </Link>
             </div>
           </Stack>
-          <AddonSearch />
           <Tabs
             textColor="secondary"
             indicatorColor="secondary"
@@ -178,6 +191,7 @@ function Addon(){
             <Tab label="ตัวเลือก" {...a11yProps(1)} />
           </Tabs>
           <CustomTabPanel value={value} index={0}>
+          <AddonSearch onSearch={handleSearchAddon} />
           <Grid
             container
             spacing={3}
@@ -207,6 +221,7 @@ function Addon(){
           </CustomTabPanel>
 
           <CustomTabPanel value={value} index={1}>
+          <OptionSearch />
           <Grid
             container
             spacing={3}
