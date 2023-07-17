@@ -69,8 +69,49 @@ export default function Promotion(){
                 </Button>
               </Stack>
             </Stack>
+            <div>
+                <Link href="./addPromotion">
+              <Button
+                startIcon={(
+                  <SvgIcon fontSize="small">
+                    <PlusIcon />
+                  </SvgIcon>
+                )}
+                variant="contained"
+              >
+                Add Promotion
+              </Button>
+              </Link>
+            </div>
            </Stack>
         </Stack>
+        {/* <PromotionSearch onSearch={handleSearchPromotion} /> */}
+          <Grid
+            container
+            spacing={3}
+          >
+            {/* {Promotions.map((promotion) => (
+              <Grid
+                xs={12}
+                md={6}
+                lg={4}
+                key={promotion._id}
+              >
+              <PromotionCard Promotion={Promotion} />
+              </Grid>
+            ))} */}
+          </Grid>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center'
+            }}
+          >
+            <Pagination
+              count={3}
+              size="small"
+            />
+          </Box>
       </Container>
     </Box>
   </>)
