@@ -10,6 +10,8 @@ import { SvgIcon } from '@mui/material';
 import BuildingStorefrontIcon from '@heroicons/react/24/solid/BuildingStorefrontIcon';
 import CakeIcon from '@heroicons/react/24/solid/CakeIcon';
 import PhotoIcon from '@heroicons/react/24/solid/PhotoIcon';
+import DocIcon from '@heroicons/react/24/solid/NewspaperIcon';
+import EyeIcon from '@heroicons/react/24/solid/EyeIcon';
 
 
 export const items = [
@@ -41,6 +43,15 @@ export const items = [
     )
   },
   {
+    title: 'Order',
+    path: '/order',
+    icon: (
+      <SvgIcon fontSize="small">
+        <EyeIcon />
+      </SvgIcon>
+    )
+  },
+  {
     title: 'Menu',
     path: '/menu',
     icon: (
@@ -64,6 +75,15 @@ export const items = [
     icon: (
       <SvgIcon fontSize="small">
         <PhotoIcon />
+      </SvgIcon>
+    )
+  },
+  {
+    title: 'Report',
+    path: '/report',
+    icon: (
+      <SvgIcon fontSize="small">
+        <DocIcon />
       </SvgIcon>
     )
   },

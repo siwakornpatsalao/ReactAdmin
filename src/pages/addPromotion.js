@@ -16,8 +16,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 const steps = ['เลือกรูปแบบโปรโมชั่น', 'เพิ่มรายละเอียดโปรโมชั่น', 'ตัวอย่างโปรโมชั่น'];
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-function Step1({setSelected,selected}) {
-    const [selected2, setSelected2] = useState('');
+function Step1({setSelected,selected,setSelected2,selected2}) {
   
     const handleSelectedChange = (event) => {
       setSelected(event.target.value);
@@ -47,9 +46,16 @@ function Step1({setSelected,selected}) {
 }
 
 
-function Step2({ selected }) {
+function Step2({ selected,selected2 }) {
     const [menus, setMenus] = useState([]);
     const [selectedDays, setSelectedDays] = useState([]);
+    const [percent, setPercent] = useState(0);
+    const [specific, setSpecific] = useState(0);
+    const [free, setFree] = useState(0);
+
+    const isPercentValid = (percent) => percent <0
+    const isSpecificValid = (specific) => specific <0
+    const isFreeValid = (free) => free <0
   
     useEffect(() => {
       async function fetchMenus() {
@@ -148,26 +154,75 @@ function Step2({ selected }) {
     };
   
     return (
-      <div>
+      <div style={{ display: 'flex' }}>
+        <Box style={{ flex: 1 }}>
+        <div>
         {selected === "percent" ? (
           <div>
             <h2>เปอร์เซ็นต์</h2>
-            {renderMenus()}
+            <TextField
+                label="percent"
+                value={percent}
+                color="secondary"
+                error={isPercentValid(percent)}
+                helperText="กรุณาใส่มูลค่าส่วนลด (เปอร์เซ็น)"
+                focused
+                onChange={(e) => setPercent(e.target.value)}
+              />
             {renderPromotionDetails()}
           </div>
         ) : selected === "specific" ? (
           <div>
             <h2>เจาะจง</h2>
-            {renderMenus()}
+            <TextField
+                label="specific"
+                value={specific}
+                color="secondary"
+                error={isSpecificValid(specific)}
+                helperText="กรุณาใส่มูลค่าส่วนลด (ราคา)"
+                focused
+                onChange={(e) => setSpecific(e.target.value)}
+              />
             {renderPromotionDetails()}
           </div>
         ) : selected === "free" ? (
           <div>
             <h2>ฟรี</h2>
-            {renderMenus()}
+            <TextField
+                label="free"
+                value={free}
+                color="secondary"
+                error={isFreeValid(specific)}
+                helperText="ขั้นต่ำคำสั่งซื้อ"
+                focused
+                onChange={(e) => setFree(e.target.value)}
+              />
             {renderPromotionDetails()}
           </div>
         ) : null}
+        </div>
+        </Box>
+
+        <Box style={{ flex: 1 }}>
+        <div>
+          {selected2 === 'menu' ? (
+            <div>
+              <h2>เลือกเมนู</h2>
+              {renderMenus()}
+            </div>
+          ): selected2 === 'category' ? (
+            <div>
+              <h2>เลือกหมวดหมู่</h2>
+              หมวดหมู่
+            </div>
+          ): selected2 === 'amount' ? (
+            <div>
+              <h2>คำสั่งซื้อ</h2>
+              ขั้นต่ำคำสั่งซื้อ
+            </div>
+          ):null}
+        </div>
+        </Box>
       </div>
     );
 }
@@ -175,9 +230,51 @@ function Step2({ selected }) {
 
 
 function Step3() {
+  const [topic, setTopic] = useState('');
+  const [message, setMessage] = useState('');
+  const [image, setImage] = useState(null);
+
+  const isTopicValid = (topic) => topic=='';
+  const isMessageValid = (message) => message=='';
+
+  function handleChangeFile(e) {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      const base64String = reader.result;
+      setImage(base64String);
+    };
+
+    reader.readAsDataURL(file);
+  }
+
   return (
     <div>
-        hey3
+        การแสดงผล
+        <input id="file-input" type="file" onChange={handleChangeFile} accept="image/*" />
+        {image && (
+              <img src={image} style={{ maxWidth: "100%", height: "500px" }} alt="Preview" />
+        )}
+        <TextField
+                label="หัวข้อ"
+                value={topic}
+                color="secondary"
+                error={isTopicValid(topic)}
+                helperText="กรุณาใส่หัวข้อ"
+                focused
+                onChange={(e) => setTopic(e.target.value)}
+        />
+        <TextField
+                label="ข้อความ"
+                value={message}
+                color="secondary"
+                error={isMessageValid(message)}
+                helperText="กรุณาใส่ข้อความ"
+                focused
+                onChange={(e) => setMessage(e.target.value)}
+        />
+        <Button><h1>Review</h1></Button>
     </div>
     // Add your content for step 3 here
   );
@@ -187,6 +284,7 @@ export default function HorizontalLinearStepper() {
   const [activeStep, setActiveStep] = useState(0);
   const [skipped, setSkipped] = useState(new Set());
   const [selected, setSelected] = useState('');
+  const [selected2, setSelected2] = useState('');
 
   const isStepOptional = (step) => {
     return step === 1;
@@ -231,9 +329,9 @@ export default function HorizontalLinearStepper() {
   const renderStepContent = (step) => {
     switch (step) {
       case 0:
-        return <Step1 setSelected={setSelected} selected2={selected} />;
+        return <Step1 setSelected={setSelected} selected={selected} setSelected2={setSelected2} selected2={selected2} />;
       case 1:
-        return <Step2 selected={selected}/>;
+        return <Step2 selected={selected} selected2={selected2}/>;
       case 2:
         return <Step3 />;
       default:
