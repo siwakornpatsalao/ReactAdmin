@@ -61,6 +61,7 @@ function Addon(){
     const initial = useRef(false);
     const [value, setValue] = useState(0);
     const [optionGroups, setOptionGroups] = useState([]);
+    const [originalAddons, setOriginalAddons] = useState([]);
 
     const handleChange = (event, newValue) => {
       setValue(newValue);
@@ -68,14 +69,15 @@ function Addon(){
 
     //filter search
     const handleSearchAddon = (searchValue) => {
+      console.log(searchValue);
       if (searchValue !== '') {
-        const filteredAddons = Addons.filter((addon) =>
+        const filteredAddons = originalAddons.filter((addon) =>
           addon.name.toLowerCase().includes(searchValue.toLowerCase())
         );
         setAddons(filteredAddons);
       } else {
         // Reset to show all addons when search value is empty
-        setAddons(Addons)
+        setAddons(originalAddons);
       }
     };
 
@@ -85,6 +87,7 @@ function Addon(){
             const res = await fetch("http://localhost:5000/Addons");
             const data = await res.json();
             setAddons(data);
+            setOriginalAddons(data);
             console.log(data);
           } catch (error) {
             console.error("Error fetching Addons:", error);

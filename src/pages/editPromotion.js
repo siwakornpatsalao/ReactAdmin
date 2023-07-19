@@ -7,12 +7,13 @@ import Typography from '@mui/material/Typography';
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { TextField, MenuItem, Button, Radio, RadioGroup} from '@mui/material';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef} from 'react';
 import FormGroup from "@mui/material/FormGroup";
 import Checkbox from "@mui/material/Checkbox";
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Swal from "sweetalert2";
+import { useRouter } from 'next/router';
 
 const steps = ['เลือกรูปแบบโปรโมชั่น', 'เพิ่มรายละเอียดโปรโมชั่น', 'ตัวอย่างโปรโมชั่น'];
 const daysOfWeek = ['วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัส', 'วันศุกร์', 'วันเสาร์', 'วันอาทิตย์'];
@@ -114,6 +115,10 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,star
         </FormGroup>
       ));
     };
+
+    const formatDate = (dateString) => {
+        return dateString.slice(0, 10); // Extract the first 10 characters (YYYY-MM-DD)
+    };
   
     const renderPromotionDetails = () => {
       return (
@@ -123,7 +128,7 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,star
           <TextField
             label="วันเริ่มต้น"
             type="date"
-            value={start_date}
+            value={formatDate(start_date)}
             onChange={(e) => setStart_Date(e.target.value)}
             error={isStartDateValid(start_date)}
             helperText='กรุณาใส่วันเริ่มต้น'
@@ -135,7 +140,7 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,star
           <TextField
             label="วันสิ้นสุด"
             type="date"
-            value={finish_date}
+            value={formatDate(finish_date)}
             onChange={(e) => setFinish_Date(e.target.value)}
             error={isFinishDateValid(finish_date)}
             helperText='กรุณาใส่วันสิ้นสุด'
@@ -327,6 +332,10 @@ export default function HorizontalLinearStepper() {
   const [topic, setTopic] = useState('');
   const [message, setMessage] = useState('');
   const [image, setImage] = useState(null);
+  const [promotion,setPromotion] = useState([]);
+  const initial = useRef(false);
+  const router = useRouter();
+  const { id } = router.query;
 
   const isStepOptional = (step) => {
     return step === 1;
@@ -335,6 +344,36 @@ export default function HorizontalLinearStepper() {
   const isStepSkipped = (step) => {
     return skipped.has(step);
   };
+
+  useEffect(() => {
+    async function fetchPromotion() {
+      try {
+        const res = await fetch(`http://localhost:5000/promotions/${id}`);
+        const data = await res.json();
+        setPromotion(data);
+        setType(data.type);
+        setProductType(data.productType);
+        setData(data.data);
+        setStart_Date(data.start_date);
+        setFinish_Date(data.finish_date);
+        setSelectedDays(data.days);
+        setStart_Time(data.start_time);
+        setFinish_Time(data.finish_time);
+        setTopic(data.topic);
+        setMessage(data.message);
+        setImage(data.image);
+        console.log(selectedDays);
+      } catch (error) {
+        console.error("Error fetching promotion:", error);
+      }
+    }
+
+    if (!initial.current) {
+        initial.current = true;
+        console.log(initial.current);
+        fetchPromotion();
+    }
+  }, [id]);
 
   const handleNext = () => {
     let newSkipped = skipped;
@@ -393,13 +432,13 @@ export default function HorizontalLinearStepper() {
     console.log(type);
     console.log(selectedDays);
     const formattedSelectedDays = selectedDays.map((day) => ({ day }));
-    if (!image || !type || !productType || !data || !start_date || !finish_date || !start_time || !finish_time || !topic || !message ||!selectedDays) {
+    if (!image || !type || !productType || !data || !start_date || !finish_date || !start_time || !finish_time || !topic || !message || !selectedDays) {
       Swal.fire("Error", "กรุณากรอกข้อมูลให้ถูกต้อง", "error");
       return;
     }
     try{
-      const response = await fetch("http://localhost:5000/promotions", {
-          method: "POST",
+      const response = await fetch(`http://localhost:5000/promotions/${id}`, {
+          method: "PUT",
           body: JSON.stringify({
             type: type,
             productType: productType,

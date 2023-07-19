@@ -7,7 +7,7 @@ export const PromotionSearch = ({ onSearch }) => {
 
   const handleSearch = (value) => {
     setSearchValue(value);
-    onSearch(value);
+    onSearch(searchValue);
   };
 
   return (

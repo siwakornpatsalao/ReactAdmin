@@ -15,8 +15,48 @@ import {
 } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import Link from 'next/link';
+import { useEffect, useState, useRef } from 'react';
+import { PromotionCard } from 'src/sections/promotion/promotion-card';
+import { PromotionSearch } from 'src/sections/promotion/promotion-search';
 
 export default function Promotion(){
+
+  const [promotions, setPromotions] = useState([]);
+  const initial = useRef(false);
+  const [originalPromotions, setOriginalPromotions] = useState([]);
+
+  const handleSearchPromotion = (searchValue) => {
+    if (searchValue !== '') {
+      const filteredPromotion = originalPromotions.filter((promotion) =>
+        promotion.topic.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      setPromotions(filteredPromotion);
+    } else {
+      // Reset to show all addons when search value is empty
+      setPromotions(originalPromotions)
+    }
+  };
+
+  useEffect(() => {
+    async function fetchPromotion(){
+      try{
+        const res = await fetch("http://localhost:5000/promotions");
+        const data = await res.json();
+        setPromotions(data);
+        setOriginalPromotions(data);
+        console.log(data);
+      }catch(error) {
+        console.error("Error fetching Promotion:", error);
+      }
+    }
+
+    if (!initial.current) {
+      initial.current = true;
+      console.log(initial.current);
+      fetchPromotion();
+    }
+  }, [])
+
     return(
         <>
     <Head>
@@ -85,21 +125,21 @@ export default function Promotion(){
             </div>
            </Stack>
         </Stack>
-        {/* <PromotionSearch onSearch={handleSearchPromotion} /> */}
+        <PromotionSearch onSearch={handleSearchPromotion} />
           <Grid
             container
             spacing={3}
           >
-            {/* {Promotions.map((promotion) => (
+            {promotions.map((promotion) => (
               <Grid
                 xs={12}
                 md={6}
                 lg={4}
                 key={promotion._id}
               >
-              <PromotionCard Promotion={Promotion} />
+              <PromotionCard Promotion={promotion} />
               </Grid>
-            ))} */}
+            ))}
           </Grid>
           <Box
             sx={{

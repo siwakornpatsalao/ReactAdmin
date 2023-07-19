@@ -48,9 +48,7 @@ export default function BasicTabs() {
   const [value, setValue] = useState(0);
   const [image, setImage] = useState(null);
   const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
   const [price, setPrice] = useState(0);
-  const [category, setCategory] = useState('');
   const [amount, setAmount] = useState(0);
   const [editAmount, setEditAmount] = useState(0);
   const [unit, setUnit] = useState('');

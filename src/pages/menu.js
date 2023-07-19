@@ -22,6 +22,7 @@ import Link from 'next/link';
 function Menu(){
     const [menus, setMenus] = useState([]);
     const initial = useRef(false);
+    const [originalMenus, setOriginalMenus] = useState([]);
 
     function handleAddCategory() {
         Swal.fire({
@@ -54,12 +55,26 @@ function Menu(){
         });
       }
 
+      const handleSearchMenu = (searchValue) => {
+        console.log(searchValue);
+        if (searchValue !== '') {
+          const filteredMenus = originalMenus.filter((Menu) =>
+            Menu.name.toLowerCase().includes(searchValue.toLowerCase())
+          );
+          setMenus(filteredMenus);
+        } else {
+          // Reset to show all Menus when search value is empty
+          setMenus(originalMenus);
+        }
+      };   
+
     useEffect(() => {
         async function fetchMenus() {
           try {
             const res = await fetch("http://localhost:5000/menus");
             const data = await res.json();
             setMenus(data);
+            setOriginalMenus(data);
             console.log(data);
           } catch (error) {
             console.error("Error fetching menus:", error);
@@ -155,7 +170,7 @@ function Menu(){
               </Button>
             </div>
           </Stack>
-          <MenuSearch />
+          <MenuSearch onSearch={handleSearchMenu} />
           <Grid
             container
             spacing={3}

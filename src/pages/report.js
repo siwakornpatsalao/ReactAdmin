@@ -25,23 +25,23 @@ function createData(order, date, orderCount, menuCount, total) {
 }
 
 const rows = [
-  createData(1, '16/06/23', 9, 11, 560),
-  createData(2, '15/06/23', 10, 14, 760),
-  createData(3, '14/06/23', 8, 9, 410),
-  createData(4, '13/06/23', 11, 13, 700),
-  createData(5, '12/06/23', 7, 11, 590),
+  createData(1, '06/16/2023', 9, 11, 560),
+  createData(2, '06/15/2023', 10, 14, 760),
+  createData(3, '06/14/2023', 8, 9, 410),
+  createData(4, '06/13/2023', 11, 13, 700),
+  createData(5, '06/12/2023', 7, 11, 590),
 ];
 
-function createData2(order, date, time, name, amount, price, status, type) {
-  return { order, date, time, name, amount, price, status, type };
+function createData2(order, date, time, name, count, price, status, type) {
+  return { order, date, time, name, count, price, status, type };
 }
 
 const rows2 = [
-  createData2(1, '16/06/23', '09:00:00', 'วิปครีม', 100, 10, 'อัปเดต', 'เมนูเพิ่มเติม'),
-  createData2(2, '16/06/23', '09:23:25', 'ไส้', '-', '-', 'อัปเดต', 'ตัวเลือก'),
-  createData2(3, '14/06/23', '08:06:23', 'ชีส', 100, 10, 'สร้าง', 'เมนูเพิ่มเติม'),
-  createData2(4, '14/06/23', '08:31:11', 'ไข่ดาว', 30, 10, 'สร้าง', 'เมนูเพิ่มเติม'),
-  createData2(5, '14/06/23', '08:45:34', 'แป้ง', '-', '-', 'สร้าง', 'ตัวเลือก'),
+  createData2(1, '06/16/2023', '09:00:00', 'วิปครีม', 100, 10, 'อัปเดต', 'เมนูเพิ่มเติม'),
+  createData2(2, '06/16/2023', '09:23:25', 'ไส้', '-', '-', 'อัปเดต', 'ตัวเลือก'),
+  createData2(3, '06/14/2023', '08:06:23', 'ชีส', 100, 10, 'สร้าง', 'เมนูเพิ่มเติม'),
+  createData2(4, '06/14/2023', '08:31:11', 'ไข่ดาว', 30, 10, 'สร้าง', 'เมนูเพิ่มเติม'),
+  createData2(5, '06/14/2023', '08:45:34', 'แป้ง', '-', '-', 'สร้าง', 'ตัวเลือก'),
 ];
 
 function createData3(order, date, name, menuCount, total) {
@@ -49,11 +49,11 @@ function createData3(order, date, name, menuCount, total) {
 }
 
 const rows3 = [
-  createData3(1, '16/06/23', 'เครป 3 ไส้', 12, 650),
-  createData3(2, '15/06/23', 'เครป 2 ไส้', 8, 530),
-  createData3(3, '14/06/23', 'เครป 1 ไส้', 6, 400),
-  createData3(4, '13/06/23', 'เครปไส้แตก', 4, 250),
-  createData3(5, '12/06/23', 'เครป 5 ไส้', 1, 60),
+  createData3(1, '06/16/2023', 'เครป 3 ไส้', 12, 650),
+  createData3(2, '06/15/2023', 'เครป 2 ไส้', 8, 530),
+  createData3(3, '06/14/2023', 'เครป 1 ไส้', 6, 400),
+  createData3(4, '06/13/2023', 'เครปไส้แตก', 4, 250),
+  createData3(5, '06/12/2023', 'เครป 5 ไส้', 1, 60),
 ];
 
 const years = [];
@@ -67,7 +67,7 @@ const months = [
 ];
 
 const days = [];
-for (let i = 1; i < 31; i++) {
+for (let i = 1; i <= 31; i++) {
   days.push(i);
 }
 
@@ -135,6 +135,127 @@ export default function BasicTabs() {
   const [month, setMonth] = useState('');
   const [day, setDay] = useState('');
   const [time, setTime] = useState('');
+  const [sortOrder, setSortOrder] = useState("desc");
+  const [sortDate, setSortDate] = useState("desc");
+  const [sortOrderCount, setSortOrderCount] = useState("desc");
+  const [sortMenuCount, setSortMenuCount] = useState("desc");
+  const [sortTotal, setSortTotal] = useState("desc");
+  const [sortCount, setSortCount] = useState("desc");
+  const [sortPrice, setSortPrice] = useState("desc");
+  const [sortTime, setSortTime] = useState("desc");
+  const [sortName, setSortName] = useState("desc");
+  const [sortStatus, setSortStatus] = useState("desc");
+  const [sortType, setSortType] = useState("desc");
+
+  function sortByOrder(row) {
+    if (sortOrder === "asc") {
+      row.sort((a, b) => b.order - a.order);
+      setSortOrder("desc");
+    } else {
+      row.sort((a, b) => a.order - b.order);
+      setSortOrder("asc");
+    }
+  }
+
+  function sortByDate(row) {
+    if (sortDate === "asc") {
+      row.sort((a, b) => new Date(b.date) - new Date(a.date));
+      setSortDate("desc");
+    } else {
+      row.sort((a, b) => new Date(a.date) - new Date(b.date));
+      setSortDate("asc");
+    }
+  }  
+
+  function sortByOrderCount(row){
+    if(sortOrderCount === 'asc'){
+      row.sort((a, b) => b.orderCount - a.orderCount);
+      setSortOrderCount("desc");
+    } else {
+      row.sort((a, b) => a.orderCount - b.orderCount);
+      setSortOrderCount("asc");
+    }
+  }
+
+  function sortByMenuCount(row){
+    if(sortMenuCount === 'asc'){
+      row.sort((a, b) => b.menuCount - a.menuCount);
+      setSortMenuCount("desc");
+    } else {
+      row.sort((a, b) => a.menuCount - b.menuCount);
+      setSortMenuCount("asc");
+    }
+  }
+
+  function sortByTotal(row){
+    if(sortTotal === 'asc'){
+      row.sort((a, b) => b.total - a.total);
+      setSortTotal("desc");
+    } else {
+      row.sort((a, b) => a.total - b.total);
+      setSortTotal("asc");
+    }
+  }
+
+  function sortByCount(row){
+    if(sortCount === 'asc'){
+      row.sort((a, b) => b.count - a.count);
+      setSortCount("desc");
+    } else {
+      row.sort((a, b) => a.count - b.count);
+      setSortCount("asc");
+    }
+  }
+
+  function sortByPrice(row){
+    if(sortPrice === 'asc'){
+      row.sort((a, b) => b.price - a.price);
+      setSortPrice("desc");
+    } else {
+      row.sort((a, b) => a.price - b.price);
+      setSortPrice("asc");
+    }
+  }
+
+  function sortByTime(row){
+    if(sortTime === 'asc'){
+      //row.sort((a, b) => );
+      setSortTime("desc");
+    } else {
+      //row.sort((a, b) => );
+      setSortTime("asc");
+    }
+  }
+
+  function sortByName(row){
+    if(sortName === 'asc'){
+      row.sort((a, b) => (a.name > b.name ? -1 : 1));
+      setSortName("desc");
+    } else {
+      row.sort((a, b) => (a.name < b.name ? -1 : 1));
+      setSortName("asc");
+    }
+  }
+
+  function sortByStatus(row){
+    if(sortStatus === 'asc'){
+      row.sort((a, b) => (a.status > b.status ? -1 : 1));
+      setSortStatus("desc");
+    } else {
+      row.sort((a, b) => (a.status < b.status ? -1 : 1));
+      setSortStatus("asc");
+    }
+  }
+
+  function sortByType(row){
+    if(sortType === 'asc'){
+      row.sort((a, b) => (a.type > b.type ? -1 : 1));
+      setSortType("desc");
+    } else {
+      row.sort((a, b) => (a.type < b.type ? -1 : 1));
+      setSortType("asc");
+    }
+  }
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -185,11 +306,11 @@ export default function BasicTabs() {
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                   <TableRow>
-                    <TableCell>ลำดับ</TableCell>
-                    <TableCell>วันที่</TableCell>
-                    <TableCell>จำนวนออเดอร์</TableCell>
-                    <TableCell>จำนวนสินค้า</TableCell>
-                    <TableCell>ยอดขาย</TableCell>
+                    <TableCell><Button onClick={()=>{sortByOrder(rows)}}>ลำดับ</Button></TableCell>
+                    <TableCell><Button onClick={()=>{sortByDate(rows)}}>วันที่</Button></TableCell>
+                    <TableCell><Button onClick={()=>{sortByOrderCount(rows)}}>จำนวนออเดอร์</Button></TableCell>
+                    <TableCell><Button onClick={()=>{sortByMenuCount(rows)}}>จำนวนสินค้า</Button></TableCell>
+                    <TableCell><Button onClick={()=>{sortByTotal(rows)}}>จำนวนยอดขาย</Button></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -220,20 +341,20 @@ export default function BasicTabs() {
             {month && month === "กุมภาพันธ์" ? (
               renderDropdown("รายวัน", days.slice(0, 29), day, handleChangeDay)
             ) : month === "เมษายน" || month === "มิถุนายน" || month==='กันยายน' || month==='พฤศจิกายน'? (
-              renderDropdown("รายวัน", days.slice(0, 31), day, handleChangeDay)
+              renderDropdown("รายวัน", days.slice(0, 30), day, handleChangeDay)
             ):(
-               renderDropdown("รายวัน", days.slice(0, 32), day, handleChangeDay))}
+               renderDropdown("รายวัน", days.slice(0, 31), day, handleChangeDay))}
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell>ลำดับ</TableCell>
-                  <TableCell>วันที่</TableCell>
-                  <TableCell>เวลา</TableCell>
-                  <TableCell>ชื่อรายการ</TableCell>
-                  <TableCell>จำนวน</TableCell>
-                  <TableCell>ราคา</TableCell>
-                  <TableCell>สถานะ</TableCell>
-                  <TableCell>ประเภท</TableCell>
+                  <TableCell><Button onClick={()=>{sortByOrder(rows2)}}>ลำดับ</Button></TableCell>
+                  <TableCell><Button onClick={()=>{sortByDate(rows2)}}>วันที่</Button></TableCell>
+                  <TableCell><Button onClick={()=>{sortByTime(rows2)}}>เวลา</Button></TableCell>
+                  <TableCell><Button onClick={()=>{sortByName(rows2)}}>ชื่อรายการ</Button></TableCell>
+                  <TableCell><Button onClick={()=>{sortByCount(rows2)}}>จำนวน</Button></TableCell>
+                  <TableCell><Button onClick={()=>{sortByPrice(rows2)}}>ราคา</Button></TableCell>
+                  <TableCell><Button onClick={()=>{sortByStatus(rows2)}}>สถานะ</Button></TableCell>
+                  <TableCell><Button onClick={()=>{sortByType(rows2)}}>ประเภท</Button></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -248,7 +369,7 @@ export default function BasicTabs() {
                     <TableCell>{row.date}</TableCell>
                     <TableCell>{row.time}</TableCell>
                     <TableCell>{row.name}</TableCell>
-                    <TableCell>{row.amount}</TableCell>
+                    <TableCell>{row.count}</TableCell>
                     <TableCell>{row.price}</TableCell>
                     <TableCell>{row.status}</TableCell>
                     <TableCell>{row.type}</TableCell>
@@ -273,11 +394,11 @@ export default function BasicTabs() {
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell>ลำดับ</TableCell>
-                  <TableCell>วันที่</TableCell>
-                  <TableCell>ชื่อสินค้า</TableCell>
-                  <TableCell>จำนวนสินค้า</TableCell>
-                  <TableCell>ยอดขาย</TableCell>
+                  <TableCell><Button onClick={()=>{sortByOrder(rows3)}}>ลำดับ</Button></TableCell>
+                  <TableCell><Button onClick={()=>{sortByDate(rows3)}}>วันที่</Button></TableCell>
+                  <TableCell><Button onClick={()=>{sortByName(rows3)}}>ชื่อสินค้า</Button></TableCell>
+                  <TableCell><Button onClick={()=>{sortByMenuCount(rows3)}}>จำนวนสินค้า</Button></TableCell>
+                  <TableCell><Button onClick={()=>{sortByTotal(rows3)}}>ยอดขาย</Button></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
