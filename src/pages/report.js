@@ -62,17 +62,17 @@ for (let i = 2023; i >= 2013; i--) {
 }
 
 const months = [
-    'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
+    '','มกราคม','กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
     'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
 ];
 
-const days = [];
+const days = [''];
 for (let i = 1; i <= 31; i++) {
   days.push(i);
 }
 
 const times = [
-    '09:00 - 12:00', '12:01 - 15:00' , '15:01 - 18:00'
+    '09:00:00 - 12:00:00', '12:01:00 - 15:00:00' , '15:01:00 - 18:00:00'
 ]
 
 function CustomTabPanel(props) {
@@ -121,8 +121,8 @@ function renderDropdown(label, options, value, onChange) {
         label={label}
         onChange={onChange}
       >
-        {options.map((option) => (
-          <MenuItem key={option} value={option}>{option}</MenuItem>
+        {options.map((option,index) => (
+          <MenuItem key={option} value={index}>{option}</MenuItem>
         ))}
       </Select>
     </FormControl>
@@ -146,115 +146,68 @@ export default function BasicTabs() {
   const [sortName, setSortName] = useState("desc");
   const [sortStatus, setSortStatus] = useState("desc");
   const [sortType, setSortType] = useState("desc");
+  const [filteredRows, setFilteredRows] = useState(rows);
+  const [filteredRows2, setFilteredRows2] = useState(rows2);
+  const [filteredRows3, setFilteredRows3] = useState(rows3);
 
-  function sortByOrder(row) {
-    if (sortOrder === "asc") {
-      row.sort((a, b) => b.order - a.order);
-      setSortOrder("desc");
-    } else {
-      row.sort((a, b) => a.order - b.order);
-      setSortOrder("asc");
+  function sortByInt(row,column,sort,setSort){
+    if(sort === 'asc'){
+      row.sort((a, b) => b[column] - a[column]);
+      setSort("desc");
+    }else{
+      row.sort((a, b) => a[column] - b[column]);
+      setSort("asc")
     }
   }
 
-  function sortByDate(row) {
-    if (sortDate === "asc") {
-      row.sort((a, b) => new Date(b.date) - new Date(a.date));
-      setSortDate("desc");
+  function sortByString(row,column,sort,setSort){
+    if(sort === 'asc'){
+      row.sort((a, b) => (a[column] > b[column] ? -1 : 1));
+      setSort("desc");
     } else {
-      row.sort((a, b) => new Date(a.date) - new Date(b.date));
-      setSortDate("asc");
-    }
-  }  
-
-  function sortByOrderCount(row){
-    if(sortOrderCount === 'asc'){
-      row.sort((a, b) => b.orderCount - a.orderCount);
-      setSortOrderCount("desc");
-    } else {
-      row.sort((a, b) => a.orderCount - b.orderCount);
-      setSortOrderCount("asc");
+      row.sort((a, b) => (a[column] < b[column] ? -1 : 1));
+      setSort("asc");
     }
   }
 
-  function sortByMenuCount(row){
-    if(sortMenuCount === 'asc'){
-      row.sort((a, b) => b.menuCount - a.menuCount);
-      setSortMenuCount("desc");
+  function sortByDate(row,column,sort,setSort){
+    if (sort === "asc") {
+      row.sort((a, b) => new Date(b[column]) - new Date(a[column]));
+      setSort("desc");
     } else {
-      row.sort((a, b) => a.menuCount - b.menuCount);
-      setSortMenuCount("asc");
+      row.sort((a, b) => new Date(a[column]) - new Date(b[column]));
+      setSort("asc");
     }
   }
 
-  function sortByTotal(row){
-    if(sortTotal === 'asc'){
-      row.sort((a, b) => b.total - a.total);
-      setSortTotal("desc");
-    } else {
-      row.sort((a, b) => a.total - b.total);
-      setSortTotal("asc");
-    }
+  function convertTimeToMinutes(timeString) {
+    const [hours, minutes] = timeString.split(":");
+    return parseInt(hours) * 60 + parseInt(minutes);
   }
 
-  function sortByCount(row){
-    if(sortCount === 'asc'){
-      row.sort((a, b) => b.count - a.count);
-      setSortCount("desc");
-    } else {
-      row.sort((a, b) => a.count - b.count);
-      setSortCount("asc");
-    }
-  }
-
-  function sortByPrice(row){
-    if(sortPrice === 'asc'){
-      row.sort((a, b) => b.price - a.price);
-      setSortPrice("desc");
-    } else {
-      row.sort((a, b) => a.price - b.price);
-      setSortPrice("asc");
-    }
-  }
-
-  function sortByTime(row){
-    if(sortTime === 'asc'){
-      //row.sort((a, b) => );
+  function sortByTime(row) {
+    if (sortTime === "asc") {
+      row.sort((a, b) => {
+        const timeA = convertTimeToMinutes(a.time);
+        const timeB = convertTimeToMinutes(b.time);
+        return timeA - timeB;
+      });
       setSortTime("desc");
     } else {
-      //row.sort((a, b) => );
+      row.sort((a, b) => {
+        const timeA = convertTimeToMinutes(a.time);
+        const timeB = convertTimeToMinutes(b.time);
+        return timeB - timeA;
+      });
       setSortTime("asc");
     }
   }
 
-  function sortByName(row){
-    if(sortName === 'asc'){
-      row.sort((a, b) => (a.name > b.name ? -1 : 1));
-      setSortName("desc");
-    } else {
-      row.sort((a, b) => (a.name < b.name ? -1 : 1));
-      setSortName("asc");
-    }
-  }
-
-  function sortByStatus(row){
-    if(sortStatus === 'asc'){
-      row.sort((a, b) => (a.status > b.status ? -1 : 1));
-      setSortStatus("desc");
-    } else {
-      row.sort((a, b) => (a.status < b.status ? -1 : 1));
-      setSortStatus("asc");
-    }
-  }
-
-  function sortByType(row){
-    if(sortType === 'asc'){
-      row.sort((a, b) => (a.type > b.type ? -1 : 1));
-      setSortType("desc");
-    } else {
-      row.sort((a, b) => (a.type < b.type ? -1 : 1));
-      setSortType("asc");
-    }
+  function handleReset(){
+    setYear('');
+    setMonth('');
+    setDay('');
+    setTime('');
   }
 
   const handleChange = (event, newValue) => {
@@ -281,6 +234,66 @@ export default function BasicTabs() {
     setTime(event.target.value);
   };
 
+  // filter Table 1
+
+  useEffect(() => {
+    if (year) {
+      const filteredRowsByYear = rows.filter((row) => row.date.endsWith(`/${year}`));
+      setFilteredRows(filteredRowsByYear);
+    }else if(month){
+      const filteredRowsByMonth = rows.filter((row) => row.date.startsWith(`0${month}`));
+      setFilteredRows(filteredRowsByMonth);
+    }else if(year && month){
+      const filteredRowsByMonth = rows.filter((row) => row.date.startsWith(`0${month}`) && row.date.endsWith(`/${year}`));
+      setFilteredRows(filteredRowsByMonth);
+    }else{
+      setFilteredRows(rows);
+    }
+    
+  }, [year,month]);
+
+  // filter Table 2
+
+  useEffect(() => {
+    if (year) {
+      const filteredRowsByYear = rows2.filter((row) => row.date.endsWith(`/${year}`));
+      setFilteredRows2(filteredRowsByYear);
+    }else if(month){
+      const filteredRowsByMonth = rows2.filter((row) => row.date.startsWith(`0${month}`));
+      setFilteredRows2(filteredRowsByMonth);
+    }else if(day){
+      const filteredRowsByDay = rows2.filter((row) => parseInt(row.date.split('/')[1]) === day);
+      setFilteredRows2(filteredRowsByDay);
+    }else if(year && month){
+      const filteredRowsByMonth = rows2.filter((row) => row.date.startsWith(`0${month}`) && row.date.endsWith(`/${year}`));
+      setFilteredRows2(filteredRowsByMonth);
+    }else{
+      setFilteredRows2(rows2);
+    }
+    
+  }, [year,month,day]);
+
+  // filter Table 3
+
+  useEffect(() => {
+    if (year) {
+      const filteredRowsByYear = rows3.filter((row) => row.date.endsWith(`/${year}`));
+      setFilteredRows3(filteredRowsByYear);
+    }else if(month){
+      const filteredRowsByMonth = rows3.filter((row) => row.date.startsWith(`0${month}`));
+      setFilteredRows3(filteredRowsByMonth);
+    }else if(day){
+      const filteredRowsByDay = rows3.filter((row) => parseInt(row.date.split('/')[1]) === day);
+      setFilteredRows3(filteredRowsByDay);
+    }else if(year && month){
+      const filteredRowsByMonth = rows3.filter((row) => row.date.startsWith(`0${month}`) && row.date.endsWith(`/${year}`));
+      setFilteredRows3(filteredRowsByMonth);
+    }else{
+      setFilteredRows3(rows3);
+    }
+    
+  }, [year,month,day]);
+
   return (
     <DashboardLayout>
       <Box sx={{ width: "100%" }}>
@@ -298,23 +311,24 @@ export default function BasicTabs() {
             <Tab label="รายงานสินค้าขายดี" {...a11yProps(2)} />
           </Tabs>
         </Box>
-        <CustomTabPanel value={value} index={0}>
+        <CustomTabPanel value={value} index={0} >
           <Box>
             <TableContainer>
               {renderDropdown("รายปี", years, year, handleChangeYear)}
               {renderDropdown("รายเดือน", months, month, handleChangeMonth)}
+              <Button variant='contained' onClick={handleReset}>Reset</Button>
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                   <TableRow>
-                    <TableCell><Button onClick={()=>{sortByOrder(rows)}}>ลำดับ</Button></TableCell>
-                    <TableCell><Button onClick={()=>{sortByDate(rows)}}>วันที่</Button></TableCell>
-                    <TableCell><Button onClick={()=>{sortByOrderCount(rows)}}>จำนวนออเดอร์</Button></TableCell>
-                    <TableCell><Button onClick={()=>{sortByMenuCount(rows)}}>จำนวนสินค้า</Button></TableCell>
-                    <TableCell><Button onClick={()=>{sortByTotal(rows)}}>จำนวนยอดขาย</Button></TableCell>
+                    <TableCell><Button onClick={()=>{sortByInt(filteredRows,'order',sortOrder,setSortOrder)}}>ลำดับ</Button></TableCell>
+                    <TableCell><Button onClick={()=>{sortByDate(filteredRows,'date',sortDate,setSortDate)}}>วันที่</Button></TableCell>
+                    <TableCell><Button onClick={()=>{sortByInt(filteredRows,'orderCount',sortOrderCount,setSortOrderCount)}}>จำนวนออเดอร์</Button></TableCell>
+                    <TableCell><Button onClick={()=>{sortByInt(filteredRows,'menuCount',sortMenuCount,setSortMenuCount)}}>จำนวนสินค้า</Button></TableCell>
+                    <TableCell><Button onClick={()=>{sortByInt(filteredRows,'total',sortTotal,setSortTotal)}}>จำนวนยอดขาย</Button></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rows.map((row) => (
+                  {filteredRows.map((row) => (
                     <TableRow
                       key={row.name}
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -334,7 +348,7 @@ export default function BasicTabs() {
           </Box>
         </CustomTabPanel>
 
-        <CustomTabPanel value={value} index={1}>
+        <CustomTabPanel value={value} index={1} >
           <TableContainer>
             {renderDropdown("รายปี", years, year, handleChangeYear)}
             {renderDropdown("รายเดือน", months, month, handleChangeMonth)}
@@ -344,21 +358,22 @@ export default function BasicTabs() {
               renderDropdown("รายวัน", days.slice(0, 30), day, handleChangeDay)
             ):(
                renderDropdown("รายวัน", days.slice(0, 31), day, handleChangeDay))}
+            <Button variant='contained' onClick={handleReset}>Reset</Button>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell><Button onClick={()=>{sortByOrder(rows2)}}>ลำดับ</Button></TableCell>
-                  <TableCell><Button onClick={()=>{sortByDate(rows2)}}>วันที่</Button></TableCell>
-                  <TableCell><Button onClick={()=>{sortByTime(rows2)}}>เวลา</Button></TableCell>
-                  <TableCell><Button onClick={()=>{sortByName(rows2)}}>ชื่อรายการ</Button></TableCell>
-                  <TableCell><Button onClick={()=>{sortByCount(rows2)}}>จำนวน</Button></TableCell>
-                  <TableCell><Button onClick={()=>{sortByPrice(rows2)}}>ราคา</Button></TableCell>
-                  <TableCell><Button onClick={()=>{sortByStatus(rows2)}}>สถานะ</Button></TableCell>
-                  <TableCell><Button onClick={()=>{sortByType(rows2)}}>ประเภท</Button></TableCell>
+                  <TableCell><Button onClick={()=>{sortByInt(filteredRows2,'order',sortOrder,setSortOrder)}}>ลำดับ</Button></TableCell>
+                  <TableCell><Button onClick={()=>{sortByDate(filteredRows2,'date',sortDate,setSortDate)}}>วันที่</Button></TableCell>
+                  <TableCell><Button onClick={()=>{sortByTime(filteredRows2,'time',sortTime,setSortTime)}}>เวลา</Button></TableCell>
+                  <TableCell><Button onClick={()=>{sortByString(filteredRows2,'name',sortName,setSortName)}}>ชื่อรายการ</Button></TableCell>
+                  <TableCell><Button onClick={()=>{sortByInt(filteredRows2,'count',sortCount,setSortCount)}}>จำนวน</Button></TableCell>
+                  <TableCell><Button onClick={()=>{sortByInt(filteredRows2,'price',sortPrice,setSortPrice)}}>ราคา</Button></TableCell>
+                  <TableCell><Button onClick={()=>{sortByString(filteredRows2,'status',sortStatus,setSortStatus)}}>สถานะ</Button></TableCell>
+                  <TableCell><Button onClick={()=>{sortByString(filteredRows2,'type',sortType,setSortType)}}>ประเภท</Button></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows2.map((row) => (
+                {filteredRows2.map((row) => (
                   <TableRow
                     key={row.name}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -380,7 +395,7 @@ export default function BasicTabs() {
           </TableContainer>
         </CustomTabPanel>
 
-        <CustomTabPanel value={value} index={2}>
+        <CustomTabPanel value={value} index={2} >
           <TableContainer>
             {renderDropdown("รายปี", years, year, handleChangeYear)}
             {renderDropdown("รายเดือน", months, month, handleChangeMonth)}
@@ -391,18 +406,19 @@ export default function BasicTabs() {
             ):(
                renderDropdown("รายวัน", days.slice(0, 32), day, handleChangeDay))}
             {renderDropdown("เวลา", times, time, handleChangeTime)}
+            <Button variant='contained' onClick={handleReset}>Reset</Button>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell><Button onClick={()=>{sortByOrder(rows3)}}>ลำดับ</Button></TableCell>
-                  <TableCell><Button onClick={()=>{sortByDate(rows3)}}>วันที่</Button></TableCell>
-                  <TableCell><Button onClick={()=>{sortByName(rows3)}}>ชื่อสินค้า</Button></TableCell>
-                  <TableCell><Button onClick={()=>{sortByMenuCount(rows3)}}>จำนวนสินค้า</Button></TableCell>
-                  <TableCell><Button onClick={()=>{sortByTotal(rows3)}}>ยอดขาย</Button></TableCell>
+                  <TableCell><Button onClick={()=>{sortByInt(filteredRows3,'order',sortOrder,setSortOrder)}}>ลำดับ</Button></TableCell>
+                  <TableCell><Button onClick={()=>{sortByDate(filteredRows3,'date',sortDate,setSortDate)}}>วันที่</Button></TableCell>
+                  <TableCell><Button onClick={()=>{sortByString(filteredRows3,'name',sortName,setSortName)}}>ชื่อสินค้า</Button></TableCell>
+                  <TableCell><Button onClick={()=>{sortByInt(filteredRows3,'menuCount',sortMenuCount,setSortMenuCount)}}>จำนวนสินค้า</Button></TableCell>
+                  <TableCell><Button onClick={()=>{sortByInt(filteredRows3,'total',sortTotal,setSortTotal)}}>ยอดขาย</Button></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows3.map((row) => (
+                {filteredRows3.map((row) => (
                   <TableRow
                     key={row.name}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}

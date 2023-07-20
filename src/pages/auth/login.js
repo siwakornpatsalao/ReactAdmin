@@ -18,16 +18,17 @@ import {
 } from '@mui/material';
 import { useAuth } from 'src/hooks/use-auth';
 import { Layout as AuthLayout } from 'src/layouts/auth/layout';
+import { useEffect } from 'react';
 
 const Page = () => {
+  const [store, setStore] = useState([]);
   const router = useRouter();
   const auth = useAuth();
   const [method, setMethod] = useState('email');
   const formik = useFormik({
     initialValues: {
-      email: 'demo@devias.io',
-      password: 'Password123!',
-      submit: null
+      email: '',
+      password: '',
     },
     validationSchema: Yup.object({
       email: Yup
@@ -42,8 +43,18 @@ const Page = () => {
     }),
     onSubmit: async (values, helpers) => {
       try {
-        await auth.signIn(values.email, values.password);
-        router.push('/');
+        const user = store.find(
+          (storedUser) => storedUser.email === values.email && storedUser.password === values.password
+        );
+
+        if (user) {
+          console.log('Login successful');
+          router.push('/');
+        } else {
+          helpers.setStatus({ success: false });
+          helpers.setErrors({ submit: 'Please check your email and password !!' });
+          helpers.setSubmitting(false);
+        }
       } catch (err) {
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });
@@ -67,11 +78,34 @@ const Page = () => {
     [auth, router]
   );
 
+  useEffect(() => {
+    const storedValuesString = localStorage.getItem("registrationValues");
+    let storedValues = [];
+
+    if (storedValuesString) {
+      storedValues = JSON.parse(storedValuesString);
+    }
+
+    setStore(storedValues);
+    console.log(store);
+
+
+    if (
+      storedValues.email &&
+      storedValues.password
+    ) {
+      formik.setValues({
+        email: storedValues.email,
+        password: storedValues.password,
+      });
+    }
+  },[])
+
   return (
     <>
       <Head>
         <title>
-          Login | Devias Kit
+          เข้าสู่ระแบบ
         </title>
       </Head>
       <Box
@@ -97,21 +131,20 @@ const Page = () => {
               sx={{ mb: 3 }}
             >
               <Typography variant="h4">
-                Login
+                เข้าสู่ระแบบ
               </Typography>
               <Typography
                 color="text.secondary"
                 variant="body2"
               >
-                Don&apos;t have an account?
-                &nbsp;
+               ยังไม่มีร้านค้าใช่หรือไม่
                 <Link
                   component={NextLink}
                   href="/auth/register"
                   underline="hover"
                   variant="subtitle2"
                 >
-                  Register
+                  ลงทะเบียนร้านค้า
                 </Link>
               </Typography>
             </Stack>
@@ -124,10 +157,7 @@ const Page = () => {
                 label="Email"
                 value="email"
               />
-              <Tab
-                label="Phone Number"
-                value="phoneNumber"
-              />
+          
             </Tabs>
             {method === 'email' && (
               <form
@@ -158,9 +188,7 @@ const Page = () => {
                     value={formik.values.password}
                   />
                 </Stack>
-                <FormHelperText sx={{ mt: 1 }}>
-                  Optionally you can skip.
-                </FormHelperText>
+            
                 {formik.errors.submit && (
                   <Typography
                     color="error"
@@ -179,14 +207,7 @@ const Page = () => {
                 >
                   Continue
                 </Button>
-                <Button
-                  fullWidth
-                  size="large"
-                  sx={{ mt: 3 }}
-                  onClick={handleSkip}
-                >
-                  Skip authentication
-                </Button>
+        
                 <Alert
                   color="primary"
                   severity="info"
@@ -198,19 +219,7 @@ const Page = () => {
                 </Alert>
               </form>
             )}
-            {method === 'phoneNumber' && (
-              <div>
-                <Typography
-                  sx={{ mb: 1 }}
-                  variant="h6"
-                >
-                  Not available in the demo
-                </Typography>
-                <Typography color="text.secondary">
-                  To prevent unnecessary costs we disabled this feature in the demo.
-                </Typography>
-              </div>
-            )}
+     
           </div>
         </Box>
       </Box>
