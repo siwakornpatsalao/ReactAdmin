@@ -52,6 +52,8 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,star
     const [menus, setMenus] = useState([]);
     const [categories, setCategories] = useState([]);
     const initial = useRef(false);
+    const [prev,setPrev] = useState(selectedDays);
+
 
     const isDataValid = (data) => data < 0;
     const isStartDateValid = (start_date) => start_date == '';
@@ -88,12 +90,13 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,star
         fetchMenus();
         fetchCategories();
       }
-    }, []);
-  
+    }, [selectedDays]);
+
     const handleDaySelect = (event, newSelectedDays) => {
+      // Create a new array with the selected days
       setSelectedDays(newSelectedDays);
     };
-  
+
     const renderMenus = () => {
       return menus.map((menu) => (
         <FormGroup key={menu._id}>
@@ -117,7 +120,7 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,star
     };
 
     const formatDate = (dateString) => {
-        return dateString.slice(0, 10); // Extract the first 10 characters (YYYY-MM-DD)
+        return dateString.slice(0, 10);
     };
   
     const renderPromotionDetails = () => {
@@ -149,13 +152,20 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,star
             }}
           />
           <h4>วัน</h4>
+          <div>
+            {prev.map((day) => (
+              <h1 key={day.day} value={day.day}>
+                {day.day}
+              </h1>
+            ))}
+          </div>
           <ToggleButtonGroup
             value={selectedDays}
             onChange={handleDaySelect}
             aria-label="Days of Week"
           >
             {daysOfWeek.map((day) => (
-              <ToggleButton key={day} value={day}>
+              <ToggleButton key={day} value={day} >
                 {day}
               </ToggleButton>
             ))}
@@ -351,29 +361,29 @@ export default function HorizontalLinearStepper() {
         const res = await fetch(`http://localhost:5000/promotions/${id}`);
         const data = await res.json();
         setPromotion(data);
+        setSelectedDays(data.days);
         setType(data.type);
         setProductType(data.productType);
         setData(data.data);
         setStart_Date(data.start_date);
         setFinish_Date(data.finish_date);
-        setSelectedDays(data.days);
         setStart_Time(data.start_time);
         setFinish_Time(data.finish_time);
         setTopic(data.topic);
         setMessage(data.message);
         setImage(data.image);
-        console.log(selectedDays);
       } catch (error) {
         console.error("Error fetching promotion:", error);
       }
     }
 
+    console.log(selectedDays);
+
     if (!initial.current) {
         initial.current = true;
-        console.log(initial.current);
         fetchPromotion();
     }
-  }, [id]);
+  }, [id,selectedDays]);
 
   const handleNext = () => {
     let newSkipped = skipped;
@@ -416,10 +426,22 @@ export default function HorizontalLinearStepper() {
       case 0:
         return <Step1 setType={setType} type={type} setProductType={setProductType} productType={productType} />;
       case 1:
-        return <Step2 type={type} productType={productType} selectedDays={selectedDays} setSelectedDays={setSelectedDays} 
-        data={data} setData={setData} start_date={start_date} setStart_Date={setStart_Date} 
-        finish_date={finish_date} setFinish_Date={setFinish_Date} start_time={start_time} setStart_Time={setStart_Time} 
-        finish_time={finish_time} setFinish_Time={setFinish_Time}/>;
+        return  <Step2
+            type={type}
+            productType={productType}
+            selectedDays={selectedDays}
+            setSelectedDays={setSelectedDays}
+            data={data}
+            setData={setData}
+            start_date={start_date}
+            setStart_Date={setStart_Date}
+            finish_date={finish_date}
+            setFinish_Date={setFinish_Date}
+            start_time={start_time}
+            setStart_Time={setStart_Time}
+            finish_time={finish_time}
+            setFinish_Time={setFinish_Time}
+          />
       case 2:
         return <Step3 topic={topic} setTopic={setTopic} message={message} setMessage={setMessage} image={image} setImage={setImage}/>;
       default:
@@ -427,23 +449,64 @@ export default function HorizontalLinearStepper() {
     }
   };
 
+  async function handleDeletePromotion(e) {
+    e.preventDefault();
+    Swal.fire({
+      title: "ต้องการลบ Promotion นี้หรือไม่",
+      confirmButtonText: "ยืนยัน",
+      showDenyButton: true, 
+      denyButtonText: "ยกเลิก",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        Swal.fire(`ลบ Promotion นี้แล้ว`, "", "success");
+        try {
+          const response = await fetch(`http://localhost:5000/promotions/${id}`, {
+            method: "DELETE",
+          });
+          if (!response.ok) {
+            throw new Error("Failed to delete this menu");
+          }
+          setImage(null);
+          setType("");
+          setProductType("");
+          setSelectedDays([]);
+          setData("");
+          setStart_Date("");
+          setFinish_Date("");
+          setStart_Time("");
+          setFinish_Time("");
+          setTopic("");
+          setMessage("");
+        } catch (error) {
+          console.log("Error:", error.message);
+        }
+      }
+    })
+  }
+
   async function handleSubmit(e){
     e.preventDefault();
     console.log(type);
     console.log(selectedDays);
-    const formattedSelectedDays = selectedDays.map((day) => ({ day }));
     if (!image || !type || !productType || !data || !start_date || !finish_date || !start_time || !finish_time || !topic || !message || !selectedDays) {
       Swal.fire("Error", "กรุณากรอกข้อมูลให้ถูกต้อง", "error");
       return;
     }
-    try{
-      const response = await fetch(`http://localhost:5000/promotions/${id}`, {
+    Swal.fire({
+      title: "ต้องการแก้ไข Promotion นี้หรือไม่",
+      confirmButtonText: "ยืนยัน",
+      showDenyButton: true,
+      denyButtonText: "ยกเลิก", 
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await fetch(`http://localhost:5000/promotions/${id}`, {
           method: "PUT",
           body: JSON.stringify({
             type: type,
             productType: productType,
             data: data,
-            days: formattedSelectedDays,
+            days: selectedDays,
             start_date: start_date,
             finish_date: finish_date,
             start_time: start_time,
@@ -451,24 +514,31 @@ export default function HorizontalLinearStepper() {
             image: image,
             topic: topic,
             message: message,
+            updated_at: new Date().toISOString(),
           }),
           headers: {
             "Content-Type": "application/json",
           },
         });
         if (!response.ok) {
+          Swal.fire(`แก้ไข Promotion ไม่สำเร็จ`, "", "error");
           throw new Error("Failed to add new promotion");
         }
+        Swal.fire(`แก้ไข Promotion นี้แล้ว`, "", "success");
+        setActiveStep(0);
+        setSkipped(new Set());
         const resJson = await response.json();
         console.log(resJson);
     }catch(error){
       console.log("Error:", error.message);
     }
+  }})
   }
 
   return (
     <DashboardLayout>
       <Box sx={{ width: '100%', padding: '20px' }}>
+      <Button style={{ background: 'red' }} variant="contained" onClick={handleDeletePromotion}>ลบ Promotion</Button>
         <Stepper activeStep={activeStep} sx={{ padding: '50px' }}>
           {steps.map((label, index) => {
             const stepProps = {};
@@ -511,11 +581,11 @@ export default function HorizontalLinearStepper() {
                 Back
               </Button>
               <Box sx={{ flex: '1 1 auto' }} />
-              {isStepOptional(activeStep) && (
+              {/* {isStepOptional(activeStep) && (
                 <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
                   Skip
                 </Button>
-              )}
+              )} */}
 
               <Button onClick={activeStep === steps.length - 1 ? handleSubmit : handleNext}>
                 {activeStep === steps.length - 1 ? 'Finish' : 'Next'}

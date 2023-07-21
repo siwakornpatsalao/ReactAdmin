@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import { withAuthGuard } from 'src/hocs/with-auth-guard';
 import { SideNav } from './side-nav';
 import { TopNav } from './top-nav';
+import { padding } from '@mui/system';
 
 const SIDE_NAV_WIDTH = 280;
 
@@ -20,7 +21,8 @@ const LayoutContainer = styled('div')({
   display: 'flex',
   flex: '1 1 auto',
   flexDirection: 'column',
-  width: '100%'
+  width: '100%',
+  padding: '30px',
 });
 
 export const Layout = withAuthGuard((props) => {

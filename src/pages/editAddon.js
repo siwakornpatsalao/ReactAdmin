@@ -12,6 +12,11 @@ import Checkbox from '@mui/material/Checkbox';
 import Swal from "sweetalert2";
 import { useRouter } from 'next/router';
 
+const disabledTabStyle = {
+  pointerEvents: 'none',
+  opacity: 0.5,
+};
+
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -95,6 +100,7 @@ export default function BasicTabs() {
               amount: parseInt(amount) + parseInt(editAmount),
               editAmount: editAmount,
               unit: unit,
+              updated_at: new Date().toISOString(),
             }),
             headers: {
               'Content-Type': 'application/json',
@@ -261,6 +267,7 @@ export default function BasicTabs() {
               options: options,
               require: isRequired ? 'necessary' : 'not',
               selection: isRequired2 ? 'one' : 'many',
+              updated_at: new Date().toISOString(),
             }),
             headers: {
               'Content-Type': 'application/json',
@@ -276,7 +283,6 @@ export default function BasicTabs() {
         }
       }
     })
-    
   }
 
   async function handleDeleteOption(e) {
@@ -318,7 +324,11 @@ export default function BasicTabs() {
 
 
     if(name==''){
-
+      setValue(1);
+      //disable addon tab
+    }else if(optionGroupName==''){
+      setValue(0);
+      //disable optiongroup tab
     }
     //if from addon do fetchAddonData **BUT** if from option do fetchOptionGroup
     
@@ -357,7 +367,7 @@ export default function BasicTabs() {
       fetchOptionGroup();
       fetchAddonData();
     }
-  }, [id]);
+  }, [id, name,optionGroupName]);
 
   return (
     <DashboardLayout>
@@ -371,8 +381,8 @@ export default function BasicTabs() {
           aria-label="basic tabs example"
           centered
         >
-          <Tab label="เมนูเพิ่มเติม" {...a11yProps(0)} />
-          <Tab label="ตัวเลือก" {...a11yProps(1)} />
+          <Tab style={!name ? disabledTabStyle : {}} label="เมนูเพิ่มเติม" {...a11yProps(0)} />
+          <Tab style={!optionGroupName ? disabledTabStyle : {}} label="ตัวเลือก" {...a11yProps(1)} />
         </Tabs>
       </Box>
 
@@ -427,12 +437,12 @@ export default function BasicTabs() {
               label="จำนวน"
               value={amount}
               color="secondary"
+              disabled
               focused
               onChange={(e) => setAmount(e.target.value)}
             />
             <TextField
               label="แก้ไขจำนวน"
-              disabled
               value={editAmount}
               color="secondary"
               error={isEditAmountValid(editAmount)}

@@ -86,6 +86,7 @@ export default function BasicTabs() {
               description: description,
               price: price,
               category: category,
+              updated_at: new Date().toISOString(),
             }),
             headers: {
               "Content-Type": "application/json",
@@ -109,8 +110,8 @@ export default function BasicTabs() {
     Swal.fire({
       title: "ต้องการลบสินค้านี้หรือไม่",
       confirmButtonText: "ยืนยัน",
-      showDenyButton: true, // Add cancel button
-      denyButtonText: "ยกเลิก", // Text for cancel button
+      showDenyButton: true, 
+      denyButtonText: "ยกเลิก", 
     }).then(async (result) => {
       if (result.isConfirmed) {
         Swal.fire(`ลบสินค้าชิ้นนี้แล้ว`, "", "success");

@@ -392,39 +392,61 @@ export default function HorizontalLinearStepper() {
     e.preventDefault();
     console.log(type);
     console.log(selectedDays);
-    const formattedSelectedDays = selectedDays.map((day) => ({ day }));
     if (!image || !type || !productType || !data || !start_date || !finish_date || !start_time || !finish_time || !topic || !message ||!selectedDays) {
       Swal.fire("Error", "กรุณากรอกข้อมูลให้ถูกต้อง", "error");
       return;
     }
-    try{
-      const response = await fetch("http://localhost:5000/promotions", {
-          method: "POST",
-          body: JSON.stringify({
-            type: type,
-            productType: productType,
-            data: data,
-            days: formattedSelectedDays,
-            start_date: start_date,
-            finish_date: finish_date,
-            start_time: start_time,
-            finish_time: finish_time,
-            image: image,
-            topic: topic,
-            message: message,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        if (!response.ok) {
-          throw new Error("Failed to add new promotion");
+    Swal.fire({
+      title: "ต้องการเพิ่ม Promotion นี้หรือไม่",
+      confirmButtonText: "ยืนยัน",
+      showDenyButton: true,
+      denyButtonText: "ยกเลิก", 
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await fetch("http://localhost:5000/promotions", {
+              method: "POST",
+              body: JSON.stringify({
+                type: type,
+                productType: productType,
+                data: data,
+                days: selectedDays,
+                start_date: start_date,
+                finish_date: finish_date,
+                start_time: start_time,
+                finish_time: finish_time,
+                image: image,
+                topic: topic,
+                message: message,
+              }),
+              headers: {
+                "Content-Type": "application/json",
+              },
+            });
+            if (!response.ok) {
+              Swal.fire(`เพิ่ม Promotion ไม่สำเร็จ`, "", "error");
+              throw new Error("Failed to add new promotion");
+            }
+            Swal.fire(`เพิ่ม Promotion แล้ว`, "", "success");
+            const resJson = await response.json();
+            console.log(resJson);
+            setImage(null);
+            setType("");
+            setProductType("");
+            setSelectedDays([]);
+            setData("");
+            setStart_Date("");
+            setFinish_Date("");
+            setStart_Time("");
+            setFinish_Time("");
+            setTopic("");
+            setMessage("");
+            setActiveStep(0);
+            setSkipped(new Set());
+        }catch(error){
+          console.log("Error:", error.message);
         }
-        const resJson = await response.json();
-        console.log(resJson);
-    }catch(error){
-      console.log("Error:", error.message);
-    }
+      }})
   }
 
   return (
@@ -472,11 +494,11 @@ export default function HorizontalLinearStepper() {
                 Back
               </Button>
               <Box sx={{ flex: '1 1 auto' }} />
-              {isStepOptional(activeStep) && (
+              {/* {isStepOptional(activeStep) && (
                 <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
                   Skip
                 </Button>
-              )}
+              )} */}
 
               <Button onClick={activeStep === steps.length - 1 ? handleSubmit : handleNext}>
                 {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
