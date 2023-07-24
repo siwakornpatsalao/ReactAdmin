@@ -222,7 +222,6 @@ export default function BasicTabs() {
       denyButtonText: "ยกเลิก", 
     }).then(async (result) => {
       if (result.isConfirmed) {
-        Swal.fire(`เพิ่มกลุ่มตัวเลือกแล้ว`, "", "success");
         try {
           console.log(optionGroupName)
           const response = await fetch('http://localhost:5000/optiongroups', {
@@ -240,6 +239,7 @@ export default function BasicTabs() {
           if (!response.ok) {
             throw new Error('Failed to add new optionGroups');
           }
+          Swal.fire(`เพิ่มกลุ่มตัวเลือกแล้ว`, "", "success");
           const resJson = await response.json();
           console.log(resJson);
           setOptionGroupName('');

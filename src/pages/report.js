@@ -37,11 +37,11 @@ function createData2(order, date, time, name, count, price, status, type) {
 }
 
 const rows2 = [
-  createData2(1, '06/16/2023', '09:00:00', 'วิปครีม', 100, 10, 'อัปเดต', 'เมนูเพิ่มเติม'),
-  createData2(2, '06/16/2023', '09:23:25', 'ไส้', '-', '-', 'อัปเดต', 'ตัวเลือก'),
+  createData2(1, '06/16/2023', '10:00:00', 'วิปครีม', 100, 10, 'อัปเดต', 'เมนูเพิ่มเติม'),
+  createData2(2, '06/16/2023', '13:23:25', 'ไส้', '-', '-', 'อัปเดต', 'ตัวเลือก'),
   createData2(3, '06/14/2023', '08:06:23', 'ชีส', 100, 10, 'สร้าง', 'เมนูเพิ่มเติม'),
   createData2(4, '06/14/2023', '08:31:11', 'ไข่ดาว', 30, 10, 'สร้าง', 'เมนูเพิ่มเติม'),
-  createData2(5, '06/14/2023', '08:45:34', 'แป้ง', '-', '-', 'สร้าง', 'ตัวเลือก'),
+  createData2(5, '06/14/2023', '17:45:34', 'แป้ง', '-', '-', 'สร้าง', 'ตัวเลือก'),
 ];
 
 function createData3(order, date, name, menuCount, total) {
@@ -71,9 +71,11 @@ for (let i = 1; i <= 31; i++) {
   days.push(i);
 }
 
-const times = [
-    '09:00:00 - 12:00:00', '12:01:00 - 15:00:00' , '15:01:00 - 18:00:00'
-]
+const timeArray = [];
+for (let hour = 0; hour < 24; hour++) {
+  const formattedHour = hour.toString().padStart(2, '0');
+  timeArray.push(`${formattedHour}:00:00`);
+}
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -129,6 +131,7 @@ function renderDropdown(label, options, value, onChange) {
   );
 }
 
+
 export default function BasicTabs() {
   const [value, setValue] = useState(0);
   const [year, setYear] = useState('');
@@ -149,6 +152,8 @@ export default function BasicTabs() {
   const [filteredRows, setFilteredRows] = useState(rows);
   const [filteredRows2, setFilteredRows2] = useState(rows2);
   const [filteredRows3, setFilteredRows3] = useState(rows3);
+  const [startTime, setStartTime] = useState('');
+  const [finishTime, setFinishTime] = useState('');
 
   function sortByInt(row,column,sort,setSort){
     if(sort === 'asc'){
@@ -181,10 +186,28 @@ export default function BasicTabs() {
   }
 
   function convertTimeToMinutes(timeString) {
-    const [hours, minutes] = timeString.split(":");
-    return parseInt(hours) * 60 + parseInt(minutes);
+    const [hours, minutes, seconds] = timeString.split(":");
+    return parseInt(hours) * 60 + parseInt(minutes) + parseInt(seconds) / 60;
   }
 
+  function formatTimeFromHours(totalHours) {
+    if (typeof totalHours !== 'number' || isNaN(totalHours) || totalHours < 0) {
+      return '00:00:00';
+    }
+  
+    const hours = Math.floor(totalHours);
+    const remainingHours = totalHours - hours;
+    const minutes = Math.floor(remainingHours * 60);
+    const seconds = Math.floor((remainingHours * 60 - minutes) * 60);
+  
+    const formattedHours = hours.toString().padStart(2, '0');
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+    const formattedSeconds = seconds.toString().padStart(2, '0');
+  
+    return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+  }
+  
+  
   function sortByTime(row) {
     if (sortTime === "asc") {
       row.sort((a, b) => {
@@ -208,6 +231,8 @@ export default function BasicTabs() {
     setMonth('');
     setDay('');
     setTime('');
+    setStartTime('');
+    setFinishTime('');
   }
 
   const handleChange = (event, newValue) => {
@@ -234,6 +259,14 @@ export default function BasicTabs() {
     setTime(event.target.value);
   };
 
+  const handleChangeStartTime = (event) => {
+    setStartTime(event.target.value);
+  };
+  
+  const handleChangeFinishTime = (event) => {
+    setFinishTime(event.target.value);
+  };
+
   // filter Table 1
 
   useEffect(() => {
@@ -251,27 +284,31 @@ export default function BasicTabs() {
     }
     
   }, [year,month]);
-
+  
   // filter Table 2
 
   useEffect(() => {
-    if (year) {
-      const filteredRowsByYear = rows2.filter((row) => row.date.endsWith(`/${year}`));
-      setFilteredRows2(filteredRowsByYear);
-    }else if(month){
-      const filteredRowsByMonth = rows2.filter((row) => row.date.startsWith(`0${month}`));
-      setFilteredRows2(filteredRowsByMonth);
-    }else if(day){
-      const filteredRowsByDay = rows2.filter((row) => parseInt(row.date.split('/')[1]) === day);
-      setFilteredRows2(filteredRowsByDay);
-    }else if(year && month){
-      const filteredRowsByMonth = rows2.filter((row) => row.date.startsWith(`0${month}`) && row.date.endsWith(`/${year}`));
-      setFilteredRows2(filteredRowsByMonth);
-    }else{
+  function isTimeInRange(time, range) {
+    const { startTime, finishTime } = range;
+    const timeToCheck = time;
+    const start = formatTimeFromHours(startTime)
+    const finish = formatTimeFromHours(finishTime)
+    return timeToCheck >= start && timeToCheck <= finish;
+  }
+
+    if (year || month || day || startTime || finishTime ) {
+      const filteredRowsByYear = rows2.filter((row) => {
+      const yearMatches = !year || row.date.endsWith(`/${year}`);
+      const monthMatches = !month || row.date.startsWith(`0${month}`);
+      const dayMatches = !day || parseInt(row.date.split('/')[1]) === day;
+      const timeMatches = !startTime || !finishTime || isTimeInRange(row.time, { startTime, finishTime });
+      return yearMatches && monthMatches && dayMatches && timeMatches;
+    });
+    setFilteredRows2(filteredRowsByYear);
+   }else {
       setFilteredRows2(rows2);
-    }
-    
-  }, [year,month,day]);
+   }
+  }, [year, month, day, time, startTime, finishTime]);
 
   // filter Table 3
 
@@ -358,6 +395,12 @@ export default function BasicTabs() {
               renderDropdown("รายวัน", days.slice(0, 30), day, handleChangeDay)
             ):(
                renderDropdown("รายวัน", days.slice(0, 31), day, handleChangeDay))}
+            {/* {renderDropdown("เวลา", times, time, handleChangeTime)} */}
+
+            {renderDropdown("เวลาเริ่มต้น", timeArray, startTime, handleChangeStartTime)}
+            {renderDropdown("เวลาสิ้นสุด", timeArray, finishTime, handleChangeFinishTime)}
+
+            
             <Button variant='contained' onClick={handleReset}>Reset</Button>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
@@ -405,7 +448,7 @@ export default function BasicTabs() {
               renderDropdown("รายวัน", days.slice(0, 31), day, handleChangeDay)
             ):(
                renderDropdown("รายวัน", days.slice(0, 32), day, handleChangeDay))}
-            {renderDropdown("เวลา", times, time, handleChangeTime)}
+            {/* {renderDropdown("เวลา", times, time, handleChangeTime)} */}
             <Button variant='contained' onClick={handleReset}>Reset</Button>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>

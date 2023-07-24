@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import { Box, Button, Link, Stack, TextField, Typography } from "@mui/material";
 import { useAuth } from "src/hooks/use-auth";
 import { Layout as AuthLayout } from "src/layouts/auth/layout";
+import Swal from 'sweetalert2';
 
 const Page = () => {
   const [store, setStore] = useState([]);
@@ -45,12 +46,41 @@ const Page = () => {
         };
         setStore([...store, storedValues]);
 
-        localStorage.setItem("registrationValues", JSON.stringify(store));
-        console.log("Stored Values:", store);
-
         if (values.password !== values.passwordConfirm) {
           throw new Error("รหัสผ่านไม่ตรงกัน");
         }
+
+        Swal.fire({
+          title: "ต้องการเพิ่มชื่อผู้ใช้นี้หรือไม่",
+          confirmButtonText: "ยืนยัน",
+          showDenyButton: true,
+          denyButtonText: "ยกเลิก", 
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            try {
+              const response = await fetch('http://localhost:5000/user', {
+                method: 'POST',
+                body: JSON.stringify({
+                  name: storedValues.name,
+                  phone: storedValues.number,
+                  email: storedValues.email,
+                  password: storedValues.password,
+                }),
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              });
+              if (!response.ok) {
+                throw new Error('Failed to add new User');
+              }
+              Swal.fire(`เพิ่มผู้ใช้แล้ว`, "", "success");
+              const resJson = await response.json();
+              console.log(resJson);
+              formik.resetForm();
+            } catch (error) {
+              console.log('Error:', error.message);
+            }
+          }})
 
         await auth.signUp(
           values.email,
@@ -60,7 +90,9 @@ const Page = () => {
           values.number
         );
         router.push("/");
-      } catch (err) {}
+      } catch (err) {
+
+      }
     },
   });
 

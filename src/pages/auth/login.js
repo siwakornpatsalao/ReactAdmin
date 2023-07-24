@@ -18,12 +18,13 @@ import {
 } from '@mui/material';
 import { useAuth } from 'src/hooks/use-auth';
 import { Layout as AuthLayout } from 'src/layouts/auth/layout';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 const Page = () => {
   const [store, setStore] = useState([]);
   const router = useRouter();
   const auth = useAuth();
+  const initial = useRef(false);
   const [method, setMethod] = useState('email');
   const formik = useFormik({
     initialValues: {
@@ -79,26 +80,24 @@ const Page = () => {
   );
 
   useEffect(() => {
-    const storedValuesString = localStorage.getItem("registrationValues");
-    let storedValues = [];
 
-    if (storedValuesString) {
-      storedValues = JSON.parse(storedValuesString);
+    const fetchUser = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/user');
+        const data = await response.json();
+        setStore(data); // Update the state with fetched data
+        console.log(data);
+      } catch (error) {
+        console.error('Error fetching menu:', error);
+      }
+    };
+
+    if (!initial.current) {
+      initial.current = true;
+      console.log(initial.current);
+      fetchUser();
     }
 
-    setStore(storedValues);
-    console.log(store);
-
-
-    if (
-      storedValues.email &&
-      storedValues.password
-    ) {
-      formik.setValues({
-        email: storedValues.email,
-        password: storedValues.password,
-      });
-    }
   },[])
 
   return (

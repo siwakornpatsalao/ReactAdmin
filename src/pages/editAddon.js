@@ -85,8 +85,8 @@ export default function BasicTabs() {
     Swal.fire({
       title: "ยืนยันการแก้ไขเมนูเพิ่มเติมนี้หรือไม่",
       confirmButtonText: "ยืนยัน",
-      showDenyButton: true, // Add cancel button
-      denyButtonText: "ยกเลิก", // Text for cancel button
+      showDenyButton: true, 
+      denyButtonText: "ยกเลิก",
     }).then(async (result) => {
       if (result.isConfirmed) {
         Swal.fire(`แก้ไขเมนูเพิ่มเติมชิ้นนี้แล้ว`, "", "success");
