@@ -172,11 +172,11 @@ export default function BasicTabs() {
       `<input id="swal-input2" class="swal2-input" placeholder="ราคา" value=${option.price}>`,
       showDenyButton: true,
       confirmButtonText: "ยืนยัน",
-      showCancelButton: true, // Add cancel button
-      cancelButtonText: "ยกเลิก", // Text for cancel button
+      showCancelButton: true, 
+      cancelButtonText: "ยกเลิก", 
       denyButtonText: `ลบตัวเลือก`,
       customClass: {
-        content: "custom-swal-content", // Custom class for the Swal content
+        content: "custom-swal-content", 
       },
     }).then(async (result) => {
       if (result.isConfirmed) {

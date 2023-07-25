@@ -19,17 +19,43 @@ import TableRow from '@mui/material/TableRow';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import Collapse from '@mui/material/Collapse';
+import Typography from '@mui/material/Typography';
+import { IconButton } from "@mui/material";
+import { AiFillCaretDown, AiFillCaretUp } from 'react-icons/ai';
+import TablePagination from '@mui/material/TablePagination';
+import { useTheme } from '@mui/material/styles';
+import LastPageIcon from '@mui/icons-material/LastPage';
+import FirstPageIcon from '@mui/icons-material/FirstPage';
+import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 
-function createData(order, date, orderCount, menuCount, total) {
-  return { order, date, orderCount, menuCount, total };
+const dropDown = [
+  createDrop(1, 'เครปไส้แตก', '12:31:00', 81),
+  createDrop(2, 'เครป 2 ไส้, ขนมปังชีส', '13:35:00', 79),
+  createDrop(3, 'เครป 1 ไส้', '18:01:00', 29),
+  createDrop(4, 'เครปไส้แตก', '18:54:00', 71),
+  createDrop(5, 'เครปไส้แตก', '20:47:00', 71),
+  createDrop(6, 'เครป 2 ไส้', '21:46:32', 29),
+]
+
+const dropDown2 = [
+  createDrop(1, 'เครปไส้แตก', '12:31:00', 81),
+  createDrop(2, 'เครป 2 ไส้, ขนมปังชีส', '13:35:00', 79),
+  createDrop(3, 'เครป 1 ไส้', '18:01:00', 29),
+]
+
+function createData(order, date, orderCount, menuCount, total,dropDown) {
+  return { order, date, orderCount, menuCount, total, dropDown };
 }
 
 const rows = [
-  createData(1, '06/16/2023', 9, 11, 560),
-  createData(2, '06/15/2023', 10, 14, 760),
-  createData(3, '06/14/2023', 8, 9, 410),
-  createData(4, '06/13/2023', 11, 13, 700),
-  createData(5, '06/12/2023', 7, 11, 590),
+  createData(1, '06/16/2023', 9, 11, 560, dropDown),
+  createData(2, '06/15/2023', 10, 14, 600, dropDown2),
+  createData(3, '06/14/2023', 11, 13, 780, dropDown),
+  createData(4, '06/13/2023', 8, 14, 760, dropDown2),
+  createData(5, '06/12/2023', 10, 12, 750, dropDown),
+  createData(6, '06/11/2023', 11, 13, 800, dropDown)
 ];
 
 function createData2(order, date, time, name, count, price, status, type) {
@@ -42,6 +68,7 @@ const rows2 = [
   createData2(3, '06/14/2023', '08:06:23', 'ชีส', 100, 10, 'สร้าง', 'เมนูเพิ่มเติม'),
   createData2(4, '06/14/2023', '08:31:11', 'ไข่ดาว', 30, 10, 'สร้าง', 'เมนูเพิ่มเติม'),
   createData2(5, '06/14/2023', '17:45:34', 'แป้ง', '-', '-', 'สร้าง', 'ตัวเลือก'),
+  createData2(6, '06/13/2023', '18:45:34', 'ไข่เจียว', 50, 10, 'สร้าง', 'เมนูเพิ่มเติม'),
 ];
 
 function createData3(order, date, name, menuCount, total) {
@@ -54,7 +81,12 @@ const rows3 = [
   createData3(3, '06/14/2023', 'เครป 1 ไส้', 6, 400),
   createData3(4, '06/13/2023', 'เครปไส้แตก', 4, 250),
   createData3(5, '06/12/2023', 'เครป 5 ไส้', 1, 60),
+  createData3(6, '06/11/2023', 'เครป 4 ไส้', 3, 140),
 ];
+
+function createDrop(order, menu, time, total){
+  return {order,menu,time,total};
+}
 
 const years = [];
 for (let i = 2023; i >= 2013; i--) {
@@ -131,6 +163,67 @@ function renderDropdown(label, options, value, onChange) {
   );
 }
 
+function TablePaginationActions(props) {
+  const theme = useTheme();
+  const { count, page, rowsPerPage, onPageChange } = props;
+
+  const handleFirstPageButtonClick = (event) => {
+    onPageChange(event, 0);
+  };
+
+  const handleBackButtonClick = (event) => {
+    onPageChange(event, page - 1);
+  };
+
+  const handleNextButtonClick = (event) => {
+    onPageChange(event, page + 1);
+  };
+
+  const handleLastPageButtonClick = (event) => {
+    onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
+  };
+
+  return (
+    <Box sx={{ flexShrink: 0, ml: 2.5 }}>
+      <IconButton
+        onClick={handleFirstPageButtonClick}
+        disabled={page === 0}
+        aria-label="first page"
+      >
+        {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
+      </IconButton>
+      <IconButton
+        onClick={handleBackButtonClick}
+        disabled={page === 0}
+        aria-label="previous page"
+      >
+        {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+      </IconButton>
+      <IconButton
+        onClick={handleNextButtonClick}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        aria-label="next page"
+      >
+        {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+      </IconButton>
+      <IconButton
+        onClick={handleLastPageButtonClick}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        aria-label="last page"
+      >
+        {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
+      </IconButton>
+    </Box>
+  );
+}
+
+TablePaginationActions.propTypes = {
+  count: PropTypes.number.isRequired,
+  onPageChange: PropTypes.func.isRequired,
+  page: PropTypes.number.isRequired,
+  rowsPerPage: PropTypes.number.isRequired,
+};
+
 
 export default function BasicTabs() {
   const [value, setValue] = useState(0);
@@ -154,6 +247,21 @@ export default function BasicTabs() {
   const [filteredRows3, setFilteredRows3] = useState(rows3);
   const [startTime, setStartTime] = useState('');
   const [finishTime, setFinishTime] = useState('');
+  const [open, setOpen] = useState(Array(rows.length).fill(false));
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [paginatedRows, setPaginatedRows] = useState(rows);
+  const [paginatedRows2, setPaginatedRows2] = useState(rows2);
+  const [paginatedRows3, setPaginatedRows3] = useState(rows3);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   function sortByInt(row,column,sort,setSort){
     if(sort === 'asc'){
@@ -233,6 +341,9 @@ export default function BasicTabs() {
     setTime('');
     setStartTime('');
     setFinishTime('');
+    setPage(0);
+    setRowsPerPage(5);
+    setOpen(Array(rows.length).fill(false));
   }
 
   const handleChange = (event, newValue) => {
@@ -241,6 +352,9 @@ export default function BasicTabs() {
     setMonth(''); 
     setDay(''); 
     setTime('');
+    setPage(0);
+    setRowsPerPage(5);
+    setOpen(Array(rows.length).fill(false));
   };
 
   const handleChangeYear = (event) => {
@@ -255,10 +369,6 @@ export default function BasicTabs() {
     setDay(event.target.value);
   };
 
-  const handleChangeTime = (event) => {
-    setTime(event.target.value);
-  };
-
   const handleChangeStartTime = (event) => {
     setStartTime(event.target.value);
   };
@@ -266,6 +376,16 @@ export default function BasicTabs() {
   const handleChangeFinishTime = (event) => {
     setFinishTime(event.target.value);
   };
+
+  function handlePopUp(row, row1){
+    Swal.fire({
+      title: "รายการคำสั่งซื้อ",
+      html: `ชื่อ: ${row.menu} <br><br>
+             ราคารวม: ${row.total} บาท <br><br>
+             วันที่ ${row1.date}
+             เวลา: ${row.time}`,
+    })
+  }
 
   // filter Table 1
 
@@ -284,17 +404,25 @@ export default function BasicTabs() {
     }
     
   }, [year,month]);
+
+  // Pagination 1
+
+  useEffect(() => {
+    const startIndex = page * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+    setPaginatedRows(filteredRows.slice(startIndex, endIndex));
+  }, [filteredRows, page, rowsPerPage]);
   
   // filter Table 2
 
   useEffect(() => {
-  function isTimeInRange(time, range) {
-    const { startTime, finishTime } = range;
-    const timeToCheck = time;
-    const start = formatTimeFromHours(startTime)
-    const finish = formatTimeFromHours(finishTime)
-    return timeToCheck >= start && timeToCheck <= finish;
-  }
+    function isTimeInRange(time, range) {
+      const { startTime, finishTime } = range;
+      const timeToCheck = time;
+      const start = formatTimeFromHours(startTime)
+      const finish = formatTimeFromHours(finishTime)
+      return timeToCheck >= start && timeToCheck <= finish;
+    }
 
     if (year || month || day || startTime || finishTime ) {
       const filteredRowsByYear = rows2.filter((row) => {
@@ -305,10 +433,19 @@ export default function BasicTabs() {
       return yearMatches && monthMatches && dayMatches && timeMatches;
     });
     setFilteredRows2(filteredRowsByYear);
-   }else {
-      setFilteredRows2(rows2);
-   }
+    }else {
+        setFilteredRows2(rows2);
+    }
+
   }, [year, month, day, time, startTime, finishTime]);
+
+  // Pagination 2
+
+  useEffect(() => {
+    const startIndex = page * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+    setPaginatedRows2(filteredRows2.slice(startIndex, endIndex));
+  }, [filteredRows2, page, rowsPerPage]);
 
   // filter Table 3
 
@@ -330,6 +467,14 @@ export default function BasicTabs() {
     }
     
   }, [year,month,day]);
+
+  // Pagination 3
+
+  useEffect(() => {
+    const startIndex = page * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+    setPaginatedRows3(filteredRows3.slice(startIndex, endIndex));
+  }, [filteredRows3, page, rowsPerPage]);
 
   return (
     <DashboardLayout>
@@ -362,23 +507,105 @@ export default function BasicTabs() {
                     <TableCell><Button onClick={()=>{sortByInt(filteredRows,'orderCount',sortOrderCount,setSortOrderCount)}}>จำนวนออเดอร์</Button></TableCell>
                     <TableCell><Button onClick={()=>{sortByInt(filteredRows,'menuCount',sortMenuCount,setSortMenuCount)}}>จำนวนสินค้า</Button></TableCell>
                     <TableCell><Button onClick={()=>{sortByInt(filteredRows,'total',sortTotal,setSortTotal)}}>จำนวนยอดขาย</Button></TableCell>
+                    <TableCell></TableCell>
                   </TableRow>
                 </TableHead>
+
                 <TableBody>
-                  {filteredRows.map((row) => (
-                    <TableRow
+                  {paginatedRows.map((row, index) => (
+                    <React.Fragment>
+                      <TableRow
                       key={row.name}
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                     >
-                      <TableCell component="th" scope="row">
-                        {row.order}
-                      </TableCell>
+                      <TableCell>{row.order}</TableCell>
                       <TableCell>{row.date}</TableCell>
                       <TableCell>{row.orderCount}</TableCell>
                       <TableCell>{row.menuCount}</TableCell>
-                      <TableCell>{row.total} บาท</TableCell>
+                      <TableCell>{`${row.total} บาท`}</TableCell>
+                      <TableCell>
+                      <IconButton
+                          aria-label="expand row"
+                          size="small"
+                          onClick={() => {
+                            const newOpen = [...open];
+                            newOpen[index] = !newOpen[index];
+                            setOpen(newOpen);
+                          }}
+                        >
+                          {open[index] ? <AiFillCaretUp style={{ color: 'blue' }}/> : <AiFillCaretDown />}
+                        </IconButton>
+                      </TableCell>
                     </TableRow>
+                    <TableRow>
+                        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+                          <Collapse in={open[index]} timeout="auto" unmountOnExit>
+                            <Box sx={{ margin: 1 }}>
+                              <Typography variant="h6" gutterBottom component="div">
+                                Dropdown
+                              </Typography>
+                              <Table size="small" aria-label="purchases">
+                                <TableHead>
+                                  <TableRow>
+                                    <TableCell>ลำดับ</TableCell>
+                                    <TableCell>เมนู</TableCell>
+                                    <TableCell>เวลา</TableCell>
+                                    <TableCell>ราคา</TableCell>
+                                  </TableRow>
+                                </TableHead>
+
+                                <TableBody>
+                                  {row.dropDown.map((historyRow) => (
+                                    <TableRow onClick={() => handlePopUp(historyRow, row)} key={historyRow.order}>
+                                      <TableCell component="th" scope="row">
+                                        {historyRow.order}
+                                      </TableCell>
+                                      <TableCell>{historyRow.menu}</TableCell>
+                                      <TableCell>{historyRow.time}</TableCell>
+                                      <TableCell>{historyRow.total} บาท</TableCell>
+                                    </TableRow>
+                                  ))}
+                                  {/* <TablePagination
+                                    rowsPerPageOptions={[5, 10, 25, { label: 'All', value: 1000000 }]}
+                                    colSpan={3}
+                                    count={paginatedRows.length} // Update this line for each tab
+                                    rowsPerPage={rowsPerPage}
+                                    page={page}
+                                    SelectProps={{
+                                      inputProps: {
+                                        'aria-label': 'rows per page',
+                                      },
+                                      native: true,
+                                    }}
+                                    onPageChange={handleChangePage}
+                                    onRowsPerPageChange={handleChangeRowsPerPage}
+                                    ActionsComponent={TablePaginationActions}
+                                  /> */}
+                                </TableBody>
+
+                              </Table>
+                            </Box>
+                          </Collapse>
+                        </TableCell>
+                      </TableRow>
+                    </React.Fragment>
                   ))}
+                    <TablePagination
+                      rowsPerPageOptions={[5, 10, 25, { label: 'All', value: 1000000 }]}
+                      colSpan={3}
+                      count={filteredRows.length} // Update this line for each tab
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      SelectProps={{
+                        inputProps: {
+                          'aria-label': 'rows per page',
+                        },
+                        native: true,
+                      }}
+                      onPageChange={handleChangePage}
+                      onRowsPerPageChange={handleChangeRowsPerPage}
+                      ActionsComponent={TablePaginationActions}
+                    />
                 </TableBody>
               </Table>
             </TableContainer>
@@ -395,12 +622,10 @@ export default function BasicTabs() {
               renderDropdown("รายวัน", days.slice(0, 30), day, handleChangeDay)
             ):(
                renderDropdown("รายวัน", days.slice(0, 31), day, handleChangeDay))}
-            {/* {renderDropdown("เวลา", times, time, handleChangeTime)} */}
 
             {renderDropdown("เวลาเริ่มต้น", timeArray, startTime, handleChangeStartTime)}
             {renderDropdown("เวลาสิ้นสุด", timeArray, finishTime, handleChangeFinishTime)}
 
-            
             <Button variant='contained' onClick={handleReset}>Reset</Button>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
@@ -416,7 +641,7 @@ export default function BasicTabs() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {filteredRows2.map((row) => (
+                {paginatedRows2.map((row) => (
                   <TableRow
                     key={row.name}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -434,6 +659,22 @@ export default function BasicTabs() {
                   </TableRow>
                 ))}
               </TableBody>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+                colSpan={3}
+                count={filteredRows2.length} // Update this line for each tab
+                rowsPerPage={rowsPerPage}
+                page={page}
+                SelectProps={{
+                  inputProps: {
+                    'aria-label': 'rows per page',
+                  },
+                  native: true,
+                }}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                ActionsComponent={TablePaginationActions}
+              />
             </Table>
           </TableContainer>
         </CustomTabPanel>
@@ -448,7 +689,6 @@ export default function BasicTabs() {
               renderDropdown("รายวัน", days.slice(0, 31), day, handleChangeDay)
             ):(
                renderDropdown("รายวัน", days.slice(0, 32), day, handleChangeDay))}
-            {/* {renderDropdown("เวลา", times, time, handleChangeTime)} */}
             <Button variant='contained' onClick={handleReset}>Reset</Button>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
@@ -461,7 +701,7 @@ export default function BasicTabs() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {filteredRows3.map((row) => (
+                {paginatedRows3.map((row) => (
                   <TableRow
                     key={row.name}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -476,6 +716,22 @@ export default function BasicTabs() {
                   </TableRow>
                 ))}
               </TableBody>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+                colSpan={3}
+                count={filteredRows3.length} // Update this line for each tab
+                rowsPerPage={rowsPerPage}
+                page={page}
+                SelectProps={{
+                  inputProps: {
+                    'aria-label': 'rows per page',
+                  },
+                  native: true,
+                }}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                ActionsComponent={TablePaginationActions}
+              />
             </Table>
           </TableContainer>
         </CustomTabPanel>
