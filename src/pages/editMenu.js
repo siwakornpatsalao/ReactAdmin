@@ -61,6 +61,8 @@ export default function BasicTabs() {
   const router = useRouter();
   const { id } = router.query;
   const [menu, setMenu] = useState([]);
+  const [selectedAddons, setSelectedAddons] = useState([]);
+  const [selectedOptionGroups, setSelectedOptionGroups] = useState([]);
   
   const isNameValid = (name) => name == "";
   const isDesValid = (description) => description == "" ;
@@ -69,6 +71,15 @@ export default function BasicTabs() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+
+    const addonIds = selectedAddons;
+    const optionGroupIds = selectedOptionGroups; 
+
+    if (!image || isNameValid(name) || isDesValid(description) || isPriceValid(price) || isCategoryValid(category)) {
+      Swal.fire("Error", "กรุณากรอกข้อมูลให้ถูกต้อง", "error");
+      return;
+    }
+
     Swal.fire({
       title: "ยืนยันการแก้ไขสินค้านี้หรือไม่",
       confirmButtonText: "ยืนยัน",
@@ -76,7 +87,6 @@ export default function BasicTabs() {
       denyButtonText: "ยกเลิก",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        Swal.fire(`แก้ไขสินค้าชิ้นนี้แล้ว`, "", "success");
         try {
           const response = await fetch(`http://localhost:5000/menus/${id}`, {
             method: "PUT",
@@ -86,6 +96,8 @@ export default function BasicTabs() {
               description: description,
               price: price,
               category: category,
+              addonId: addonIds,
+              optionGroupId: optionGroupIds, 
               updated_at: new Date().toISOString(),
             }),
             headers: {
@@ -93,10 +105,12 @@ export default function BasicTabs() {
             },
           });
           if (!response.ok) {
+            Swal.fire(`ไม่สามารถแก้ไขสิ้นค้าชิ้นนี้ได้`, "", "success");
             throw new Error("Failed to Edit this menu");
           }
           const resJson = await response.json();
           console.log(resJson);
+          Swal.fire(`แก้ไขสินค้าชิ้นนี้แล้ว`, "", "success");
 
         } catch (error) {
           console.log("Error:", error.message);
@@ -167,6 +181,8 @@ export default function BasicTabs() {
           setPrice(data.price);
           setCategory(data.category);
           setImage(data.thumbnail);
+          setSelectedAddons(data.addonId);
+          setSelectedOptionGroups(data.optionGroupId);
         } catch (error) {
           console.error('Error fetching menu:', error);
         }
@@ -296,7 +312,7 @@ export default function BasicTabs() {
             </TextField>
             <br/>
 
-            <Button variant="contained" type="submit">สร้างเมนูใหม่</Button>
+            <Button variant="contained" type="submit">แก้ไขเมนู</Button>
             </Box>
             </Box>
           </form>
@@ -307,14 +323,42 @@ export default function BasicTabs() {
           <br/>
           {addons.map((addon) => (
             <FormGroup key={addon._id}>
-              <FormControlLabel control={<Checkbox defaultChecked />} label={addon.name} />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={selectedAddons.includes(addon._id)}
+                    onChange={() =>
+                      setSelectedAddons((prev) =>
+                        prev.includes(addon._id)
+                          ? prev.filter((id) => id !== addon._id)
+                          : [...prev, addon._id]
+                      )
+                    }
+                  />
+                }
+                label={addon.name}
+              />
             </FormGroup>
           ))}
-          <br/>
+
           <h1>ตัวเลือก</h1>
           {optionGroups.map((optionGroup) => (
             <FormGroup key={optionGroup._id}>
-              <FormControlLabel control={<Checkbox defaultChecked />} label={optionGroup.name} />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={selectedOptionGroups.includes(optionGroup._id)}
+                    onChange={() =>
+                      setSelectedOptionGroups((prev) =>
+                        prev.includes(optionGroup._id)
+                          ? prev.filter((id) => id !== optionGroup._id)
+                          : [...prev, optionGroup._id]
+                      )
+                    }
+                  />
+                }
+                label={optionGroup.name}
+              />
             </FormGroup>
           ))}
         </CustomTabPanel>

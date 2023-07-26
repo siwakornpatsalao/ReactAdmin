@@ -462,7 +462,7 @@ export default function BasicTabs() {
             />
           <br/>
 
-          <Button variant="contained" type="submit">สร้างเมนูเพิ่มเติมใหม่</Button>
+          <Button variant="contained" type="submit">แก้ไขเมนูเพิ่มเติม</Button>
           </Box>
         </Box>
         </form>
@@ -503,7 +503,7 @@ export default function BasicTabs() {
         </RadioGroup>
         <br/>
 
-        <Button variant='contained' type="submit">แก้ไขตัวเลือก</Button>
+        <Button variant='contained' type="submit">แก้ไขกลุ่มตัวเลือก</Button>
         </Box>
         </Box>
         </form>

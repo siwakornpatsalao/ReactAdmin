@@ -57,6 +57,8 @@ export default function BasicTabs() {
   const [addons, setAddons] = useState([]);
   const [optionGroups, setOptionGroups] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [selectedAddons, setSelectedAddons] = useState([]);
+  const [selectedOptionGroups, setSelectedOptionGroups] = useState([]);
 
   const isNameValid = (name) => name == "";
   const isDesValid = (description) => description == "" ;
@@ -65,10 +67,15 @@ export default function BasicTabs() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+  
+    const addonIds = selectedAddons;
+    const optionGroupIds = selectedOptionGroups; 
+  
     if (!image || isNameValid(name) || isDesValid(description) || isPriceValid(price) || isCategoryValid(category)) {
       Swal.fire("Error", "กรุณากรอกข้อมูลให้ถูกต้อง", "error");
       return;
     }
+    console.log(addonIds);
     Swal.fire({
       title: "ต้องการเพิ่มสินค้านี้หรือไม่",
       confirmButtonText: "ยืนยัน",
@@ -76,7 +83,6 @@ export default function BasicTabs() {
       denyButtonText: "ยกเลิก", 
     }).then(async (result) => {
       if (result.isConfirmed) {
-        Swal.fire(`เพิ่มสินค้าชิ้นนี้แล้ว`, "", "success");
         try {
           const response = await fetch("http://localhost:5000/menus", {
             method: "POST",
@@ -86,27 +92,35 @@ export default function BasicTabs() {
               description: description,
               price: price,
               category: category,
+              addonId: addonIds,
+              optionGroupId: optionGroupIds, 
             }),
             headers: {
               "Content-Type": "application/json",
             },
           });
           if (!response.ok) {
+            Swal.fire(`ไม่สามารถเพิ่มเมนูได้`, "", "error");
             throw new Error("Failed to add new menu");
           }
           const resJson = await response.json();
           console.log(resJson);
+          Swal.fire(`เพิ่มสินค้าชิ้นนี้แล้ว`, "", "success");
           setImage(null);
           setName("");
           setDescription("");
           setPrice(0);
           setCategory("");
+          setSelectedAddons([]);
+          setSelectedOptionGroups([]);
           document.getElementById("file-input").value = "";
         } catch (error) {
           console.log("Error:", error.message);
         }
-      }})
+      }
+    });
   }
+  
 
   function handleChangeFile(e) {
     const file = e.target.files[0];
@@ -238,14 +252,42 @@ export default function BasicTabs() {
           <br/>
           {addons.map((addon) => (
             <FormGroup key={addon._id}>
-              <FormControlLabel control={<Checkbox defaultChecked />} label={addon.name} />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={selectedAddons.includes(addon._id)}
+                    onChange={() =>
+                      setSelectedAddons((prev) =>
+                        prev.includes(addon._id)
+                          ? prev.filter((id) => id !== addon._id)
+                          : [...prev, addon._id]
+                      )
+                    }
+                  />
+                }
+                label={addon.name}
+              />
             </FormGroup>
           ))}
-          <br/>
+
           <h1>ตัวเลือก</h1>
           {optionGroups.map((optionGroup) => (
             <FormGroup key={optionGroup._id}>
-              <FormControlLabel control={<Checkbox defaultChecked />} label={optionGroup.name} />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={selectedOptionGroups.includes(optionGroup._id)}
+                    onChange={() =>
+                      setSelectedOptionGroups((prev) =>
+                        prev.includes(optionGroup._id)
+                          ? prev.filter((id) => id !== optionGroup._id)
+                          : [...prev, optionGroup._id]
+                      )
+                    }
+                  />
+                }
+                label={optionGroup.name}
+              />
             </FormGroup>
           ))}
         </CustomTabPanel>
