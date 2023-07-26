@@ -282,34 +282,52 @@ function Step3({topic,setTopic,message,setMessage,image,setImage}) {
     reader.readAsDataURL(file);
   }
 
+  function handleReset(){
+    setMessage('')
+    setTopic('')
+    setImage(null)
+  }
+
   return (
     <div>
-        การแสดงผล
+      {/* Image */}
+      <Box  sx={{ display: 'flex',}}>
+      <Box sx={{ m: 2 }}>
         <input id="file-input" type="file" onChange={handleChangeFile} accept="image/*" />
-        {image && (
-              <img src={image} style={{ maxWidth: "100%", height: "500px" }} alt="Preview" />
-        )}
-        <TextField
-                label="หัวข้อ"
-                value={topic}
-                color="secondary"
-                error={isTopicValid(topic)}
-                helperText="กรุณาใส่หัวข้อ"
-                focused
-                onChange={(e) => setTopic(e.target.value)}
-        />
-        <TextField
-                label="ข้อความ"
-                value={message}
-                color="secondary"
-                error={isMessageValid(message)}
-                helperText="กรุณาใส่ข้อความ"
-                focused
-                onChange={(e) => setMessage(e.target.value)}
-        />
-        <Button><h1>Review</h1></Button>
+        {image && <img src={image} style={{ maxWidth: '100%', height: '500px' }} alt="Preview" />}
+      </Box>
+
+      {/* Topic and Message */}
+      <Box sx={{  m: 1, width: "25ch",}}>
+        <Box sx={{ mb: 2 }}>
+          <TextField
+            label="หัวข้อ"
+            value={topic}
+            color="secondary"
+            error={isTopicValid(topic)}
+            helperText="กรุณาใส่หัวข้อ"
+            focused
+            onChange={(e) => setTopic(e.target.value)}
+          />
+        </Box>
+        <Box sx={{ mb: 2 }}>
+          <TextField
+            label="ข้อความ"
+            value={message}
+            color="secondary"
+            error={isMessageValid(message)}
+            helperText="กรุณาใส่ข้อความ"
+            focused
+            onChange={(e) => setMessage(e.target.value)}
+          />
+        </Box>
+
+      <Button onClick={handleReset}>
+        <h1>Reset</h1>
+      </Button>
+      </Box>
+      </Box>
     </div>
-    // Add your content for step 3 here
   );
 }
 

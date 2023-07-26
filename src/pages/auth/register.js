@@ -51,14 +51,14 @@ const Page = () => {
         }
 
         Swal.fire({
-          title: "ต้องการเพิ่มชื่อผู้ใช้นี้หรือไม่",
+          title: "ต้องการเพิ่มร้านค้านี้หรือไม่",
           confirmButtonText: "ยืนยัน",
           showDenyButton: true,
           denyButtonText: "ยกเลิก", 
         }).then(async (result) => {
           if (result.isConfirmed) {
             try {
-              const response = await fetch('http://localhost:5000/user', {
+              const response = await fetch('http://localhost:5000/shops', {
                 method: 'POST',
                 body: JSON.stringify({
                   name: storedValues.name,

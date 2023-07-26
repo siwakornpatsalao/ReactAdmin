@@ -197,12 +197,11 @@ export default function BasicTabs() {
           updatedOptions[index] = editOption;
           setOptions(updatedOptions);
           console.log(options);
-          // edit and store in array
         }
       }else if(result.isDenied){
         Swal.fire("ตัวเลือกถูกลบ", "", "success");
         const updatedOptions = [...options];
-        updatedOptions.splice(index, 1); // Remove the option from the array
+        updatedOptions.splice(index, 1); 
         setOptions(updatedOptions);
         console.log(options);
       }

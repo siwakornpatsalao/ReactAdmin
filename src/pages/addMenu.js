@@ -69,30 +69,6 @@ export default function BasicTabs() {
       Swal.fire("Error", "กรุณากรอกข้อมูลให้ถูกต้อง", "error");
       return;
     }
-
-    /*
-    if (!image) {
-    Swal.fire("Error", "กรุณาใส่รูปภาพ", "error");
-    return;
-    }
-    if (isNameValid(name)) {
-      Swal.fire("Error", "ชื่อควรยาว 4 ตัวอักษรขึ้นไป", "error");
-      return;
-    }
-    if (isDesValid(description)) {
-      Swal.fire("Error", "กรุณาใส่คำอธิบาย", "error");
-      return;
-    }
-    if (isPriceValid(price)) {
-      Swal.fire("Error", "กรุณาใส่ราคา", "error");
-      return;
-    }
-    if (isCategoryValid(category)) {
-      Swal.fire("Error", "กรุณาเลือกหมวดหมู่", "error");
-      return;
-    }
-    */
-
     Swal.fire({
       title: "ต้องการเพิ่มสินค้านี้หรือไม่",
       confirmButtonText: "ยืนยัน",
@@ -149,47 +125,28 @@ export default function BasicTabs() {
   };
 
   useEffect(() => {
-    async function fetchAddons() {
+    async function fetchData(url, setter) {
       try {
-        const res = await fetch("http://localhost:5000/addons");
+        const res = await fetch(url);
         const data = await res.json();
-        setAddons(data);
+        setter(data);
         console.log(data);
       } catch (error) {
-        console.error("Error fetching Addons:", error);
+        console.error(`Error fetching data from ${url}:`, error);
       }
     }
 
-    async function fetchOptions() {
-      try {
-        const res = await fetch("http://localhost:5000/optiongroups");
-        const data = await res.json();
-        setOptionGroups(data);
-        console.log(data);
-      } catch (error) {
-        console.error("Error fetching Options:", error);
-      }
-    }
-
-    async function fetchCategories() {
-      try {
-        const res = await fetch("http://localhost:5000/category");
-        const data = await res.json();
-        setCategories(data);
-        console.log(data);
-      } catch (error) {
-        console.error("Error fetching Menu:", error);
-      }
+    if (!categories.length) {
+      fetchData("http://localhost:5000/addons", setAddons);
+      fetchData("http://localhost:5000/optiongroups", setOptionGroups);
+      fetchData("http://localhost:5000/category", setCategories);
     }
 
     if (!initial.current) {
       initial.current = true;
       console.log(initial.current);
-      fetchAddons();
-      fetchOptions();
-      fetchCategories();
     }
-  }, []);
+  }, [categories.length]);
 
   return (
     <DashboardLayout>

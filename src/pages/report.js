@@ -6,9 +6,6 @@ import Box from "@mui/material/Box";
 import { useState, useEffect, useRef } from "react";
 import { TextField, MenuItem, Button } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Swal from "sweetalert2";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -24,11 +21,7 @@ import Typography from "@mui/material/Typography";
 import { IconButton } from "@mui/material";
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import TablePagination from "@mui/material/TablePagination";
-import { useTheme } from "@mui/material/styles";
-import LastPageIcon from "@mui/icons-material/LastPage";
-import FirstPageIcon from "@mui/icons-material/FirstPage";
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
+import TablePage from "../components/TablePagination";
 
 const dropDown = [
   createDrop(1, "เครปไส้แตก", "12:31:00", 81),
@@ -94,19 +87,7 @@ for (let i = 2023; i >= 2013; i--) {
 }
 
 const months = [
-  "",
-  "มกราคม",
-  "กุมภาพันธ์",
-  "มีนาคม",
-  "เมษายน",
-  "พฤษภาคม",
-  "มิถุนายน",
-  "กรกฎาคม",
-  "สิงหาคม",
-  "กันยายน",
-  "ตุลาคม",
-  "พฤศจิกายน",
-  "ธันวาคม",
+  "","มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม",
 ];
 
 const days = [""];
@@ -176,63 +157,6 @@ function renderDropdown(label, options, value, onChange) {
   );
 }
 
-function TablePaginationActions(props) {
-  const theme = useTheme();
-  const { count, page, rowsPerPage, onPageChange } = props;
-
-  const handleFirstPageButtonClick = (event) => {
-    onPageChange(event, 0);
-  };
-
-  const handleBackButtonClick = (event) => {
-    onPageChange(event, page - 1);
-  };
-
-  const handleNextButtonClick = (event) => {
-    onPageChange(event, page + 1);
-  };
-
-  const handleLastPageButtonClick = (event) => {
-    onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
-  };
-
-  return (
-    <Box sx={{ flexShrink: 0, ml: 2.5 }}>
-      <IconButton
-        onClick={handleFirstPageButtonClick}
-        disabled={page === 0}
-        aria-label="first page"
-      >
-        {theme.direction === "rtl" ? <LastPageIcon /> : <FirstPageIcon />}
-      </IconButton>
-      <IconButton onClick={handleBackButtonClick} disabled={page === 0} aria-label="previous page">
-        {theme.direction === "rtl" ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-      </IconButton>
-      <IconButton
-        onClick={handleNextButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="next page"
-      >
-        {theme.direction === "rtl" ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-      </IconButton>
-      <IconButton
-        onClick={handleLastPageButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="last page"
-      >
-        {theme.direction === "rtl" ? <FirstPageIcon /> : <LastPageIcon />}
-      </IconButton>
-    </Box>
-  );
-}
-
-TablePaginationActions.propTypes = {
-  count: PropTypes.number.isRequired,
-  onPageChange: PropTypes.func.isRequired,
-  page: PropTypes.number.isRequired,
-  rowsPerPage: PropTypes.number.isRequired,
-};
-
 export default function BasicTabs() {
   const [value, setValue] = useState(0);
   const [year, setYear] = useState("");
@@ -267,7 +191,7 @@ export default function BasicTabs() {
       <TablePagination
         rowsPerPageOptions={[5, 10, 25, { label: "All", value: 1000000 }]}
         colSpan={3}
-        count={filteredRows.length} 
+        count={filteredRows.length}
         rowsPerPage={rowsPerPage}
         page={page}
         SelectProps={{
@@ -278,7 +202,7 @@ export default function BasicTabs() {
         }}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
-        ActionsComponent={TablePaginationActions}
+        ActionsComponent={TablePage}
       />
     );
   }
@@ -534,62 +458,21 @@ export default function BasicTabs() {
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                   <TableRow>
-                    <TableCell>
-                      <Button
-                        onClick={() => {
-                          sortByInt(filteredRows, "order", sortOrder, setSortOrder);
-                        }}
-                      >
-                        ลำดับ
-                      </Button>
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        onClick={() => {
-                          sortByDate(filteredRows, "date", sortDate, setSortDate);
-                        }}
-                      >
-                        วันที่
-                      </Button>
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        onClick={() => {
-                          sortByInt(filteredRows, "orderCount", sortOrderCount, setSortOrderCount);
-                        }}
-                      >
-                        จำนวนออเดอร์
-                      </Button>
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        onClick={() => {
-                          sortByInt(filteredRows, "menuCount", sortMenuCount, setSortMenuCount);
-                        }}
-                      >
-                        จำนวนสินค้า
-                      </Button>
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        onClick={() => {
-                          sortByInt(filteredRows, "total", sortTotal, setSortTotal);
-                        }}
-                      >
-                        จำนวนยอดขาย
-                      </Button>
-                    </TableCell>
+                    <TableCell><Button onClick={() => {sortByInt(paginatedRows, "order", sortOrder, setSortOrder);}}>ลำดับ</Button></TableCell>
+                    <TableCell> <Button onClick={() => { sortByDate(paginatedRows, "date", sortDate, setSortDate); }} > วันที่ </Button> </TableCell>
+                    <TableCell> <Button onClick={() => { sortByInt(paginatedRows, "orderCount", sortOrderCount, setSortOrderCount); }} > จำนวนออเดอร์ </Button> </TableCell>
+                    <TableCell> <Button onClick={() => { sortByInt(paginatedRows, "menuCount", sortMenuCount, setSortMenuCount); }} > จำนวนสินค้า </Button> </TableCell>
+                    <TableCell> <Button onClick={() => { sortByInt(paginatedRows, "total", sortTotal, setSortTotal); }} > จำนวนยอดขาย </Button> </TableCell>
                     <TableCell></TableCell>
                   </TableRow>
                 </TableHead>
 
                 <TableBody>
                   {paginatedRows.map((row, index) => (
-                    <React.Fragment>
+                    <>
                       <TableRow
                         key={row.name}
-                        sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                      >
+                        sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                         <TableCell>{row.order}</TableCell>
                         <TableCell>{row.date}</TableCell>
                         <TableCell>{row.orderCount}</TableCell>
@@ -603,13 +486,8 @@ export default function BasicTabs() {
                               const newOpen = [...open];
                               newOpen[index] = !newOpen[index];
                               setOpen(newOpen);
-                            }}
-                          >
-                            {open[index] ? (
-                              <AiFillCaretUp style={{ color: "blue" }} />
-                            ) : (
-                              <AiFillCaretDown />
-                            )}
+                            }}>
+                            {open[index] ? (<AiFillCaretUp style={{ color: "blue" }} />) : (<AiFillCaretDown />)}
                           </IconButton>
                         </TableCell>
                       </TableRow>
@@ -634,8 +512,7 @@ export default function BasicTabs() {
                                   {row.dropDown.map((historyRow) => (
                                     <TableRow
                                       onClick={() => handlePopUp(historyRow, row)}
-                                      key={historyRow.order}
-                                    >
+                                      key={historyRow.order}>
                                       <TableCell component="th" scope="row">
                                         {historyRow.order}
                                       </TableCell>
@@ -666,7 +543,7 @@ export default function BasicTabs() {
                           </Collapse>
                         </TableCell>
                       </TableRow>
-                    </React.Fragment>
+                    </>
                   ))}
                   {pagination(filteredRows)}
                 </TableBody>
@@ -687,64 +564,29 @@ export default function BasicTabs() {
                 month === "พฤศจิกายน"
               ? renderDropdown("รายวัน", days.slice(0, 30), day, handleChangeDay)
               : renderDropdown("รายวัน", days.slice(0, 31), day, handleChangeDay)}
-
             {renderDropdown("เวลาเริ่มต้น", timeArray, startTime, handleChangeStartTime)}
             {renderDropdown("เวลาสิ้นสุด", timeArray, finishTime, handleChangeFinishTime)}
-
             <Button variant="contained" onClick={handleReset}>
               Reset
             </Button>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell>
-                    <Button onClick={() => {sortByInt(filteredRows2, "order", sortOrder, setSortOrder);}}>
-                      ลำดับ
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <Button onClick={() => {sortByDate(filteredRows2, "date", sortDate, setSortDate);}}>
-                      วันที่
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <Button onClick={() => {sortByTime(filteredRows2, "time", sortTime, setSortTime);}}>
-                      เวลา
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <Button onClick={() => {sortByString(filteredRows2, "name", sortName, setSortName);}}>
-                      ชื่อรายการ
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <Button onClick={() => {sortByInt(filteredRows2, "count", sortCount, setSortCount);}}>
-                      จำนวน
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <Button onClick={() => {sortByInt(filteredRows2, "price", sortPrice, setSortPrice);}}>
-                      ราคา
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <Button onClick={() => {sortByString(filteredRows2, "status", sortStatus, setSortStatus);}}>
-                      สถานะ
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <Button onClick={() => {sortByString(filteredRows2, "type", sortType, setSortType);}}>
-                      ประเภท
-                    </Button>
-                  </TableCell>
+                  <TableCell> <Button onClick={() => { sortByInt(paginatedRows2, "order", sortOrder, setSortOrder); }} > ลำดับ </Button> </TableCell>
+                  <TableCell> <Button onClick={() => { sortByDate(paginatedRows2, "date", sortDate, setSortDate); }} > วันที่ </Button> </TableCell>
+                  <TableCell> <Button onClick={() => { sortByTime(paginatedRows2, "time", sortTime, setSortTime); }} > เวลา </Button> </TableCell>
+                  <TableCell> <Button onClick={() => { sortByString(paginatedRows2, "name", sortName, setSortName); }} > ชื่อรายการ </Button> </TableCell>
+                  <TableCell> <Button onClick={() => { sortByInt(paginatedRows2, "count", sortCount, setSortCount); }} > จำนวน </Button> </TableCell>
+                  <TableCell> <Button onClick={() => { sortByInt(paginatedRows2, "price", sortPrice, setSortPrice); }} > ราคา </Button> </TableCell>
+                  <TableCell> <Button onClick={() => { sortByString(paginatedRows2, "status", sortStatus, setSortStatus); }} > สถานะ </Button> </TableCell>
+                  <TableCell> <Button onClick={() => { sortByString(paginatedRows2, "type", sortType, setSortType); }} > ประเภท </Button> </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {paginatedRows2.map((row) => (
                   <TableRow
                     key={row.name}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                     <TableCell component="th" scope="row">
                       {row.order}
                     </TableCell>
@@ -769,10 +611,7 @@ export default function BasicTabs() {
             {renderDropdown("รายเดือน", months, month, handleChangeMonth)}
             {month && month === "กุมภาพันธ์"
               ? renderDropdown("รายวัน", days.slice(0, 29), day, handleChangeDay)
-              : month === "เมษายน" ||
-                month === "มิถุนายน" ||
-                month === "กันยายน" ||
-                month === "พฤศจิกายน"
+              : month === "เมษายน" || month === "มิถุนายน" || month === "กันยายน" || month === "พฤศจิกายน"
               ? renderDropdown("รายวัน", days.slice(0, 31), day, handleChangeDay)
               : renderDropdown("รายวัน", days.slice(0, 32), day, handleChangeDay)}
             <Button variant="contained" onClick={handleReset}>
@@ -781,51 +620,11 @@ export default function BasicTabs() {
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell>
-                    <Button
-                      onClick={() => {
-                        sortByInt(filteredRows3, "order", sortOrder, setSortOrder);
-                      }}
-                    >
-                      ลำดับ
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      onClick={() => {
-                        sortByDate(filteredRows3, "date", sortDate, setSortDate);
-                      }}
-                    >
-                      วันที่
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      onClick={() => {
-                        sortByString(filteredRows3, "name", sortName, setSortName);
-                      }}
-                    >
-                      ชื่อสินค้า
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      onClick={() => {
-                        sortByInt(filteredRows3, "menuCount", sortMenuCount, setSortMenuCount);
-                      }}
-                    >
-                      จำนวนสินค้า
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      onClick={() => {
-                        sortByInt(filteredRows3, "total", sortTotal, setSortTotal);
-                      }}
-                    >
-                      ยอดขาย
-                    </Button>
-                  </TableCell>
+                  <TableCell> <Button onClick={() => { sortByInt(paginatedRows3, "order", sortOrder, setSortOrder); }} > ลำดับ </Button> </TableCell>
+                  <TableCell> <Button onClick={() => { sortByDate(paginatedRows3, "date", sortDate, setSortDate); }} > วันที่ </Button> </TableCell>
+                  <TableCell> <Button onClick={() => { sortByString(paginatedRows3, "name", sortName, setSortName); }} > ชื่อสินค้า </Button> </TableCell>
+                  <TableCell> <Button onClick={() => { sortByInt(paginatedRows3, "menuCount", sortMenuCount, setSortMenuCount); }} > จำนวนสินค้า </Button> </TableCell>
+                  <TableCell> <Button onClick={() => { sortByInt(paginatedRows3, "total", sortTotal, setSortTotal); }} > ยอดขาย </Button> </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

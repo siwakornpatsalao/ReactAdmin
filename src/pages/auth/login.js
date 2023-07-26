@@ -19,8 +19,10 @@ import {
 import { useAuth } from 'src/hooks/use-auth';
 import { Layout as AuthLayout } from 'src/layouts/auth/layout';
 import { useEffect, useRef } from 'react';
+import { AuthProvider } from 'src/contexts/auth-context';
 
 const Page = () => {
+  const [userProp, setUserProp] = useState([]);
   const [store, setStore] = useState([]);
   const router = useRouter();
   const auth = useAuth();
@@ -49,7 +51,9 @@ const Page = () => {
         );
 
         if (user) {
+          setUserProp(user);
           console.log('Login successful');
+          auth.signIn(user)
           router.push('/');
         } else {
           helpers.setStatus({ success: false });
@@ -83,7 +87,7 @@ const Page = () => {
 
     const fetchUser = async () => {
       try {
-        const response = await fetch('http://localhost:5000/user');
+        const response = await fetch('http://localhost:5000/shops');
         const data = await response.json();
         setStore(data); // Update the state with fetched data
         console.log(data);
@@ -101,12 +105,13 @@ const Page = () => {
   },[])
 
   return (
-    <>
+    <div>
       <Head>
         <title>
           เข้าสู่ระแบบ
         </title>
       </Head>
+      {/* <AuthProvider propToReceive={userProp}> */}
       <Box
         sx={{
           backgroundColor: 'background.paper',
@@ -230,7 +235,8 @@ const Page = () => {
           </div>
         </Box>
       </Box>
-    </>
+    {/* </AuthProvider> */}
+    </div>
   );
 };
 

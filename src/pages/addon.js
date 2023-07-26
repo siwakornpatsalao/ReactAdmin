@@ -82,38 +82,27 @@ function Addon(){
     };
 
     useEffect(() => {
-        async function fetchAddons() {
-          try {
-            const res = await fetch("http://localhost:5000/Addons");
-            const data = await res.json();
-            setAddons(data);
-            setOriginalAddons(data);
-            console.log(data);
-          } catch (error) {
-            console.error("Error fetching Addons:", error);
-          }
+      async function fetchData(url, setter) {
+        try {
+          const res = await fetch(url);
+          const data = await res.json();
+          setter(data);
+          console.log(data);
+        } catch (error) {
+          console.error(`Error fetching data from ${url}:`, error);
         }
-
-        async function fetchOptionGroups() {
-          try {
-            const res = await fetch("http://localhost:5000/optiongroups");
-            const data = await res.json();
-            setOptionGroups(data);
-            console.log(data);
-          } catch (error) {
-            console.error("Error fetching Addons:", error);
-          }
-        }
+      }
     
         if (!initial.current) {
           initial.current = true;
           console.log(initial.current);
-          fetchAddons();
-          fetchOptionGroups();
+          fetchData("http://localhost:5000/Addons",setAddons);
+          fetchData('http://localhost:5000/optiongroups',setOptionGroups);
         }
         
       }, []);
-    return (
+
+  return (
         <>
     <Head>
       <title>
