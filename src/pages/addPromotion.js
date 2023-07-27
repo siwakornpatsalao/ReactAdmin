@@ -254,7 +254,12 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,star
           ): productType === 'amount' ? (
             <div>
               <h2>คำสั่งซื้อ</h2>
-              ขั้นต่ำคำสั่งซื้อ
+              <TextField
+                label="free"
+                color="secondary"
+                helperText="ขั้นต่ำคำสั่งซื้อ"
+                focused
+              />
             </div>
           ):null}
         </div>
