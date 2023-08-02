@@ -23,6 +23,7 @@ import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import TablePagination from "@mui/material/TablePagination";
 import TablePage from "../components/TablePagination";
 import styles from './report.module.css';
+// component page 1 2 3
 
 /* const dropDown = [
   createDrop(1, "เครปไส้แตก", "12:31:00", 81),
@@ -193,6 +194,14 @@ function renderDropdown(label, options, value, onChange) {
 }
 
 export default function BasicTabs() {
+  /* const {
+    pagination,handleChangePage,handleChangeRowsPerPage,sortByInt,sortByString,sortByDate,sortByTime,sortOrder,setSortOrder,sortDate,setSortDate,
+    sortOrderCount,setSortOrderCount,sortMenuCount,setSortMenuCount,sortTotal,setSortTotal,sortCount,setSortCount,sortPrice,setSortPrice,sortTime,
+    setSortTime,sortName,setSortName,sortStatus,setSortStatus,sortType,setSortType,rows,setRows,rows2,setRows2,rows3,setRows3,filteredRows,setFilteredRows,
+    filteredRows2,setFilteredRows2,filteredRows3,setFilteredRows3,startTime,setStartTime,finishTime,setFinishTime,open,setOpen,page,setPage,
+    rowsPerPage,setRowsPerPage,paginatedRows,setPaginatedRows,paginatedRows2,setPaginatedRows2,paginatedRows3,setPaginatedRows3,
+  } = SortAndPage(); */
+
   const [value, setValue] = useState(0);
   const [year, setYear] = useState("");
   const [month, setMonth] = useState("");
@@ -437,13 +446,13 @@ export default function BasicTabs() {
       }
     }
 
-    /* if (!initial.current) {
+    if (!initial.current) {
       initial.current = true;
       console.log(initial.current);
       fetchReport1();
       fetchReport2();
       fetchReport3();
-    } */
+    }
 
  
   }, []);
@@ -848,6 +857,7 @@ export default function BasicTabs() {
             </Table>
           </TableContainer>
         </CustomTabPanel>
+        
       </Box>
     </DashboardLayout>
   );

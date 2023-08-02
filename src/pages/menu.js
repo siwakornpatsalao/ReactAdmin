@@ -63,7 +63,6 @@ function Menu(){
           );
           setMenus(filteredMenus);
         } else {
-          // Reset to show all Menus when search value is empty
           setMenus(originalMenus);
         }
       };   

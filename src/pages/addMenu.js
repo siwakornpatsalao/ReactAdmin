@@ -59,6 +59,8 @@ export default function BasicTabs() {
   const [categories, setCategories] = useState([]);
   const [selectedAddons, setSelectedAddons] = useState([]);
   const [selectedOptionGroups, setSelectedOptionGroups] = useState([]);
+  const [menus, setMenus] = useState([]);
+  const [id, setId] = useState(0);
 
   const isNameValid = (name) => name == "";
   const isDesValid = (description) => description == "" ;
@@ -87,6 +89,7 @@ export default function BasicTabs() {
           const response = await fetch("http://localhost:5000/menus", {
             method: "POST",
             body: JSON.stringify({
+              id: id+1,
               name: name,
               thumbnail: image,
               description: description,
@@ -138,6 +141,21 @@ export default function BasicTabs() {
     setValue(newValue);
   };
 
+  const fetchMenus = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/menus');
+      const data = await res.json();
+      setMenus(data);
+      const maxId = data.reduce((max, item) => {
+        return item.id > max ? item.id : max;
+      }, 0);
+      setId(maxId);
+      console.log(data);
+    } catch (error) {
+      console.error(`Error fetching data from ${url}:`, error);
+    }
+  }
+
   useEffect(() => {
     async function fetchData(url, setter) {
       try {
@@ -154,13 +172,18 @@ export default function BasicTabs() {
       fetchData("http://localhost:5000/addons", setAddons);
       fetchData("http://localhost:5000/optiongroups", setOptionGroups);
       fetchData("http://localhost:5000/category", setCategories);
+      fetchMenus();
     }
 
     if (!initial.current) {
       initial.current = true;
       console.log(initial.current);
     }
-  }, [categories.length]);
+  }, []);
+
+  useEffect(() => {
+    fetchMenus();
+  }, [id]);
 
   return (
     <DashboardLayout>

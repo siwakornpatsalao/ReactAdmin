@@ -76,7 +76,6 @@ function Addon(){
         );
         setAddons(filteredAddons);
       } else {
-        // Reset to show all addons when search value is empty
         setAddons(originalAddons);
       }
     };

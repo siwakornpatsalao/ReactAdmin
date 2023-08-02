@@ -47,7 +47,8 @@ function Step1({setType,type,setProductType,productType}) {
 }
 
 
-function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,start_date,setStart_Date,finish_date,setFinish_Date,start_time,setStart_Time,finish_time,setFinish_Time }) {
+function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,start_date,setStart_Date,finish_date,setFinish_Date,start_time,setStart_Time,finish_time,setFinish_Time
+                ,selectedMenus,setSelectedMenus,selectedCategories,setSelectedCategories,amount,setAmount }) {
     const [menus, setMenus] = useState([]);
     const [categories, setCategories] = useState([]);
     const initial = useRef(false);
@@ -97,22 +98,44 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,star
       return menus.map((menu) => (
         <FormGroup key={menu._id}>
           <FormControlLabel
-            control={<Checkbox defaultChecked />}
+            control={
+              <Checkbox
+                checked={selectedMenus.includes(menu._id)}
+                onChange={() =>
+                  setSelectedMenus((prev) =>
+                    prev.includes(menu._id)
+                      ? prev.filter((id) => id !== menu._id)
+                      : [...prev, menu._id]
+                  )
+                }
+              />
+            }
             label={menu.name}
           />
         </FormGroup>
-      ));
+      ))
     };
 
     const renderCategories = () => {
       return categories.map((category) => (
         <FormGroup key={category._id}>
           <FormControlLabel
-            control={<Checkbox defaultChecked />}
+            control={
+              <Checkbox
+                checked={selectedCategories.includes(category._id)}
+                onChange={() =>
+                  setSelectedCategories((prev) =>
+                    prev.includes(category._id)
+                      ? prev.filter((id) => id !== category._id)
+                      : [...prev, category._id]
+                  )
+                }
+              />
+            }
             label={category.name}
           />
         </FormGroup>
-      ));
+      ))
     };
   
     const renderPromotionDetails = () => {
@@ -258,6 +281,8 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,star
                 label="free"
                 color="secondary"
                 helperText="ขั้นต่ำคำสั่งซื้อ"
+                value= {amount}
+                onChange={(e) => setAmount(e.target.value)}
                 focused
               />
             </div>
@@ -350,6 +375,11 @@ export default function HorizontalLinearStepper() {
   const [topic, setTopic] = useState('');
   const [message, setMessage] = useState('');
   const [image, setImage] = useState(null);
+  const [selectedMenus, setSelectedMenus] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [amount, setAmount] = useState(0);
+  const [id, setId] = useState(0);
+  const initial = useRef(false);
 
   const isStepOptional = (step) => {
     return step === 1;
@@ -403,7 +433,8 @@ export default function HorizontalLinearStepper() {
         return <Step2 type={type} productType={productType} selectedDays={selectedDays} setSelectedDays={setSelectedDays} 
         data={data} setData={setData} start_date={start_date} setStart_Date={setStart_Date} 
         finish_date={finish_date} setFinish_Date={setFinish_Date} start_time={start_time} setStart_Time={setStart_Time} 
-        finish_time={finish_time} setFinish_Time={setFinish_Time}/>;
+        finish_time={finish_time} setFinish_Time={setFinish_Time} selectedMenus={selectedMenus} setSelectedMenus={setSelectedMenus}
+        selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories} amount={amount} setAmount={setAmount}/>;
       case 2:
         return <Step3 topic={topic} setTopic={setTopic} message={message} setMessage={setMessage} image={image} setImage={setImage}/>;
       default:
@@ -415,6 +446,9 @@ export default function HorizontalLinearStepper() {
     e.preventDefault();
     console.log(type);
     console.log(selectedDays);
+
+    const menu = selectedMenus;
+    const category = selectedCategories;
     if (!image || !type || !productType || !data || !start_date || !finish_date || !start_time || !finish_time || !topic || !message ||!selectedDays) {
       Swal.fire("Error", "กรุณากรอกข้อมูลให้ถูกต้อง", "error");
       return;
@@ -430,6 +464,7 @@ export default function HorizontalLinearStepper() {
           const response = await fetch("http://localhost:5000/promotions", {
               method: "POST",
               body: JSON.stringify({
+                id: id+1,
                 type: type,
                 productType: productType,
                 data: data,
@@ -441,6 +476,9 @@ export default function HorizontalLinearStepper() {
                 image: image,
                 topic: topic,
                 message: message,
+                menu: menu,
+                category: category,
+                amount: amount,
               }),
               headers: {
                 "Content-Type": "application/json",
@@ -466,11 +504,40 @@ export default function HorizontalLinearStepper() {
             setMessage("");
             setActiveStep(0);
             setSkipped(new Set());
+            setSelectedCategories([]);
+            setSelectedMenus([]);
+            setAmount(0);
+            fetchPromotions();
         }catch(error){
           console.log("Error:", error.message);
         }
       }})
   }
+
+  const fetchPromotions = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/promotions');
+      const data = await res.json();
+      const maxId = data.reduce((max, item) => {
+        return item.id > max ? item.id : max;
+      }, 0);
+      setId(maxId);
+      console.log(data);
+    } catch (error) {
+      console.error(`Error fetching data from ${url}:`, error);
+    }
+  }
+
+  useEffect(() => {
+    if (!initial.current) {
+      initial.current = true;
+      console.log(initial.current);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchPromotions();
+  }, [id]);
 
   return (
     <DashboardLayout>

@@ -10,6 +10,8 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Swal from "sweetalert2";
+import AddonAdd from 'src/components/addonAdd';
+import OptionAdd from 'src/components/optionAdd';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -57,6 +59,9 @@ export default function BasicTabs() {
   const [optionGroupName, setOptionGroupName] = useState('');
   const [isRequired, setIsRequired] = useState(true);
   const [isRequired2, setIsRequired2] = useState(true);
+  const [addons, setAddons] = useState([]);
+  const [id, setId] = useState(0);
+  const [id2, setId2] = useState(0);
 
   const isNameValid = (name) => name == "";
   const isPriceValid = (price) => price<=0;
@@ -83,6 +88,7 @@ export default function BasicTabs() {
           const response = await fetch('http://localhost:5000/addons', {
             method: 'POST',
             body: JSON.stringify({
+              id: id+1,
               name: name,
               thumbnail: image,
               price: price,
@@ -104,6 +110,7 @@ export default function BasicTabs() {
           setPrice(0);
           setAmount(0);
           setUnit("");
+          fetchAddons();
           document.getElementById('file-input').value = '';
         } catch (error) {
           console.log('Error:', error.message);
@@ -226,6 +233,7 @@ export default function BasicTabs() {
           const response = await fetch('http://localhost:5000/optiongroups', {
             method: 'POST',
             body: JSON.stringify({
+              id: id2+1,
               name: optionGroupName,
               options: options,
               require: isRequired ? 'necessary' : 'not',
@@ -243,6 +251,7 @@ export default function BasicTabs() {
           console.log(resJson);
           setOptionGroupName('');
           setOptions([]);
+          fetchOptions();
         } catch (error) {
           console.log('Error:', error.message);
         }
@@ -253,13 +262,46 @@ export default function BasicTabs() {
     setValue(newValue);
   };
 
-  useEffect(() => {
+  const fetchAddons = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/addons');
+      const data = await res.json();
+      setAddons(data);
+      const maxId = data.reduce((max, item) => {
+        return item.id > max ? item.id : max;
+      }, 0);
+      setId(maxId);
+      console.log(data);
+    } catch (error) {
+      console.error(`Error fetching data from ${url}:`, error);
+    }
+  }
 
+  const fetchOptions = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/optiongroups');
+      const data = await res.json();
+      const maxId = data.reduce((max, item) => {
+        return item.id > max ? item.id : max;
+      }, 0);
+      setId2(maxId);
+      console.log(data);
+    } catch (error) {
+      console.error(`Error fetching data from ${url}:`, error);
+    }
+  }
+
+  useEffect(() => {
     if (!initial.current) {
       initial.current = true;
       console.log(initial.current);
     }
   }, []);
+
+  useEffect(() => {
+    fetchAddons();
+    fetchOptions();
+  }, [id, id2]);
 
   return (
     <DashboardLayout>
@@ -279,7 +321,8 @@ export default function BasicTabs() {
       </Box>
 
       <CustomTabPanel value={value} index={0}>
-        <form onSubmit={handleSubmit}>
+      <AddonAdd/>
+       {/* { <form onSubmit={handleSubmit}>
         <Box sx={{ display: 'flex',marginLeft: '300px'  }}>
           <Box sx={{ m: 1 }}>
           <input
@@ -356,11 +399,12 @@ export default function BasicTabs() {
           <Button variant="contained" type="submit">สร้างเมนูเพิ่มเติมใหม่</Button>
           </Box>
         </Box>
-        </form>
+        </form> } */}
       </CustomTabPanel>
 
       <CustomTabPanel value={value} index={1}>
-        <form onSubmit={handleSubmitOption}>
+        <OptionAdd/>
+        {/* <form onSubmit={handleSubmitOption}>
           <Box sx={{display:'flex',marginLeft: '400px' }}>   
           <Box sx={{ m: 1 }}>
         <h1>ชื่อกลุ่มตัวเลือก</h1>
@@ -395,7 +439,7 @@ export default function BasicTabs() {
         <Button variant='contained' type="submit">สร้างตัวเลือกใหม่</Button>
         </Box>
         </Box>
-        </form>
+        </form> */}
       </CustomTabPanel>
     </Box>
     </DashboardLayout>

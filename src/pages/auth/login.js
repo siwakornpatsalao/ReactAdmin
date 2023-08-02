@@ -219,16 +219,17 @@ const Page = () => {
                 >
                   Skip authentication
                 </Button>
-        
+
+              {/*
                 <Alert
                   color="primary"
                   severity="info"
                   sx={{ mt: 3 }}
                 >
-                  <div>
+                   <div>
                     You can use <b>demo@devias.io</b> and password <b>Password123!</b>
                   </div>
-                </Alert>
+                </Alert>*/}
               </form>
             )}
      
