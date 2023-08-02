@@ -296,7 +296,7 @@ function Step3({topic,setTopic,message,setMessage,image,setImage}) {
   return (
     <div>
       {/* Image */}
-      <Box  sx={{ display: 'flex',}}>
+      <Box  sx={{ display: 'flex', justifyContent:'center'}}>
       <Box sx={{ m: 2 }}>
         <input id="file-input" type="file" onChange={handleChangeFile} accept="image/*" />
         {image && <img src={image} style={{ maxWidth: '100%', height: '500px' }} alt="Preview" />}

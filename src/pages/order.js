@@ -86,6 +86,8 @@ export default function BasicTabs() {
     const [paginatedRows, setPaginatedRows] = useState(rows);
     const [paidOrders, setPaidOrders] = useState([]);
     const initial = useRef(false);
+    const currentTime = Date.now();
+    const currentDate = new Date(currentTime).toLocaleDateString();
 
     function pagination(filteredRows) {
       return (
@@ -214,14 +216,36 @@ export default function BasicTabs() {
 
           const paidOrder = updatedRows.find((r) => r.id === row.id);
           if (paidOrder) {
-            setPaidOrders((prevPaidOrders) => [...prevPaidOrders, paidOrder]);
+            //setPaidOrders((prevPaidOrders) => [...prevPaidOrders, paidOrder]);
+            handleAddPaidRow(row);
+            handleDeleteRow(row);
             const updatedPendingOrders = rows.filter(
               (pendingOrder) => pendingOrder.id !== row.id
             );
             setRows(updatedPendingOrders);
           }
+          // แสดงแค่แถวที่ยังไม่ชำระเงิน
         }});
-    }
+      }
+
+      function handlePopUpPaid(row){
+        Swal.fire({
+          title: "รายการคำสั่งซื้อ",
+          html: `ออเดอร์ที่: ${row.id} <br><br>
+                ชื่อ: ${row.menu} <br><br>
+                เวลา: ${row.time} <br><br>
+                สถานะ: ${row.status}`,
+          confirmButtonText:'ยืนยันออเดอร์',
+          confirmButtonColor: 'green',
+          showCancelButton: true,
+          cancelButtonColor: '#d33',
+        }).then(async (result) =>{
+          if(result.isConfirmed){
+            // ลบแถวที่เลือก 
+            handleDeletePaidRow(row)
+          }
+        })
+      }
 
     async function handleAddPaidRow(row){
       row.status = "ชำระเงินแล้ว";
@@ -229,6 +253,7 @@ export default function BasicTabs() {
         const response = await fetch("http://localhost:5000/orderPaids", {
           method: "POST",
           body: JSON.stringify({
+            id: row.id,
             menu: row.menu,
             time: row.time,
             status: row.status,
@@ -242,6 +267,7 @@ export default function BasicTabs() {
         }
         const resJson = await response.json();
         console.log(resJson);
+        setPaidOrders((prevPaidOrders) => [...prevPaidOrders, resJson]);
       } catch (error) {
         console.log("Error:", error.message);
       }
@@ -258,6 +284,24 @@ export default function BasicTabs() {
         }
         const resJson = await response.json();
         console.log(resJson);
+        setRows((prevRows) => prevRows.filter((r) => r._id !== resJson._id));
+      } catch (error) {
+        console.log("Error:", error.message);
+      }
+    }
+
+    async function handleDeletePaidRow(row){
+      try{
+        const response = await fetch(`http://localhost:5000/orderPaids/${row._id}`, {
+          method: "DELETE",
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to delete paid order");
+        }
+        const resJson = await response.json();
+        console.log(resJson);
+        setPaidOrders((prevPaidOrders) => prevPaidOrders.filter((r) => r._id !== resJson._id));
       } catch (error) {
         console.log("Error:", error.message);
       }
@@ -274,12 +318,25 @@ export default function BasicTabs() {
           console.error("Error fetching menus:", error);
         }
       }
+
+      async function fetchOrderPaid() {
+        try {
+          const res = await fetch("http://localhost:5000/orderPaids");
+          const data = await res.json();
+          setPaidOrders(data);
+          console.log(data);
+        } catch (error) {
+          console.error("Error fetching menus:", error);
+        }
+      }
   
       if (!initial.current) {
         initial.current = true;
         console.log(initial.current);
         fetchOrder();
+        fetchOrderPaid();
       }
+      
     }, []);
 
     useEffect(() => {
@@ -308,29 +365,30 @@ export default function BasicTabs() {
             <Tab label="รอการชำระเงิน" {...a11yProps(1)} />
           </Tabs>
           </Box>
-          <h1>06/16/2566</h1>
+          <h1>{currentDate}</h1>
             <CustomTabPanel value={value} index={0}>
 
             <TableContainer>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell>เลขที่ออเดอร์</TableCell>
-                  <TableCell>เมนู</TableCell>
-                  <TableCell>เวลา</TableCell>
-                  <TableCell>สถานะ</TableCell>
+                  <TableCell> <Button onClick={() => {sortByInt(paidOrders, "id", sortOrder, setSortOrder);}}>เลขที่ออเดอร์</Button></TableCell>
+                  <TableCell> <Button onClick={() => {sortByString(paidOrders, "menu", sortMenu, setSortMenu);}}>เมนู</Button></TableCell>
+                  <TableCell> <Button onClick={() => {sortByTime(paidOrders, "time", sortTime, setSortTime);}}> เวลา </Button></TableCell>
+                  <TableCell> <Button onClick={() => {sortByString(paidOrders, "status", sortStatus, setSortStatus);}}> สถานะ</Button></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {paidOrders.map((row) => (
-                  <TableRow key={row._id}>
+                  <TableRow key={row._id}
+                  /* onClick={() => handlePopUpPaid(row)} */>
                     <TableCell component="th" scope="row">
                       {row.id}
                     </TableCell>
                     <TableCell>{row.menu}</TableCell>
                     <TableCell>{row.time}</TableCell>
                     <TableCell>
-                      <SeverityPill color={statusMap[row.status]}>
+                      <SeverityPill onClick={() => handlePopUpPaid(row)} color={statusMap[row.status]}>
                         {row.status}
                       </SeverityPill>
                     </TableCell>
@@ -338,9 +396,7 @@ export default function BasicTabs() {
                 ))}
               </TableBody>
             </Table>
-          </TableContainer>
-
-            
+          </TableContainer>           
 
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
@@ -349,7 +405,7 @@ export default function BasicTabs() {
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                   <TableRow>
-                    <TableCell><Button onClick={() => {sortByInt(paginatedRows, "order", sortOrder, setSortOrder);}}>เลขที่ออเดอร์</Button></TableCell>
+                    <TableCell> <Button onClick={() => {sortByInt(paginatedRows, "id", sortOrder, setSortOrder);}}>เลขที่ออเดอร์</Button></TableCell>
                     <TableCell> <Button onClick={() => {sortByString(paginatedRows, "menu", sortMenu, setSortMenu);}}> เมนู </Button> </TableCell>
                     {/* <TableCell> <Button onClick={() => {sortByDate(rows, "date", sortDate, setSortDate);}}> วันที่ </Button> </TableCell> */}
                     <TableCell> <Button onClick={() => {sortByTime(paginatedRows, "time", sortTime, setSortTime);}}> เวลา </Button> </TableCell>
@@ -359,7 +415,7 @@ export default function BasicTabs() {
                 <TableBody>
                 {paginatedRows.map((row) => (
                     <TableRow
-                      onClick={() => handlePopUp(row)}
+/*                       onClick={() => handlePopUp(row)} */
                       key={row._id}
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                     >
@@ -370,7 +426,7 @@ export default function BasicTabs() {
                       {/* <TableCell>{row.date}</TableCell> */}
                       <TableCell>{row.time}</TableCell>
                       <TableCell>
-                        <SeverityPill color={statusMap[row.status]}>
+                        <SeverityPill onClick={() => handlePopUp(row)} color={statusMap[row.status]}>
                         {row.status}
                       </SeverityPill>
                         </TableCell>
