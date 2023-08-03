@@ -1,31 +1,67 @@
 import * as React from "react";
-import PropTypes from "prop-types";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import { useState, useEffect, useRef } from "react";
-import { TextField, MenuItem, Button } from "@mui/material";
-import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import Swal from "sweetalert2";
+import { Button } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 import Collapse from "@mui/material/Collapse";
-import Typography from "@mui/material/Typography";
 import { IconButton } from "@mui/material";
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
-import TablePagination from "@mui/material/TablePagination";
-import TablePage from "../components/TablePagination";
-import styles from './report.module.css';
+import SortAndPage from "./sortAndPage";
 
 export default function Report3(){
     const initial = useRef(false);
+    const [rows3, setRows3] = useState([]);
+    const [filteredRows3, setFilteredRows3] = useState(rows3);
+    const [paginatedRows3, setPaginatedRows3] = useState(rows3);
+    const [open, setOpen] = useState(Array(rows3.length).fill(false));
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [year, setYear] = useState("");
+    const [month, setMonth] = useState("");
+    const [day, setDay] = useState("");
+    const [sortOrder, setSortOrder] = useState("desc");
+    const [sortDate, setSortDate] = useState("desc");
+    const [sortName, setSortName] = useState("desc");
+    const [sortMenuCount, setSortMenuCount] = useState("desc");
+    const [sortTotal, setSortTotal] = useState("desc");
+
+    const sortAndPage = SortAndPage();
+    const pagination = sortAndPage.pagination;
+    const sortByInt = sortAndPage.sortByInt;
+    const sortByString = sortAndPage.sortByString;
+    const sortByDate = sortAndPage.sortByDate;
+    const renderDropdown = sortAndPage.renderDropdown;
+    const years = sortAndPage.years;
+    const months = sortAndPage.months;
+    const days = sortAndPage.days;
+    const formatDate = sortAndPage.formatDate;
+
+    function handleReset() {
+      setYear("");
+      setMonth("");
+      setDay("");
+      setPage(0);
+      setRowsPerPage(5);
+      setOpen(Array(rows3.length).fill(false));
+    }
+
+    const handleChangeYear = (event) => {
+      setYear(event.target.value);
+    };
+
+    const handleChangeMonth = (event) => {
+      setMonth(event.target.value);
+    };
+
+    const handleChangeDay = (event) => {
+      setDay(event.target.value);
+    };
+
 
     useEffect(() => {
         async function fetchReport3() {

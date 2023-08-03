@@ -1,32 +1,106 @@
 import * as React from "react";
-import PropTypes from "prop-types";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import { useState, useEffect, useRef } from "react";
-import { TextField, MenuItem, Button } from "@mui/material";
-import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import Swal from "sweetalert2";
+import { Button } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 import Collapse from "@mui/material/Collapse";
-import Typography from "@mui/material/Typography";
 import { IconButton } from "@mui/material";
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
-import TablePagination from "@mui/material/TablePagination";
-import TablePage from "../components/TablePagination";
-import styles from './report.module.css';
-
+import SortAndPage from "./sortAndPage";
 
 export default function Report2(){
     const initial = useRef(false);
+    const [year, setYear] = useState("");
+    const [month, setMonth] = useState("");
+    const [day, setDay] = useState("");
+    const [time, setTime] = useState("");
+    const [startTime, setStartTime] = useState("");
+    const [finishTime, setFinishTime] = useState("");
+    const [rows2, setRows2] = useState([]);
+    const [filteredRows2, setFilteredRows2] = useState(rows2);
+    const [paginatedRows2, setPaginatedRows2] = useState(rows2);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [sortOrder, setSortOrder] = useState("desc");
+    const [sortDate, setSortDate] = useState("desc");
+    const [sortTime, setSortTime] = useState("desc");
+    const [sortName, setSortName] = useState("desc");
+    const [sortStatus, setSortStatus] = useState("desc");
+    const [sortType, setSortType] = useState("desc");
+    const [sortCount, setSortCount] = useState("desc");
+    const [sortPrice, setSortPrice] = useState("desc");
+    const [open, setOpen] = useState(Array(rows2.length).fill(false));
+
+    const sortAndPage = SortAndPage();
+    const pagination = sortAndPage.pagination;
+    const sortByInt = sortAndPage.sortByInt;
+    const sortByString = sortAndPage.sortByString;
+    const sortByDate = sortAndPage.sortByDate;
+    const sortByTime = sortAndPage.sortByTime;
+    const renderDropdown = sortAndPage.renderDropdown;
+    const years = sortAndPage.years;
+    const months = sortAndPage.months;
+    const days = sortAndPage.days;
+    const timeArray = sortAndPage.timeArray;
+    const formatDate = sortAndPage.formatDate;
+
+    function handleReset() {
+      setYear("");
+      setMonth("");
+      setDay("");
+      setStartTime("");
+      setFinishTime("");
+      setPage(0);
+      setRowsPerPage(5);
+      setOpen(Array(rows2.length).fill(false));
+    }
+
+    const handleChangeYear = (event) => {
+      setYear(event.target.value);
+    };
+
+    const handleChangeMonth = (event) => {
+      setMonth(event.target.value);
+    };
+
+    const handleChangeDay = (event) => {
+      setDay(event.target.value);
+    };
+
+    const handleChangeStartTime = (event) => {
+      setStartTime(event.target.value);
+    };
+
+    const handleChangeFinishTime = (event) => {
+      setFinishTime(event.target.value);
+    };
+
+    function convertTimeToMinutes(timeString) {
+      const [hours, minutes, seconds] = timeString.split(":");
+      return parseInt(hours) * 60 + parseInt(minutes) + parseInt(seconds) / 60;
+    }
+  
+    function formatTimeFromHours(totalHours) {
+      if (typeof totalHours !== "number" || isNaN(totalHours) || totalHours < 0) {
+        return "00:00:00";
+      }
+  
+      const hours = Math.floor(totalHours);
+      const remainingHours = totalHours - hours;
+      const minutes = Math.floor(remainingHours * 60);
+      const seconds = Math.floor((remainingHours * 60 - minutes) * 60);
+  
+      const formattedHours = hours.toString().padStart(2, "0");
+      const formattedMinutes = minutes.toString().padStart(2, "0");
+      const formattedSeconds = seconds.toString().padStart(2, "0");
+  
+      return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+    }
     
     useEffect(() => {
         async function fetchReport2() {

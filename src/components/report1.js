@@ -1,11 +1,7 @@
 import * as React from "react";
-import PropTypes from "prop-types";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import { useState, useEffect, useRef } from "react";
-import { TextField, MenuItem, Button } from "@mui/material";
-import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
+import { MenuItem, Button } from "@mui/material";
 import Swal from "sweetalert2";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -17,21 +13,126 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Collapse from "@mui/material/Collapse";
-import Typography from "@mui/material/Typography";
 import { IconButton } from "@mui/material";
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
-import TablePagination from "@mui/material/TablePagination";
-import TablePage from "../components/TablePagination";
-import styles from './report.module.css';
+import SortAndPage from "./sortAndPage";
 
 export default function Report1(){
+    const [rows, setRows] = useState([]);
     const [open, setOpen] = useState(Array(rows.length).fill(false));
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [paginatedRows, setPaginatedRows] = useState(rows);
     const [filteredRows, setFilteredRows] = useState(rows);
-    const [rows, setRows] = useState([]);
     const initial = useRef(false);
+    const [year, setYear] = useState("");
+    const [month, setMonth] = useState("");
+    const [day, setDay] = useState("");
+    const [sortDate, setSortDate] = useState("desc");
+    const [sortOrderCount, setSortOrderCount] = useState("desc");
+    const [sortMenuCount, setSortMenuCount] = useState("desc");
+    const [sortTotal, setSortTotal] = useState("desc");
+    
+    const sortAndPage = SortAndPage();
+    const pagination = sortAndPage.pagination;
+    const sortByInt = sortAndPage.sortByInt;
+    const sortByDate = sortAndPage.sortByDate;
+    const sortOrder = sortAndPage.sortOrder;
+    const setSortOrder = sortAndPage.setSortOrder;
+    const years = sortAndPage.years;
+    const months = sortAndPage.months;
+
+
+    const handleChangeYear = (event) => {
+      setYear(event.target.value);
+    };
+  
+    const handleChangeMonth = (event) => {
+      setMonth(event.target.value);
+    };
+  
+    const handleChangeDay = (event) => {
+      setDay(event.target.value);
+    };
+
+    function renderDropdown(label, options, value, onChange) {
+      return (
+        <FormControl sx={{ m: 1, minWidth: 120 }}>
+          <InputLabel id="demo-simple-select-label">{label}</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={value}
+            label={label}
+            onChange={onChange}
+          >
+            {options.map((option, index) => (
+              <MenuItem key={option} value={index}>
+                {option}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      );
+    }
+
+    function handleReset() {
+      setYear("");
+      setMonth("");
+      setDay("");
+      setPage(0);
+      setRowsPerPage(5);
+      setOpen(Array(rows.length).fill(false));
+    }
+
+    function handlePopUp(row, row1) {
+      Swal.fire({
+        title: "รายการคำสั่งซื้อ",
+        html: `<p>ชื่อ: ${row.name}</p>
+               <p>ราคารวม: ${row.price} บาท</p>
+               <p>วันที่ ${row1.date}</p>
+               <p>เวลา: ${row.time}</p>`,
+        customClass: {
+          title: styles['custom-title-class'],
+          html: styles['customText'],
+        },
+      });
+    }
+
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, "0");
+      const day = date.getDate().toString().padStart(2, "0");
+      return `${month}/${day}/${year}`;
+    }
+
+    /* const handleChange = (event, newValue) => {
+      setValue(newValue);
+      setYear("");
+      setMonth("");
+      setDay("");
+      setTime("");
+      setPage(0);
+      setRowsPerPage(5);
+      setOpen(Array(rows.length).fill(false));
+    }; */
+
+   /*  const fetchReport1 = async () => {
+      try {
+        const res = await fetch('http://localhost:5000/report1');
+        const data = await res.json();
+        const formattedData = data.map(item => ({
+          ...item,
+          date: formatDate(item.date),
+        }));
+        setRows(formattedData);
+        console.log(data);
+      } catch (error) {
+        console.error(`Error fetching data from ${url}:`, error);
+      }
+    }
+     */
 
     useEffect(() => {
         async function fetchReport1() {
@@ -43,18 +144,18 @@ export default function Report1(){
               date: formatDate(item.date),
             }));
             setRows(formattedData);
-            console.log(data);
+            console.log(formattedData);
           } catch (error) {
             console.error("Error fetching report1:", error);
           }
         }
+
         if (!initial.current) {
             initial.current = true;
             console.log(initial.current);
             fetchReport1();
         }
       
-       
     }, []);
 
     // filter Table 1

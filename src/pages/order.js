@@ -85,6 +85,7 @@ export default function BasicTabs() {
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [paginatedRows, setPaginatedRows] = useState(rows);
     const [paidOrders, setPaidOrders] = useState([]);
+    const [paginatedRows2, setPaginatedRows2] = useState(paidOrders);
     const initial = useRef(false);
     const currentTime = Date.now();
     const currentDate = new Date(currentTime).toLocaleDateString();
@@ -121,6 +122,7 @@ export default function BasicTabs() {
     
     const handleChange = (event, newValue) => {
         setValue(newValue);
+        setRowsPerPage(10);
       };
 
     function sortByInt(row, column, sort, setSort) {
@@ -343,7 +345,8 @@ export default function BasicTabs() {
       const startIndex = page * rowsPerPage;
       const endIndex = startIndex + rowsPerPage;
       setPaginatedRows(rows.slice(startIndex, endIndex));
-    }, [rows, page, rowsPerPage]);
+      setPaginatedRows2(paidOrders.slice(startIndex, endIndex));
+    }, [rows, page, rowsPerPage,paidOrders]);
 
     // pagination 
     // tab 1  ชำระเงินแล้ว
@@ -394,6 +397,7 @@ export default function BasicTabs() {
                     </TableCell>
                   </TableRow>
                 ))}
+                {pagination(paidOrders)}
               </TableBody>
             </Table>
           </TableContainer>           

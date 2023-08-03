@@ -1,4 +1,11 @@
-
+import * as React from "react";
+import { useState} from "react";
+import { MenuItem } from "@mui/material";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import TablePagination from "@mui/material/TablePagination";
+import TablePage from "../components/TablePagination";
 
 export default function SortAndPage(){
     const [sortOrder, setSortOrder] = useState("desc");
@@ -26,6 +33,47 @@ export default function SortAndPage(){
     const [paginatedRows, setPaginatedRows] = useState(rows);
     const [paginatedRows2, setPaginatedRows2] = useState(rows2);
     const [paginatedRows3, setPaginatedRows3] = useState(rows3);
+
+    const years = [];
+    for (let i = 2023; i >= 2013; i--) {
+      years.push(i.toString());
+    }
+
+    const months = [
+      "","มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม",
+    ];
+
+    const days = [""];
+    for (let i = 1; i <= 31; i++) {
+      days.push(i);
+    }
+
+    const timeArray = [];
+    for (let hour = 0; hour < 24; hour++) {
+      const formattedHour = hour.toString().padStart(2, "0");
+      timeArray.push(`${formattedHour}:00:00`);
+    }
+
+    function renderDropdown(label, options, value, onChange) {
+      return (
+        <FormControl sx={{ m: 1, minWidth: 120 }}>
+          <InputLabel id="demo-simple-select-label">{label}</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={value}
+            label={label}
+            onChange={onChange}
+          >
+            {options.map((option, index) => (
+              <MenuItem key={option} value={index}>
+                {option}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      );
+    }
   
     function pagination(filteredRows) {
       return (
@@ -126,11 +174,21 @@ export default function SortAndPage(){
         setSortTime("asc");
       }
     }
+
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, "0");
+      const day = date.getDate().toString().padStart(2, "0");
+      return `${month}/${day}/${year}`;
+    }
+
     return {
       pagination,handleChangePage,handleChangeRowsPerPage,sortByInt,sortByString,sortByDate,sortByTime,sortOrder,setSortOrder,sortDate,setSortDate,
       sortOrderCount,setSortOrderCount,sortMenuCount,setSortMenuCount,sortTotal,setSortTotal,sortCount,setSortCount,sortPrice,setSortPrice,sortTime,
       setSortTime,sortName,setSortName,sortStatus,setSortStatus,sortType,setSortType,rows,setRows,rows2,setRows2,rows3,setRows3,filteredRows,setFilteredRows,
       filteredRows2,setFilteredRows2,filteredRows3,setFilteredRows3,startTime,setStartTime,finishTime,setFinishTime,open,setOpen,page,setPage,
-      rowsPerPage,setRowsPerPage,paginatedRows,setPaginatedRows,paginatedRows2,setPaginatedRows2,paginatedRows3,setPaginatedRows3,
+      rowsPerPage,setRowsPerPage,paginatedRows,setPaginatedRows,paginatedRows2,setPaginatedRows2,paginatedRows3,setPaginatedRows3,renderDropdown,
+      years,months,days,timeArray,formatDate
     };
 }

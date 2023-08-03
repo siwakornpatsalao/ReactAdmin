@@ -62,12 +62,13 @@ function Addon(){
     const [value, setValue] = useState(0);
     const [optionGroups, setOptionGroups] = useState([]);
     const [originalAddons, setOriginalAddons] = useState([]);
+    const [originalOptions, setOriginalOptions] = useState([]);
 
     const handleChange = (event, newValue) => {
       setValue(newValue);
     };
 
-    //filter search
+    //filter search addon
     const handleSearchAddon = (searchValue) => {
       console.log(searchValue);
       if (searchValue !== '') {
@@ -80,12 +81,26 @@ function Addon(){
       }
     };
 
+    //filter search option
+    const handleSearchOption = (searchValue) => {
+      console.log(searchValue);
+      if (searchValue !== '') {
+        const filteredOptions = originalOptions.filter((option) =>
+          option.name.toLowerCase().includes(searchValue.toLowerCase())
+        );
+        setOptionGroups(filteredOptions);
+      } else {
+        setOptionGroups(originalOptions);
+      }
+    };
+
     useEffect(() => {
-      async function fetchData(url, setter) {
+      async function fetchData(url, setter, setterOrigin) {
         try {
           const res = await fetch(url);
           const data = await res.json();
           setter(data);
+          setterOrigin(data);
           console.log(data);
         } catch (error) {
           console.error(`Error fetching data from ${url}:`, error);
@@ -95,8 +110,8 @@ function Addon(){
         if (!initial.current) {
           initial.current = true;
           console.log(initial.current);
-          fetchData("http://localhost:5000/Addons",setAddons);
-          fetchData('http://localhost:5000/optiongroups',setOptionGroups);
+          fetchData("http://localhost:5000/Addons",setAddons, setOriginalAddons);
+          fetchData('http://localhost:5000/optiongroups',setOptionGroups, setOriginalOptions);
         }
         
       }, []);
@@ -212,7 +227,7 @@ function Addon(){
           </CustomTabPanel>
 
           <CustomTabPanel value={value} index={1}>
-          <OptionSearch />
+          <OptionSearch  onSearch={handleSearchOption}/>
           <Grid
             container
             spacing={3}
