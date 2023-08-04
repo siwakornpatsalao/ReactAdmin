@@ -70,7 +70,7 @@ export default function BasicTabs() {
 
   const isNameValid = (name) => name == "";
   const isPriceValid = (price) => price<=0;
-  const isEditAmountValid = (editAmount) => editAmount<=0;
+  const isEditAmountValid = (editAmount) => editAmount<0;
   const isUnitValid = (unit) => unit =="";
 
   const isOptionGroupNameValid = (optionGroupName) => optionGroupName == "";

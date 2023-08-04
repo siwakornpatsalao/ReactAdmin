@@ -146,7 +146,7 @@ export default function Report2(){
         } else {
           setFilteredRows2(rows2);
         }
-      }, [year, month, day, time, startTime, finishTime]);
+      }, [year, month, day, time, startTime, finishTime, rows2]);
     
       // Pagination 2
     

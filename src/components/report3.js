@@ -105,7 +105,7 @@ export default function Report3(){
         } else {
           setFilteredRows3(rows3);
         }
-      }, [year, month, day]);
+      }, [year, month, day, rows3]);
     
       // Pagination 3
     

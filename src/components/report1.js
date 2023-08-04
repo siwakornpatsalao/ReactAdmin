@@ -92,10 +92,10 @@ export default function Report1(){
                <p>ราคารวม: ${row.price} บาท</p>
                <p>วันที่ ${row1.date}</p>
                <p>เวลา: ${row.time}</p>`,
-        customClass: {
+        /* customClass: {
           title: styles['custom-title-class'],
           html: styles['customText'],
-        },
+        }, */
       });
     }
 
@@ -175,7 +175,7 @@ export default function Report1(){
       } else {
         setFilteredRows(rows);
       }
-    }, [year, month]);
+    }, [year, month, rows]);
 
     // Pagination 1
 
