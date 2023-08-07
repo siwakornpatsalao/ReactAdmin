@@ -188,11 +188,15 @@ export default function Report1(){
     return (
         <Box>
             <TableContainer>
-              {renderDropdown("รายปี", years, year, handleChangeYear)}
-              {renderDropdown("รายเดือน", months, month, handleChangeMonth)}
-              <Button variant="contained" onClick={handleReset}>
-                Reset
-              </Button>
+              <Box sx={{display: 'flex'}}>
+                {renderDropdown("รายปี", years, year, handleChangeYear)}
+                {renderDropdown("รายเดือน", months, month, handleChangeMonth)}
+                <Box sx={{marginTop:'15px', marginLeft:'20px'}}>
+                  <Button variant="contained" onClick={handleReset}>
+                    Reset
+                  </Button>
+                </Box>
+              </Box>
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                   <TableRow>
@@ -280,9 +284,11 @@ export default function Report1(){
                       </TableRow>
                     </>
                   ))}
-                  {pagination(filteredRows)}
                 </TableBody>
               </Table>
+              <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
+                {pagination(filteredRows)}
+              </Box>
             </TableContainer>
           </Box>
     )

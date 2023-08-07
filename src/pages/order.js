@@ -397,9 +397,11 @@ export default function BasicTabs() {
                     </TableCell>
                   </TableRow>
                 ))}
-                {pagination(paidOrders)}
               </TableBody>
             </Table>
+            <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
+            {pagination(paidOrders)}
+              </Box>
           </TableContainer>           
 
             </CustomTabPanel>
@@ -436,9 +438,11 @@ export default function BasicTabs() {
                         </TableCell>
                     </TableRow>
                   ))}
-                  {pagination(rows)}
                 </TableBody>
               </Table>
+              <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
+                {pagination(rows)}
+              </Box>
             </TableContainer>
 
             </CustomTabPanel>
