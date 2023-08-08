@@ -110,7 +110,7 @@ export default function Promotion(){
               </Stack>
             </Stack>
             <div>
-                <Link href="./addPromotion">
+                <Link href="./add/addPromotion">
               <Button
                 startIcon={(
                   <SvgIcon fontSize="small">

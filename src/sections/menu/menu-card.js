@@ -30,7 +30,7 @@ export const MenuCard = (props) => {
             height="200px"
           />
         </Box>
-        <Link href={`/editMenu?id=${menu._id}`} >
+        <Link href={`/edit/editMenu?id=${menu._id}`} >
         <Button>Edit</Button>
         </Link>
         <Typography

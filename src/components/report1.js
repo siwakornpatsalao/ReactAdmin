@@ -201,10 +201,10 @@ export default function Report1(){
                 <TableHead>
                   <TableRow>
                     <TableCell><Button onClick={() => {sortByInt(paginatedRows, "order", sortOrder, setSortOrder);}}>ลำดับ</Button></TableCell>
-                    <TableCell> <Button onClick={() => {sortByDate(paginatedRows, "date", sortDate, setSortDate);}}> วันที่ </Button> </TableCell>
-                    <TableCell> <Button onClick={() => {sortByInt(paginatedRows, "orderCount", sortOrderCount, setSortOrderCount);}}> จำนวนออเดอร์ </Button> </TableCell>
-                    <TableCell> <Button onClick={() => {sortByInt(paginatedRows, "menuCount", sortMenuCount, setSortMenuCount);}}> จำนวนสินค้า </Button> </TableCell>
-                    <TableCell> <Button onClick={() => {sortByInt(paginatedRows, "total", sortTotal, setSortTotal);}}> จำนวนยอดขาย </Button> </TableCell>
+                    <TableCell><Button onClick={() => {sortByDate(paginatedRows, "date", sortDate, setSortDate);}}>วันที่</Button></TableCell>
+                    <TableCell><Button onClick={() => {sortByInt(paginatedRows, "orderCount", sortOrderCount, setSortOrderCount);}}>จำนวนออเดอร์</Button></TableCell>
+                    <TableCell><Button onClick={() => {sortByInt(paginatedRows, "menuCount", sortMenuCount, setSortMenuCount);}}>จำนวนสินค้า</Button></TableCell>
+                    <TableCell><Button onClick={() => {sortByInt(paginatedRows, "total", sortTotal, setSortTotal);}}>จำนวนยอดขาย</Button></TableCell>
                     <TableCell></TableCell>
                   </TableRow>
                 </TableHead>

@@ -10,12 +10,10 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Swal from "sweetalert2";
-import { useRouter } from 'next/router';
-
-const disabledTabStyle = {
-  pointerEvents: 'none',
-  opacity: 0.5,
-};
+import AddonAdd from 'src/components/addonAdd';
+import OptionAdd from 'src/components/optionAdd';
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -58,49 +56,40 @@ export default function BasicTabs() {
   const [amount, setAmount] = useState(0);
   const [editAmount, setEditAmount] = useState(0);
   const [unit, setUnit] = useState('');
+  const [options, setOptions] = useState([]);
   const initial = useRef(false);
   const [optionGroupName, setOptionGroupName] = useState('');
-  const [options, setOptions] = useState([]);
   const [isRequired, setIsRequired] = useState(true);
   const [isRequired2, setIsRequired2] = useState(true);
-  const router = useRouter();
-  const { id } = router.query;
-  const [addon, setAddon] = useState([]);
-  const [optionGroup, setOptionGroup] = useState(null);
+  const [addons, setAddons] = useState([]);
+  const [id, setId] = useState(0);
+  const [id2, setId2] = useState(0);
 
-  const isNameValid = (name) => name == "";
-  const isPriceValid = (price) => price<=0;
-  const isEditAmountValid = (editAmount) => editAmount<0;
-  const isUnitValid = (unit) => unit =="";
-
-  const isOptionGroupNameValid = (optionGroupName) => optionGroupName == "";
-
-
-  async function handleSubmit(e) {
+  /* async function handleSubmit(e) {
     e.preventDefault();
-    if (!image || isNameValid(name) || isPriceValid(price) || isEditAmountValid(editAmount) || isUnitValid(unit)) {
+    if (!image || isNameValid(name) || isPriceValid(price) || isAmountValid(amount) || isUnitValid(unit)) {
       Swal.fire("Error", "กรุณากรอกข้อมูลให้ถูกต้อง", "error");
       return;
     }
     Swal.fire({
-      title: "ยืนยันการแก้ไขเมนูเพิ่มเติมนี้หรือไม่",
+      title: "ต้องการเพิ่มเมนูเพิ่มเติมนี้หรือไม่",
       confirmButtonText: "ยืนยัน",
-      showDenyButton: true, 
-      denyButtonText: "ยกเลิก",
+      showDenyButton: true,
+      denyButtonText: "ยกเลิก", 
     }).then(async (result) => {
       if (result.isConfirmed) {
-        Swal.fire(`แก้ไขเมนูเพิ่มเติมชิ้นนี้แล้ว`, "", "success");
+        Swal.fire(`เพิ่มเมนูเพิ่มเติมชิ้นนี้แล้ว`, "", "success");
         try {
-          const response = await fetch(`http://localhost:5000/addons/${id}`, {
-            method: 'PUT',
+          const response = await fetch('http://localhost:5000/addons', {
+            method: 'POST',
             body: JSON.stringify({
+              id: id+1,
               name: name,
               thumbnail: image,
               price: price,
-              amount: parseInt(amount) + parseInt(editAmount),
+              amount: amount,
               editAmount: editAmount,
               unit: unit,
-              updated_at: new Date().toISOString(),
             }),
             headers: {
               'Content-Type': 'application/json',
@@ -111,41 +100,17 @@ export default function BasicTabs() {
           }
           const resJson = await response.json();
           console.log(resJson);
+          setImage(null);
+          setName('');
+          setPrice(0);
+          setAmount(0);
+          setUnit("");
+          fetchAddons();
           document.getElementById('file-input').value = '';
         } catch (error) {
           console.log('Error:', error.message);
         }
       }})
-  }
-
-  async function handleDeleteAddon(e) {
-    e.preventDefault();
-    Swal.fire({
-      title: "ต้องการลบเมนูเพิ่มเติมนี้หรือไม่",
-      confirmButtonText: "ยืนยัน",
-      showDenyButton: true, 
-      denyButtonText: "ยกเลิก",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        Swal.fire(`ลบเมนูเพิ่มเติมชิ้นนี้แล้ว`, "", "success");
-        try {
-          const response = await fetch(`http://localhost:5000/addons/${id}`, {
-            method: "DELETE",
-          });
-          if (!response.ok) {
-            throw new Error("Failed to delete this addons");
-          }
-          setImage(null);
-          setName('');
-          setPrice(0);
-          setAmount('');
-          setEditAmount('');
-          setUnit('');
-        } catch (error) {
-          console.log("Error:", error.message);
-        }
-      }
-    })
   }
 
   function handleChangeFile(e) {
@@ -158,9 +123,9 @@ export default function BasicTabs() {
     };
   
     reader.readAsDataURL(file);
-  }
+  } */
 
-   //---------------------------------------------------------------------------------------------------------
+  //---------------------------------------------------------------------------------------------------------
 
   const handleIsRequiredChange = (event) => {
     setIsRequired(event.target.value === 'necessary');
@@ -212,6 +177,9 @@ export default function BasicTabs() {
       showCancelButton: true, 
       cancelButtonText: "ยกเลิก", 
       denyButtonText: `ลบตัวเลือก`,
+      customClass: {
+        content: "custom-swal-content", 
+      },
     }).then(async (result) => {
       if (result.isConfirmed) {
         const inputName = document.getElementById('swal-input1').value;
@@ -231,18 +199,16 @@ export default function BasicTabs() {
           updatedOptions[index] = editOption;
           setOptions(updatedOptions);
           console.log(options);
-          // edit and store in array
         }
       }else if(result.isDenied){
         Swal.fire("ตัวเลือกถูกลบ", "", "success");
         const updatedOptions = [...options];
-        updatedOptions.splice(index, 1); // Remove the option from the array
+        updatedOptions.splice(index, 1); 
         setOptions(updatedOptions);
         console.log(options);
       }
   });
   }
-
 
   async function handleSubmitOption(e){
     e.preventDefault();
@@ -251,23 +217,22 @@ export default function BasicTabs() {
       return;
     }
     Swal.fire({
-      title: "ยืนยันการแก้ไขกลุ่มตัวเลือกนี้หรือไม่",
+      title: "ต้องการเพิ่มกลุ่มตัวเลือกนี้หรือไม่",
       confirmButtonText: "ยืนยัน",
-      showDenyButton: true, 
-      denyButtonText: "ยกเลิก",
+      showDenyButton: true,
+      denyButtonText: "ยกเลิก", 
     }).then(async (result) => {
       if (result.isConfirmed) {
-        Swal.fire(`แก้ไขกลุ่มตัวเลือกนี้แล้ว`, "", "success");
         try {
           console.log(optionGroupName)
-          const response = await fetch(`http://localhost:5000/optiongroups/${id}`, {
-            method: 'PUT',
+          const response = await fetch('http://localhost:5000/optiongroups', {
+            method: 'POST',
             body: JSON.stringify({
+              id: id2+1,
               name: optionGroupName,
               options: options,
               require: isRequired ? 'necessary' : 'not',
               selection: isRequired2 ? 'one' : 'many',
-              updated_at: new Date().toISOString(),
             }),
             headers: {
               'Content-Type': 'application/json',
@@ -276,98 +241,62 @@ export default function BasicTabs() {
           if (!response.ok) {
             throw new Error('Failed to add new optionGroups');
           }
+          Swal.fire(`เพิ่มกลุ่มตัวเลือกแล้ว`, "", "success");
           const resJson = await response.json();
           console.log(resJson);
+          setOptionGroupName('');
+          setOptions([]);
+          fetchOptions();
         } catch (error) {
           console.log('Error:', error.message);
         }
-      }
-    })
-  }
-
-  async function handleDeleteOption(e) {
-    e.preventDefault();
-    Swal.fire({
-      title: "ต้องการลบกลุ่มตัวเลือกนี้หรือไม่",
-      confirmButtonText: "ยืนยัน",
-      showDenyButton: true,
-      denyButtonText: "ยกเลิก", 
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        Swal.fire(`ลบกลุ่มตัวเลือกนี้แล้ว`, "", "success");
-        try {
-          const response = await fetch(`http://localhost:5000/optiongroups/${id}`, {
-            method: "DELETE",
-          });
-          if (!response.ok) {
-            throw new Error("Failed to delete this optiongroups");
-          }
-          setOptionGroupName('');
-          setOptions([]);
-        } catch (error) {
-          console.log("Error:", error.message);
-        }
-      }
-    })
+      }})
   }
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
+  const fetchAddons = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/addons');
+      const data = await res.json();
+      setAddons(data);
+      const maxId = data.reduce((max, item) => {
+        return item.id > max ? item.id : max;
+      }, 0);
+      setId(maxId);
+      console.log(data);
+    } catch (error) {
+      console.error(`Error fetching data from ${url}:`, error);
+    }
+  }
+
+  const fetchOptions = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/optiongroups');
+      const data = await res.json();
+      const maxId = data.reduce((max, item) => {
+        return item.id > max ? item.id : max;
+      }, 0);
+      setId2(maxId);
+      console.log(data);
+    } catch (error) {
+      console.error(`Error fetching data from ${url}:`, error);
+    }
+  }
+
   useEffect(() => {
-
-    if (id) {
-        fetchAddonData();
-        fetchOptionGroup();
-    }
-
-
-    if(name==''){
-      setValue(1);
-      //disable addon tab
-    }else if(optionGroupName==''){
-      setValue(0);
-      //disable optiongroup tab
-    }
-    //if from addon do fetchAddonData **BUT** if from option do fetchOptionGroup
-    
-    async function fetchAddonData(){
-        try {
-          const response = await fetch(`http://localhost:5000/addons/${id}`);
-          const data = await response.json();
-          setAddon(data);
-          setName(data.name);
-          setPrice(data.price);
-          setAmount(data.amount);
-          setEditAmount(data.editAmount);
-          setImage(data.thumbnail);
-          setUnit(data.unit);
-        } catch (error) {
-          console.error('Error fetching menu:', error);
-        }
-      };
-
-    async function fetchOptionGroup() {
-      try {
-        const res = await fetch(`http://localhost:5000/optiongroups/${id}`);
-        const data = await res.json();
-        setOptionGroup(data);
-        setOptionGroupName(data.name);
-        setOptions(data.options);
-        console.log(data);
-      } catch (error) {
-        console.error("Error fetching options:", error);
-      }
-    }
-
     if (!initial.current) {
       initial.current = true;
       console.log(initial.current);
-      fetchOptionGroup();
-      fetchAddonData();
     }
-  }, [id, name,optionGroupName]);
+  }, []);
+
+  useEffect(() => {
+    fetchAddons();
+    fetchOptions();
+  }, [id, id2]);
 
   return (
     <DashboardLayout>
@@ -381,14 +310,14 @@ export default function BasicTabs() {
           aria-label="basic tabs example"
           centered
         >
-          <Tab style={!name ? disabledTabStyle : {}} label="เมนูเพิ่มเติม" {...a11yProps(0)} />
-          <Tab style={!optionGroupName ? disabledTabStyle : {}} label="ตัวเลือก" {...a11yProps(1)} />
+          <Tab label="เมนูเพิ่มเติม" {...a11yProps(0)} />
+          <Tab label="ตัวเลือก" {...a11yProps(1)} />
         </Tabs>
       </Box>
 
       <CustomTabPanel value={value} index={0}>
-        <form onSubmit={handleSubmit}>
-        <Button style={{ background: 'red' }} variant="contained" onClick={handleDeleteAddon}>ลบเมนูเพิ่มเติมชิ้นนี้</Button>
+      <AddonAdd/>
+       {/* { <form onSubmit={handleSubmit}>
         <Box sx={{ display: 'flex',marginLeft: '300px'  }}>
           <Box sx={{ m: 1 }}>
           <input
@@ -437,16 +366,16 @@ export default function BasicTabs() {
               label="จำนวน"
               value={amount}
               color="secondary"
-              disabled
+              error={isAmountValid(amount)}
+              helperText="จำนวนควรมีค่า 0 ขึ้นไป"
               focused
               onChange={(e) => setAmount(e.target.value)}
             />
             <TextField
               label="แก้ไขจำนวน"
+              disabled
               value={editAmount}
               color="secondary"
-              error={isEditAmountValid(editAmount)}
-              helperText="จำนวนที่แก้ไขควรมีค่า 0 ขึ้นไป"
               focused
               onChange={(e) => setEditAmount(e.target.value)}
             />
@@ -462,32 +391,31 @@ export default function BasicTabs() {
             />
           <br/>
 
-          <Button variant="contained" type="submit">แก้ไขเมนูเพิ่มเติม</Button>
+          <Button variant="contained" type="submit">สร้างเมนูเพิ่มเติมใหม่</Button>
           </Box>
         </Box>
-        </form>
+        </form> } */}
       </CustomTabPanel>
 
       <CustomTabPanel value={value} index={1}>
-        <form onSubmit={handleSubmitOption}>
-        <Box sx={{display:'flex',marginLeft: '400px' }}>   
-        <Box sx={{ m: 1 }}>
-        <Button style={{ background: 'red' }} variant="contained" onClick={handleDeleteOption}>ลบกลุ่มตัวเลือก</Button>
+        <OptionAdd/>
+        {/* <form onSubmit={handleSubmitOption}>
+          <Box sx={{display:'flex',marginLeft: '400px' }}>   
+          <Box sx={{ m: 1 }}>
         <h1>ชื่อกลุ่มตัวเลือก</h1>
         <TextField
               label="ชื่อกลุ่มตัวเลือก"
               value={optionGroupName}
               color="secondary"
               error={isOptionGroupNameValid(optionGroupName)}
-              helperText="กรุณาใส่ชื่อกลุ่มตัวเลือก"
+              helperText="กรุณาชื่อกลุ่มตัวเลือก"
               focused
               onChange={(e) => setOptionGroupName(e.target.value)}
         />
         <br/>
         <Button onClick={handleAddOption}>เพิ่มตัวเลือก</Button>
-        {/* If edit addon disable */}
-        {options.map((option) => (
-              <MenuItem onClick={() => handleEditOption(option)} key={option._id}>
+        {options.map((option,index) => (
+              <MenuItem onClick={() => handleEditOption(option,index)} key={option._id}>
                 {option.name} +{option.price} บาท
               </MenuItem>
             ))}
@@ -503,10 +431,10 @@ export default function BasicTabs() {
         </RadioGroup>
         <br/>
 
-        <Button variant='contained' type="submit">แก้ไขกลุ่มตัวเลือก</Button>
+        <Button variant='contained' type="submit">สร้างตัวเลือกใหม่</Button>
         </Box>
         </Box>
-        </form>
+        </form> */}
       </CustomTabPanel>
     </Box>
     </DashboardLayout>

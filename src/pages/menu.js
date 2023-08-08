@@ -142,7 +142,7 @@ function Menu(){
               </Stack>
             </Stack>
             <div>
-                <Link href="./addMenu">
+                <Link href="./add/addMenu">
               <Button
                 startIcon={(
                   <SvgIcon fontSize="small">

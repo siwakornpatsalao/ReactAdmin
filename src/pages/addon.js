@@ -171,7 +171,7 @@ function Addon(){
               </Stack>
             </Stack>
             <div>
-                <Link href="./addAddon">
+                <Link href="./add/addAddon">
               <Button
                 startIcon={(
                   <SvgIcon fontSize="small">

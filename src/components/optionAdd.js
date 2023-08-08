@@ -10,6 +10,8 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Swal from "sweetalert2";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 export default function OptionAdd(){
     const [options, setOptions] = useState([]);
@@ -20,6 +22,55 @@ export default function OptionAdd(){
     const initial = useRef(false);
 
     const isOptionGroupNameValid = (optionGroupName) => optionGroupName == "";
+
+    const validationSchema = Yup.object().shape({
+      optionGroupName: Yup.string().required('กรุณาใส่ชื่อสินค้า'),
+    });
+
+    const formik = useFormik({
+      initialValues: {
+        optionGroupName:'',
+      },
+      validationSchema,
+      onSubmit: async (values) => {
+
+        Swal.fire({
+          title: "ต้องการเพิ่มกลุ่มตัวเลือกนี้หรือไม่",
+          confirmButtonText: "ยืนยัน",
+          showDenyButton: true,
+          denyButtonText: "ยกเลิก", 
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            try {
+              console.log(optionGroupName)
+              const response = await fetch('http://localhost:5000/optiongroups', {
+                method: 'POST',
+                body: JSON.stringify({
+                  id: id2+1,
+                  name: values.optionGroupName,
+                  options: options,
+                  require: isRequired ? 'necessary' : 'not',
+                  selection: isRequired2 ? 'one' : 'many',
+                }),
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              });
+              if (!response.ok) {
+                throw new Error('Failed to add new optionGroups');
+              }
+              Swal.fire(`เพิ่มกลุ่มตัวเลือกแล้ว`, "", "success");
+              const resJson = await response.json();
+              console.log(resJson);
+              formik.resetForm();
+              setOptions([]);
+              fetchOptions();
+            } catch (error) {
+              console.log('Error:', error.message);
+            }
+          }})
+      }
+    })
 
     const handleIsRequiredChange = (event) => {
         setIsRequired(event.target.value === 'necessary');
@@ -53,8 +104,6 @@ export default function OptionAdd(){
             };
             setOptions([...options, newOption]);
             console.log(options)
-        
-            //store in array
           }
     
         }});
@@ -173,18 +222,19 @@ export default function OptionAdd(){
       }, [id2]);
 
     return(
-        <form onSubmit={handleSubmitOption}>
+        <form noValidate onSubmit={formik.handleSubmit}>
           <Box sx={{display:'flex',marginLeft: '400px' }}>   
           <Box sx={{ m: 1 }}>
         <h1>ชื่อกลุ่มตัวเลือก</h1>
         <TextField
-              label="ชื่อกลุ่มตัวเลือก"
-              value={optionGroupName}
-              color="secondary"
-              error={isOptionGroupNameValid(optionGroupName)}
-              helperText="กรุณาชื่อกลุ่มตัวเลือก"
-              focused
-              onChange={(e) => setOptionGroupName(e.target.value)}
+           focused
+           label="ชื่อกลุ่มตัวเลือก"
+           name="optionGroupName"
+           onBlur={formik.handleBlur}
+           onChange={formik.handleChange}
+           value={formik.values.optionGroupName}
+           error={formik.touched.optionGroupName && !!formik.errors.optionGroupName}
+           helperText={formik.touched.optionGroupName && formik.errors.optionGroupName}
         />
         <br/>
         <Button onClick={handleAddOption}>เพิ่มตัวเลือก</Button>

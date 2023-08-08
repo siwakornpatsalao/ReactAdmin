@@ -13,6 +13,8 @@ import Checkbox from "@mui/material/Checkbox";
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Swal from "sweetalert2";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 const steps = ['เลือกรูปแบบโปรโมชั่น', 'เพิ่มรายละเอียดโปรโมชั่น', 'ตัวอย่างโปรโมชั่น'];
 const daysOfWeek = ['วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัส', 'วันศุกร์', 'วันเสาร์', 'วันอาทิตย์'];
@@ -47,18 +49,14 @@ function Step1({setType,type,setProductType,productType}) {
 }
 
 
-function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,start_date,setStart_Date,finish_date,setFinish_Date,start_time,setStart_Time,finish_time,setFinish_Time
-                ,selectedMenus,setSelectedMenus,selectedCategories,setSelectedCategories,amount,setAmount }) {
+function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,formik,selectedMenus,setSelectedMenus,
+                  selectedCategories,setSelectedCategories,amount,setAmount }) {
     const [menus, setMenus] = useState([]);
     const [categories, setCategories] = useState([]);
     const initial = useRef(false);
 
     const isDataValid = (data) => data < 0;
-    const isStartDateValid = (start_date) => start_date == '';
-    const isFinishDateValid = (finish_date) => finish_date == '';
-    const isStartTimeValid = (start_time) => start_time == '';
-    const isFinishTimeValid = (finish_time) => finish_time == '';
-  
+
     useEffect(() => {
       async function fetchMenus() {
         try {
@@ -144,24 +142,30 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,star
           <h2>ระยะเวลาโปรโมชั่น</h2>
           <h4>วันเริ่มต้น</h4>
           <TextField
-            label="วันเริ่มต้น"
+            focused
+            label="วันเริ่ม"
+            name="start_date"
             type="date"
-            value={start_date}
-            onChange={(e) => setStart_Date(e.target.value)}
-            error={isStartDateValid(start_date)}
-            helperText='กรุณาใส่วันเริ่มต้น'
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
+            value={formik.values.start_date}
+            error={formik.touched.start_date && !!formik.errors.start_date}
+            helperText={formik.touched.start_date && formik.errors.start_date}
             InputLabelProps={{
               shrink: true,
             }}
           />
           <h4>วันสิ้นสุด</h4>
           <TextField
+            focused
             label="วันสิ้นสุด"
+            name="finish_date"
             type="date"
-            value={finish_date}
-            onChange={(e) => setFinish_Date(e.target.value)}
-            error={isFinishDateValid(finish_date)}
-            helperText='กรุณาใส่วันสิ้นสุด'
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
+            value={formik.values.finish_date}
+            error={formik.touched.finish_date && !!formik.errors.finish_date}
+            helperText={formik.touched.finish_date && formik.errors.finish_date}
             InputLabelProps={{
               shrink: true,
             }}
@@ -180,12 +184,15 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,star
           </ToggleButtonGroup>
           <h4>เวลาเริ่ม</h4>
           <TextField
-            label="Alarm clock"
+            focused
+            label="เวลาเริ่ม"
+            name="start_time"
             type="time"
-            value={start_time}
-            onChange={(e) => setStart_Time(e.target.value)}
-            error={isStartTimeValid(start_time)}
-            helperText='กรุณาใส่เวลาเริ่ม'
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
+            value={formik.values.start_time}
+            error={formik.touched.start_time && !!formik.errors.start_time}
+            helperText={formik.touched.start_time && formik.errors.start_time}
             InputLabelProps={{
               shrink: true,
             }}
@@ -195,12 +202,15 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,star
           />
           <h4>เวลาสิ้นสุด</h4>
           <TextField
-            label="Alarm clock"
+            focused
+            label="เวลาสิ้นสุด"
+            name="finish_time"
             type="time"
-            value={finish_time}
-            onChange={(e) => setFinish_Time(e.target.value)}
-            error={isFinishTimeValid(finish_time)}
-            helperText='กรุณาใส่เวลาสิ้นสุด'
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
+            value={formik.values.finish_time}
+            error={formik.touched.finish_time && !!formik.errors.finish_time}
+            helperText={formik.touched.finish_time && formik.errors.finish_time}
             InputLabelProps={{
               shrink: true,
             }}
@@ -295,10 +305,7 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,star
   
 
 
-function Step3({topic,setTopic,message,setMessage,image,setImage}) {
-
-  const isTopicValid = (topic) => topic=='';
-  const isMessageValid = (message) => message=='';
+function Step3({formik2,image,setImage}) {
 
   function handleChangeFile(e) {
     const file = e.target.files[0];
@@ -313,10 +320,10 @@ function Step3({topic,setTopic,message,setMessage,image,setImage}) {
   }
 
   function handleReset(){
-    setMessage('')
-    setTopic('')
+    formik2.resetForm()
     setImage(null)
   }
+
 
   return (
     <div>
@@ -330,25 +337,27 @@ function Step3({topic,setTopic,message,setMessage,image,setImage}) {
       {/* Topic and Message */}
       <Box sx={{  m: 1, width: "25ch",}}>
         <Box sx={{ mb: 2 }}>
-          <TextField
-            label="หัวข้อ"
-            value={topic}
-            color="secondary"
-            error={isTopicValid(topic)}
-            helperText="กรุณาใส่หัวข้อ"
+        <TextField
             focused
-            onChange={(e) => setTopic(e.target.value)}
+            label="หัวข้อ"
+            name="topic"
+            onBlur={formik2.handleBlur}
+            onChange={formik2.handleChange}
+            value={formik2.values.topic}
+            error={formik2.touched.topic && !!formik2.errors.topic}
+            helperText={formik2.touched.topic && formik2.errors.topic}
           />
         </Box>
         <Box sx={{ mb: 2 }}>
-          <TextField
-            label="ข้อความ"
-            value={message}
-            color="secondary"
-            error={isMessageValid(message)}
-            helperText="กรุณาใส่ข้อความ"
+        <TextField
             focused
-            onChange={(e) => setMessage(e.target.value)}
+            label="ข้อความ"
+            name="message"
+            onBlur={formik2.handleBlur}
+            onChange={formik2.handleChange}
+            value={formik2.values.message}
+            error={formik2.touched.message && !!formik2.errors.message}
+            helperText={formik2.touched.message && formik2.errors.message}
           />
         </Box>
 
@@ -368,18 +377,42 @@ export default function HorizontalLinearStepper() {
   const [productType, setProductType] = useState('');
   const [selectedDays, setSelectedDays] = useState([]);
   const [data, setData] = useState('');
-  const [start_date, setStart_Date] = useState('');
-  const [finish_date, setFinish_Date] = useState('');
-  const [start_time, setStart_Time] = useState('');
-  const [finish_time, setFinish_Time] = useState('');
-  const [topic, setTopic] = useState('');
-  const [message, setMessage] = useState('');
   const [image, setImage] = useState(null);
   const [selectedMenus, setSelectedMenus] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [amount, setAmount] = useState(0);
   const [id, setId] = useState(0);
   const initial = useRef(false);
+
+  const validationSchema = Yup.object().shape({
+    start_date: Yup.string().required('กรุณาใส่วันเริ่ม'),
+    finish_date: Yup.string().required('กรุณาใส่วันสิ้นสุด'),
+    start_time: Yup.string().required('กรุณาใส่เวลาเริ่ม'),
+    finish_time: Yup.string().required('กรุณาใส่เวลาสิ้นสุด'),
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      start_date:'',
+      finish_date:'',
+      start_time:'',
+      finish_time:'',
+    },
+    validationSchema
+  })
+
+  const validationSchema2 = Yup.object().shape({
+    topic: Yup.string().required('กรุณาใส่หัวข้อ'),
+    message: Yup.string().required('กรุณาใส่หัวข้อ'),
+  });
+
+  const formik2 = useFormik({
+    initialValues: {
+      topic:'',
+      message:'',
+    },
+    validationSchema2
+  })
 
   const isStepOptional = (step) => {
     return step === 1;
@@ -431,12 +464,10 @@ export default function HorizontalLinearStepper() {
         return <Step1 setType={setType} type={type} setProductType={setProductType} productType={productType} />;
       case 1:
         return <Step2 type={type} productType={productType} selectedDays={selectedDays} setSelectedDays={setSelectedDays} 
-        data={data} setData={setData} start_date={start_date} setStart_Date={setStart_Date} 
-        finish_date={finish_date} setFinish_Date={setFinish_Date} start_time={start_time} setStart_Time={setStart_Time} 
-        finish_time={finish_time} setFinish_Time={setFinish_Time} selectedMenus={selectedMenus} setSelectedMenus={setSelectedMenus}
+        data={data} setData={setData} formik={formik} selectedMenus={selectedMenus} setSelectedMenus={setSelectedMenus}
         selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories} amount={amount} setAmount={setAmount}/>;
       case 2:
-        return <Step3 topic={topic} setTopic={setTopic} message={message} setMessage={setMessage} image={image} setImage={setImage}/>;
+        return <Step3 formik2={formik2} image={image} setImage={setImage}/>;
       default:
         return null;
     }
@@ -449,7 +480,7 @@ export default function HorizontalLinearStepper() {
 
     const menu = selectedMenus;
     const category = selectedCategories;
-    if (!image || !type || !productType || !data || !start_date || !finish_date || !start_time || !finish_time || !topic || !message ||!selectedDays) {
+    if (!image || !type || !productType || !data || !selectedDays) {
       Swal.fire("Error", "กรุณากรอกข้อมูลให้ถูกต้อง", "error");
       return;
     }
@@ -469,13 +500,13 @@ export default function HorizontalLinearStepper() {
                 productType: productType,
                 data: data,
                 days: selectedDays,
-                start_date: start_date,
-                finish_date: finish_date,
-                start_time: start_time,
-                finish_time: finish_time,
+                start_date: formik.values.start_date,
+                finish_date: formik.values.finish_date,
+                start_time: formik.values.start_time,
+                finish_time: formik.values.finish_time,
                 image: image,
-                topic: topic,
-                message: message,
+                topic: formik2.values.topic,
+                message: formik2.values.message,
                 menu: menu,
                 category: category,
                 amount: amount,
@@ -496,12 +527,8 @@ export default function HorizontalLinearStepper() {
             setProductType("");
             setSelectedDays([]);
             setData("");
-            setStart_Date("");
-            setFinish_Date("");
-            setStart_Time("");
-            setFinish_Time("");
-            setTopic("");
-            setMessage("");
+            formik.resetForm();
+            formik2.resetForm();
             setActiveStep(0);
             setSkipped(new Set());
             setSelectedCategories([]);

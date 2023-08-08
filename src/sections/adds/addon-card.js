@@ -33,7 +33,7 @@ export const AddonCard = (props) => {
             height="200px"
           />
         </Box>
-        <Link href={`/editAddon?id=${Addon._id}`} >
+        <Link href={`/edit/editAddon?id=${Addon._id}`} >
         <Button>Edit</Button>
         </Link>
         <Typography

@@ -141,6 +141,7 @@ export default function BasicTabs() {
           setDescription("");
           setPrice(0);
           setCategory("");
+          router.push("/menu");
         } catch (error) {
           console.log("Error:", error.message);
         }

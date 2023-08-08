@@ -30,7 +30,7 @@ export const PromotionCard = (props) => {
             height="200px"
           />
         </Box>
-        <Link href={`/editPromotion?id=${Promotion._id}`} >
+        <Link href={`/edit/editPromotion?id=${Promotion._id}`} >
         <Button>Edit</Button>
         </Link>
         <Typography

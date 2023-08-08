@@ -10,6 +10,8 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Swal from "sweetalert2";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 function AddonAdd(){
     const [value, setValue] = useState(0);
@@ -23,14 +25,70 @@ function AddonAdd(){
     const [id, setId] = useState(0);
     const [addons, setAddons] = useState([]);
 
-    const isNameValid = (name) => name == "";
-    const isPriceValid = (price) => price<=0;
-    const isAmountValid = (amount) => amount<=0;
-    const isUnitValid = (unit) => unit =="";
+    const validationSchema = Yup.object().shape({
+      name: Yup.string().required('กรุณาใส่ชื่อสินค้า'),
+      price: Yup.number().positive('กรุณาใส่ราคาที่มากกว่า 0').required('กรุณาใส่ราคา'),
+      amount: Yup.number().positive('กรุณาใส่จำนวนที่มากกว่า 0').required('กรุณาใส่จำนวน'),
+      unit: Yup.string().required('กรุณาใส่หน่วย'),
+    });
+  
+    const formik = useFormik({
+      initialValues: {
+        name:'',
+        price:'',
+        amount:'',
+        unit:'',
+      },
+      validationSchema,
+      onSubmit: async (values) => {
+        if (!image) {
+          Swal.fire("Error", "กรุณาใส่รูปภาพ", "error");
+          return;
+        }
+
+        Swal.fire({
+          title: "ต้องการเพิ่มเมนูเพิ่มเติมนี้หรือไม่",
+          confirmButtonText: "ยืนยัน",
+          showDenyButton: true,
+          denyButtonText: "ยกเลิก", 
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            Swal.fire(`เพิ่มเมนูเพิ่มเติมชิ้นนี้แล้ว`, "", "success");
+            try {
+              const response = await fetch('http://localhost:5000/addons', {
+                method: 'POST',
+                body: JSON.stringify({
+                  id: id+1,
+                  name: values.name,
+                  thumbnail: image,
+                  price: values.price,
+                  amount: values.amount,
+                  editAmount: editAmount,
+                  unit: values.unit,
+                }),
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              });
+              if (!response.ok) {
+                throw new Error('Failed to add new addon');
+              }
+              const resJson = await response.json();
+              console.log(resJson);
+              setImage(null);
+              fetchAddons();
+              formik.resetForm();
+              document.getElementById('file-input').value = '';
+            } catch (error) {
+              console.log('Error:', error.message);
+            }
+          }})
+      }
+    })
 
 
 
-    async function handleSubmit(e) {
+    /* async function handleSubmit(e) {
         e.preventDefault();
         if (!image || isNameValid(name) || isPriceValid(price) || isAmountValid(amount) || isUnitValid(unit)) {
           Swal.fire("Error", "กรุณากรอกข้อมูลให้ถูกต้อง", "error");
@@ -76,7 +134,7 @@ function AddonAdd(){
               console.log('Error:', error.message);
             }
           }})
-      }
+      } */
     
       function handleChangeFile(e) {
         const file = e.target.files[0];
@@ -121,7 +179,7 @@ function AddonAdd(){
       }, [id]);
 
     return(
-        <form onSubmit={handleSubmit}>
+      <form noValidate onSubmit={formik.handleSubmit}>
         <Box sx={{ display: 'flex',marginLeft: '300px'  }}>
           <Box sx={{ m: 1 }}>
           <input
@@ -147,33 +205,36 @@ function AddonAdd(){
             autoComplete="off"
           >
             <TextField
-              label="ชื่อเมนู"
-              value={name}
-              color="secondary"
-              error={isNameValid(name)}
-              helperText="กรุณาใส่ชื่อสินค้า"
               focused
-              onChange={(e) => setName(e.target.value)}
+              label="ชื่อสินค้า"
+              name="name"
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              value={formik.values.name}
+              error={formik.touched.name && !!formik.errors.name}
+              helperText={formik.touched.name && formik.errors.name}
             />
             <br/>
             <TextField
+              focused
               label="ราคา"
-              value={price}
-              color="secondary"
-              error={isPriceValid(price)}
-              helperText="ราคาควรมีค่า 0 ขึ้นไป"
-              focused
-              onChange={(e) => setPrice(e.target.value)}
+              name="price"
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              value={formik.values.price}
+              error={formik.touched.price && !!formik.errors.price}
+              helperText={formik.touched.price && formik.errors.price}
             />
             <br/>
             <TextField
-              label="จำนวน"
-              value={amount}
-              color="secondary"
-              error={isAmountValid(amount)}
-              helperText="จำนวนควรมีค่า 0 ขึ้นไป"
               focused
-              onChange={(e) => setAmount(e.target.value)}
+              label="จำนวน"
+              name="amount"
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              value={formik.values.amount}
+              error={formik.touched.amount && !!formik.errors.amount}
+              helperText={formik.touched.amount && formik.errors.amount}
             />
             <TextField
               label="แก้ไขจำนวน"
@@ -185,13 +246,14 @@ function AddonAdd(){
             />
             <br/>
             <TextField
-              label="หน่วย"
-              value={unit}
-              color="secondary"
-              error={isUnitValid(unit)}
-              helperText="กรุณาใส่หน่วย"
               focused
-              onChange={(e) => setUnit(e.target.value)}
+              label="หน่วย"
+              name="unit"
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              value={formik.values.unit}
+              error={formik.touched.unit && !!formik.errors.unit}
+              helperText={formik.touched.unit && formik.errors.unit}
             />
           <br/>
 

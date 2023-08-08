@@ -10,6 +10,8 @@ import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Swal from "sweetalert2";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -49,10 +51,7 @@ function a11yProps(index) {
 export default function BasicTabs() {
   const [value, setValue] = useState(0);
   const [image, setImage] = useState(null);
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState(0);
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState(""); 
   const initial = useRef(false);
   const [addons, setAddons] = useState([]);
   const [optionGroups, setOptionGroups] = useState([]);
@@ -62,67 +61,71 @@ export default function BasicTabs() {
   const [menus, setMenus] = useState([]);
   const [id, setId] = useState(0);
 
-  const isNameValid = (name) => name == "";
-  const isDesValid = (description) => description == "" ;
-  const isPriceValid = (price) => price<=0;
-  const isCategoryValid = (category) => category == "";
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required('กรุณาใส่ชื่อสินค้า'),
+    description: Yup.string().required('กรุณาใส่คำอธิบาย'),
+    price: Yup.number().positive('กรุณาใส่ราคาที่มากกว่า 0').required('กรุณาใส่ราคา'),
+  });
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-  
-    const addonIds = selectedAddons;
-    const optionGroupIds = selectedOptionGroups; 
-  
-    if (!image || isNameValid(name) || isDesValid(description) || isPriceValid(price) || isCategoryValid(category)) {
-      Swal.fire("Error", "กรุณากรอกข้อมูลให้ถูกต้อง", "error");
-      return;
-    }
-    console.log(addonIds);
-    Swal.fire({
-      title: "ต้องการเพิ่มสินค้านี้หรือไม่",
-      confirmButtonText: "ยืนยัน",
-      showDenyButton: true,
-      denyButtonText: "ยกเลิก", 
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          const response = await fetch("http://localhost:5000/menus", {
-            method: "POST",
-            body: JSON.stringify({
-              id: id+1,
-              name: name,
-              thumbnail: image,
-              description: description,
-              price: price,
-              category: category,
-              addonId: addonIds,
-              optionGroupId: optionGroupIds, 
-            }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-          if (!response.ok) {
-            Swal.fire(`ไม่สามารถเพิ่มเมนูได้`, "", "error");
-            throw new Error("Failed to add new menu");
-          }
-          const resJson = await response.json();
-          console.log(resJson);
-          Swal.fire(`เพิ่มสินค้าชิ้นนี้แล้ว`, "", "success");
-          setImage(null);
-          setName("");
-          setDescription("");
-          setPrice(0);
-          setCategory("");
-          setSelectedAddons([]);
-          setSelectedOptionGroups([]);
-          document.getElementById("file-input").value = "";
-        } catch (error) {
-          console.log("Error:", error.message);
+  const formik = useFormik({
+    initialValues: {
+      name:'',
+      description:'',
+      price:'',
+    },
+    validationSchema,
+    onSubmit: async (values) => {
+        const addonIds = selectedAddons;
+        const optionGroupIds = selectedOptionGroups; 
+
+        if (!image || !category) {
+          Swal.fire("Error", "กรุณาใส่ข้อมูล", "error");
+          return;
         }
-      }
-    });
-  }
+
+        Swal.fire({
+          title: "ต้องการเพิ่มสินค้านี้หรือไม่",
+          confirmButtonText: "ยืนยัน",
+          showDenyButton: true,
+          denyButtonText: "ยกเลิก", 
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            console.log("Submitting form...");
+            try {
+              const response = await fetch("http://localhost:5000/menus", {
+                method: "POST",
+                body: JSON.stringify({
+                  id: id+1,
+                  name: values.name,
+                  thumbnail: image,
+                  description: values.description,
+                  price: values.price,
+                  category: category,
+                  addonId: addonIds,
+                  optionGroupId: optionGroupIds, 
+                }),
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              });
+              if (!response.ok) {
+                Swal.fire(`ไม่สามารถเพิ่มเมนูได้`, "", "error");
+                throw new Error("Failed to add new menu");
+              }
+              const resJson = await response.json();
+              console.log(resJson);
+              Swal.fire(`เพิ่มสินค้าชิ้นนี้แล้ว`, "", "success");
+              formik.resetForm();
+              setImage(null);
+              setCategory("");
+              document.getElementById("file-input").value = "";
+            } catch (error) {
+              console.log("Error:", error.message);
+            }
+          }
+        });
+    },
+  });
   
 
   function handleChangeFile(e) {
@@ -203,7 +206,7 @@ export default function BasicTabs() {
         </Box>
 
         <CustomTabPanel value={value} index={0}>
-          <form onSubmit={handleSubmit}>
+        <form noValidate onSubmit={formik.handleSubmit}>
           <Box sx={{ display: 'flex',marginLeft: '300px' }}>
             <Box sx={{ m: 1 }}>
             <input id="file-input" type="file" onChange={handleChangeFile} accept="image/*" />
@@ -218,41 +221,46 @@ export default function BasicTabs() {
                 "& > :not(style)": { m: 1, width: "25ch", marginLeft:'50px' },
               }} noValidate autoComplete="off">
               <TextField
-                label="ชื่อเมนู"
-                value={name}
-                color="secondary"
-                error={isNameValid(name)}
-                helperText="กรุณาใส่ชื่อสินค้า"
                 focused
-                onChange={(e) => setName(e.target.value)}
+                label="ชื่อสินค้า"
+                name="name"
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                value={formik.values.name}
+                error={formik.touched.name && !!formik.errors.name}
+                helperText={formik.touched.name && formik.errors.name}
+                /* inputProps={{style: {fontSize: 30}}} 
+                   font-family: Roboto; */
               />
               <br/>
               <TextField
+                focused
                 label="คำอธิบาย"
-                value={description}
-                color="secondary"
-                error={isDesValid(description)}
-                helperText="กรุณาใส่คำอธิบาย"
-                focused
-                onChange={(e) => setDescription(e.target.value)}
+                name="description"
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                value={formik.values.description}
+                error={formik.touched.description && !!formik.errors.description}
+                helperText={formik.touched.description && formik.errors.description}
               />
               <br/>
               <TextField
-                label="ราคา"
-                value={price}
-                color="secondary"
-                error={isPriceValid(price)}
-                helperText="กรุณาใส่ราคา"
                 focused
-                onChange={(e) => setPrice(e.target.value)}
+                label="ราคา"
+                name="price"
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                value={formik.values.price}
+                error={formik.touched.price && !!formik.errors.price}
+                helperText={formik.touched.price && formik.errors.price}
               />
 
             <TextField
               value={category}
               select
+              focused
               label="หมวดหมู่"
               defaultValue="เครื่องดื่ม"
-              error={isCategoryValid(category)}
               helperText="Please select your category"
               onChange={(e) => setCategory(e.target.value)}
             >

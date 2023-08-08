@@ -16,7 +16,7 @@ export const OptionCard = (props) => {
       }}
     >
       <CardContent>
-        <Link href={`/editAddon?id=${OptionGroups._id}`} >
+        <Link href={`/edit/editAddon?id=${OptionGroups._id}`} >
         <Button>Edit</Button>
         </Link>
         <Typography
