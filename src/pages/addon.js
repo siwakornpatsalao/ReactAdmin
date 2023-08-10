@@ -125,10 +125,6 @@ function Addon(){
     </Head>
     <Box
       component="main"
-      sx={{
-        flexGrow: 1,
-        py: 8
-      }}
     >
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
       </Box>
@@ -143,7 +139,7 @@ function Addon(){
               <Typography variant="h4">
                 Addons
               </Typography>
-              <Stack
+              {/* <Stack
                 alignItems="center"
                 direction="row"
                 spacing={1}
@@ -168,7 +164,7 @@ function Addon(){
                 >
                   Export
                 </Button>
-              </Stack>
+              </Stack> */}
             </Stack>
             <div>
                 <Link href="./add/addAddon">
@@ -204,9 +200,9 @@ function Addon(){
           >
             {Addons.map((Addon) => (
               <Grid
-                xs={12}
-                md={6}
-                lg={4}
+                /* xs={12}
+                md={6} */
+                lg={3}
                 key={Addon._id}
               >
                 <AddonCard Addon={Addon} />
@@ -234,9 +230,9 @@ function Addon(){
           >
             {optionGroups.map((optionGroup) => (
               <Grid
-                xs={12}
-                md={6}
-                lg={4}
+                /* xs={12}
+                md={6} */
+                lg={3}
                 key={optionGroup._id}
               >
                 <OptionCard OptionGroups={optionGroup} />

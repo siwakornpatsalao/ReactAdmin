@@ -54,6 +54,7 @@ export default function BasicTabs() {
 
   return (
     <DashboardLayout>
+      <h1>Report</h1>
       <Box sx={{ width: "100%" }}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <Tabs

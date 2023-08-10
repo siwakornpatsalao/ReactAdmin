@@ -16,7 +16,6 @@ export const AddonCard = (props) => {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        height: '100%'
       }}
     >
       <CardContent>
@@ -24,7 +23,6 @@ export const AddonCard = (props) => {
           sx={{
             display: 'flex',
             justifyContent: 'center',
-            pb: 3
           }}
         >
           <img
@@ -37,17 +35,25 @@ export const AddonCard = (props) => {
         <Button>Edit</Button>
         </Link>
         <Typography
-          align="center"
+          sx={{
+            marginLeft: '10px',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}
+          align="left"
           gutterBottom
-          variant="h5"
+          variant="body1"
+          nowrap
         >
           {Addon.name}
         </Typography>
         <Typography
-          align="center"
+          marginLeft={'10px'}
+          align="left"
           variant="body1"
+          color="red"
         >
-          {Addon.description}
+          {Addon.price}.-
         </Typography>
       </CardContent>
       <Box sx={{ flexGrow: 1 }} />

@@ -22,7 +22,7 @@ const LayoutContainer = styled('div')({
   flex: '1 1 auto',
   flexDirection: 'column',
   width: '100%',
-  padding: '60px',
+  padding: '40px',
 });
 
 export const Layout = withAuthGuard((props) => {

@@ -213,7 +213,8 @@ export default function BasicTabs() {
             <br/>
             <br/>
             {image && (
-              <img src={image} style={{ maxWidth: "100%", height: "500px" }} alt="Preview" />
+              <img src={image} style={{ maxWidth: "100%", height: "500px" }} alt="Preview" variant="square"
+              height="200px"/>
             )}
             </Box>
 

@@ -12,7 +12,6 @@ export const OptionCard = (props) => {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        height: '100%'
       }}
     >
       <CardContent>
@@ -20,19 +19,26 @@ export const OptionCard = (props) => {
         <Button>Edit</Button>
         </Link>
         <Typography
-          align="center"
+          sx={{
+            marginLeft: '10px',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}
+          align="left"
           gutterBottom
-          variant="h4"
+          variant="h6"
+          nowrap
         >
           {OptionGroups.name}
         </Typography>
         <Typography
-            color="text.secondary"
-            gutterBottom
-            variant="h5"
+            marginLeft={'10px'}
+            align="left"
+            variant="body1"
+            color="grey"
           >
             Options:<br/> {OptionGroups.options.map((option) => (
-            <span key={option._id}>{option.name}<br/> </span>
+            <span key={option._id}>{option.name}  <span style={{ marginRight: '20px' }}></span> +{option.price}.-<br/> </span>
           ))}
           </Typography>
       </CardContent>

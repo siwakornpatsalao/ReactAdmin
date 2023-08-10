@@ -328,14 +328,19 @@ function Step3({formik2,image,setImage}) {
   return (
     <div>
       {/* Image */}
+      กรุณาใส่รูปภาพ Banner
+      <br/>
+      <span style={{color:'red'}}>* รูปภาพจะแสดงในรูปแบบ 1200 x 250</span>
       <Box  sx={{ display: 'flex', justifyContent:'center'}}>
-      <Box sx={{ m: 2 }}>
+      <Box >
         <input id="file-input" type="file" onChange={handleChangeFile} accept="image/*" />
-        {image && <img src={image} style={{ maxWidth: '100%', height: '500px' }} alt="Preview" />}
+        <br/>
+        <br/>
+        {image && <img src={image} style={{ width: '1200px', height: '250px' }} alt="Preview" />}
       </Box>
 
       {/* Topic and Message */}
-      <Box sx={{  m: 1, width: "25ch",}}>
+      {/* <Box sx={{  m: 1, width: "25ch",}}>
         <Box sx={{ mb: 2 }}>
         <TextField
             focused
@@ -364,7 +369,7 @@ function Step3({formik2,image,setImage}) {
       <Button onClick={handleReset}>
         <h1>Reset</h1>
       </Button>
-      </Box>
+      </Box> */}
       </Box>
     </div>
   );

@@ -16,6 +16,7 @@ import {
 import { alpha } from '@mui/material/styles';
 import { usePopover } from 'src/hooks/use-popover';
 import { AccountPopover } from './account-popover';
+import { useEffect , useState, useRef} from 'react';
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
@@ -24,6 +25,29 @@ export const TopNav = (props) => {
   const { onNavOpen } = props;
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
   const accountPopover = usePopover();
+  const initial = useRef(false);
+  const [count,setCount] = useState(0);
+
+  useEffect(() => {
+    async function fetchData(url) {
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        setCount((prevCount) => prevCount + data.length);
+        console.log(data);
+      } catch (error) {
+        console.error(`Error fetching data from ${url}:`, error);
+      }
+    }
+  
+      if (!initial.current) {
+        initial.current = true;
+        console.log(initial.current);
+        fetchData("http://localhost:5000/orders");
+        fetchData('http://localhost:5000/orderPaids');
+      }
+      
+    }, []);
 
   return (
     <>
@@ -65,13 +89,13 @@ export const TopNav = (props) => {
                 </SvgIcon>
               </IconButton>
             )}
-            <Tooltip title="Search">
+            {/* <Tooltip title="Search">
               <IconButton>
                 <SvgIcon fontSize="small">
                   <MagnifyingGlassIcon />
                 </SvgIcon>
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
           </Stack>
           <Stack
             alignItems="center"
@@ -85,19 +109,20 @@ export const TopNav = (props) => {
                 </SvgIcon>
               </IconButton>
             </Tooltip>
+
             <Tooltip title="Notifications">
-              <IconButton>
-                <Badge
-                  badgeContent={4}
-                  color="success"
-                  variant="dot"
-                >
-                  <SvgIcon fontSize="small">
-                    <BellIcon />
-                  </SvgIcon>
-                </Badge>
-              </IconButton>
-            </Tooltip>
+      <IconButton>
+        <Badge
+          badgeContent={count}
+          color="success"
+        >
+          <SvgIcon fontSize="small">
+            <BellIcon />
+          </SvgIcon>
+        </Badge>
+      </IconButton>
+    </Tooltip>
+
             <Avatar
               onClick={accountPopover.handleOpen}
               ref={accountPopover.anchorRef}

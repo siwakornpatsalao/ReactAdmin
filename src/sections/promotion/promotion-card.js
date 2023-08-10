@@ -13,40 +13,22 @@ export const PromotionCard = (props) => {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        height: '100%'
       }}
     >
-      <CardContent>
+      <div>
         <Box
           sx={{
             display: 'flex',
             justifyContent: 'center',
-            pb: 3
           }}
         >
           <img
             src={Promotion.image}
             variant="square"
-            height="200px"
+            style={{ width: '100%', height: '250px' }}
           />
         </Box>
-        <Link href={`/edit/editPromotion?id=${Promotion._id}`} >
-        <Button>Edit</Button>
-        </Link>
-        <Typography
-          align="center"
-          gutterBottom
-          variant="h5"
-        >
-          {Promotion.topic}
-        </Typography>
-        <Typography
-          align="center"
-          variant="body1"
-        >
-          {Promotion.message}
-        </Typography>
-      </CardContent>
+      </div>
       <Box sx={{ flexGrow: 1 }} />
       <Divider />
       <Stack
@@ -54,7 +36,7 @@ export const PromotionCard = (props) => {
         direction="row"
         justifyContent="space-between"
         spacing={2}
-        sx={{ p: 2 }}
+
       >
         <Stack
           alignItems="center"
@@ -80,12 +62,9 @@ export const PromotionCard = (props) => {
           direction="row"
           spacing={1}
         >
-          <SvgIcon
-            color="action"
-            fontSize="small"
-          >
-            <ArrowDownOnSquareIcon />
-          </SvgIcon>
+          <Link href={`/edit/editPromotion?id=${Promotion._id}`} >
+        <Button>Edit</Button>
+        </Link>
           <Typography
             color="text.secondary"
             display="inline"

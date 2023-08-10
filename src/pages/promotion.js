@@ -66,10 +66,6 @@ export default function Promotion(){
     </Head>
     <Box
       component="main"
-      sx={{
-        flexGrow: 1,
-        py: 8
-      }}
     >
       <Container maxWidth="xl">
         <Stack spacing={3}>
@@ -82,7 +78,7 @@ export default function Promotion(){
               <Typography variant="h4">
                 Promotions
               </Typography>
-              <Stack
+              {/* <Stack
                 alignItems="center"
                 direction="row"
                 spacing={1}
@@ -107,7 +103,7 @@ export default function Promotion(){
                 >
                   Export
                 </Button>
-              </Stack>
+              </Stack> */}
             </Stack>
             <div>
                 <Link href="./add/addPromotion">
@@ -125,16 +121,15 @@ export default function Promotion(){
             </div>
            </Stack>
         </Stack>
-        <PromotionSearch onSearch={handleSearchPromotion} />
+        {/* <PromotionSearch onSearch={handleSearchPromotion} /> */}
           <Grid
             container
-            spacing={3}
-          >
+            spacing={3}>
             {promotions.map((promotion) => (
               <Grid
                 xs={12}
                 md={6}
-                lg={4}
+                lg={12}
                 key={promotion._id}
               >
               <PromotionCard Promotion={promotion} />

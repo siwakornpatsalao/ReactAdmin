@@ -13,7 +13,8 @@ export const MenuCard = (props) => {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        height: '100%'
+        height: '100%',
+        maxWidth: 350,
       }}
     >
       <CardContent>
@@ -21,7 +22,6 @@ export const MenuCard = (props) => {
           sx={{
             display: 'flex',
             justifyContent: 'center',
-            pb: 3
           }}
         >
           <img
@@ -30,31 +30,40 @@ export const MenuCard = (props) => {
             height="200px"
           />
         </Box>
+        <br/>
         <Link href={`/edit/editMenu?id=${menu._id}`} >
-        <Button>Edit</Button>
+          <Button>Edit</Button>
         </Link>
         <Typography
-          align="center"
+          sx={{
+            marginLeft: '10px',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}
+          align="left"
           gutterBottom
-          variant="h5"
+          variant="body1"
+          nowrap
         >
           {menu.name}
         </Typography>
         <Typography
-          align="center"
+          marginLeft={'10px'}
+          align="left"
           variant="body1"
+          color="red"
         >
-          {menu.description}
+          {menu.price}.-
         </Typography>
       </CardContent>
       <Box sx={{ flexGrow: 1 }} />
-      <Divider />
+{/*       <Divider /> */}
       <Stack
         alignItems="center"
         direction="row"
         justifyContent="space-between"
         spacing={2}
-        sx={{ p: 2 }}
+        sx={{ p: 1 }}
       >
         <Stack
           alignItems="center"
