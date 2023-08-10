@@ -176,7 +176,6 @@ function Menu() {
             style={{ width: "280px" }}
             select
             focused
-            variant="standard"
             label="หมวดหมู่"
             defaultValue="เครื่องดื่ม"
             helperText="Please select your category"
