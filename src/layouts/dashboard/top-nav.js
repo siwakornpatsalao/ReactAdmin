@@ -17,6 +17,7 @@ import { alpha } from '@mui/material/styles';
 import { usePopover } from 'src/hooks/use-popover';
 import { AccountPopover } from './account-popover';
 import { useEffect , useState, useRef} from 'react';
+import { useRouter } from 'next/navigation';
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
@@ -27,6 +28,11 @@ export const TopNav = (props) => {
   const accountPopover = usePopover();
   const initial = useRef(false);
   const [count,setCount] = useState(0);
+  const router = useRouter();
+
+  function handleOrderPage(){
+    router.push('/order')
+  }
 
   useEffect(() => {
     async function fetchData(url) {
@@ -110,8 +116,8 @@ export const TopNav = (props) => {
               </IconButton>
             </Tooltip>
 
-            <Tooltip title="Notifications">
-      <IconButton>
+            <Tooltip title="แจ้งเตือนรายการอาหาร">
+      <IconButton onClick={handleOrderPage}>
         <Badge
           badgeContent={count}
           color="success"

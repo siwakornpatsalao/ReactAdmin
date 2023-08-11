@@ -1,6 +1,4 @@
 import Head from 'next/head';
-import ArrowUpOnSquareIcon from '@heroicons/react/24/solid/ArrowUpOnSquareIcon';
-import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
 import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
 import Swal from "sweetalert2";
 import {
@@ -18,24 +16,37 @@ import Link from 'next/link';
 import { useEffect, useState, useRef } from 'react';
 import { PromotionCard } from 'src/sections/promotion/promotion-card';
 import { PromotionSearch } from 'src/sections/promotion/promotion-search';
+import TablePagination from '@mui/material/TablePagination';
+
 
 export default function Promotion(){
 
   const [promotions, setPromotions] = useState([]);
   const initial = useRef(false);
   const [originalPromotions, setOriginalPromotions] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(8);
+  const [paginatedPromotion, setPaginatedPromotion] = useState(promotions);
 
-  const handleSearchPromotion = (searchValue) => {
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  /* const handleSearchPromotion = (searchValue) => {
     if (searchValue !== '') {
       const filteredPromotion = originalPromotions.filter((promotion) =>
         promotion.topic.toLowerCase().includes(searchValue.toLowerCase())
       );
       setPromotions(filteredPromotion);
     } else {
-      // Reset to show all addons when search value is empty
       setPromotions(originalPromotions)
     }
-  };
+  }; */
 
   useEffect(() => {
     async function fetchPromotion(){
@@ -56,6 +67,12 @@ export default function Promotion(){
       fetchPromotion();
     }
   }, [])
+
+  useEffect(() => {
+    const startIndex = page * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+    setPaginatedPromotion(promotions.slice(startIndex, endIndex));
+  }, [promotions, page, rowsPerPage]);
 
     return(
         <>
@@ -121,11 +138,12 @@ export default function Promotion(){
             </div>
            </Stack>
         </Stack>
+        <br/>
         {/* <PromotionSearch onSearch={handleSearchPromotion} /> */}
           <Grid
             container
             spacing={3}>
-            {promotions.map((promotion) => (
+            {paginatedPromotion.map((promotion) => (
               <Grid
                 xs={12}
                 md={6}
@@ -142,10 +160,15 @@ export default function Promotion(){
               justifyContent: 'center'
             }}
           >
-            <Pagination
-              count={3}
-              size="small"
-            />
+            <TablePagination
+                component="div"
+                rowsPerPageOptions={[4, 8, 24, { label: "All", value: 1000000 }]}
+                count={promotions.length}
+                page={page}
+                onPageChange={handleChangePage}
+                rowsPerPage={rowsPerPage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
           </Box>
       </Container>
     </Box>

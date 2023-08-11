@@ -7,7 +7,7 @@ export const OptionSearch = ({ onSearch }) => {
 
   const handleSearch = (value) => {
     setSearchValue(value);
-    onSearch(searchValue);
+    onSearch(value);
   };
 
   return(

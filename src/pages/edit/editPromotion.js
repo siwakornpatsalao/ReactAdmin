@@ -282,8 +282,8 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,star
 
 function Step3({topic,setTopic,message,setMessage,image,setImage}) {
 
-  const isTopicValid = (topic) => topic=='';
-  const isMessageValid = (message) => message=='';
+ /*  const isTopicValid = (topic) => topic=='';
+  const isMessageValid = (message) => message==''; */
 
   function handleChangeFile(e) {
     const file = e.target.files[0];
@@ -298,51 +298,58 @@ function Step3({topic,setTopic,message,setMessage,image,setImage}) {
   }
   
   function handleReset(){
-    setMessage('')
-    setTopic('')
+    /* setMessage('')
+    setTopic('') */
     setImage(null)
   }
 
   return (
     <div>
-    {/* Image */}
-    <Box  sx={{ display: 'flex',}}>
-    <Box sx={{ m: 2 }}>
-      <input id="file-input" type="file" onChange={handleChangeFile} accept="image/*" />
-      {image && <img src={image} style={{ maxWidth: '100%', height: '500px' }} alt="Preview" />}
-    </Box>
-
-    {/* Topic and Message */}
-    <Box sx={{  m: 1, width: "25ch",}}>
-      <Box sx={{ mb: 2 }}>
-        <TextField
-          label="หัวข้อ"
-          value={topic}
-          color="secondary"
-          error={isTopicValid(topic)}
-          helperText="กรุณาใส่หัวข้อ"
-          focused
-          onChange={(e) => setTopic(e.target.value)}
-        />
-      </Box>
-      <Box sx={{ mb: 2 }}>
-        <TextField
-          label="ข้อความ"
-          value={message}
-          color="secondary"
-          error={isMessageValid(message)}
-          helperText="กรุณาใส่ข้อความ"
-          focused
-          onChange={(e) => setMessage(e.target.value)}
-        />
+      {/* Image */}
+      กรุณาใส่รูปภาพ Banner
+      <br/>
+      <span style={{color:'red'}}>* รูปภาพจะแสดงในรูปแบบ 1200 x 250</span>
+      <Box  sx={{ display: 'flex', justifyContent:'center'}}>
+      <Box >
+        <input id="file-input" type="file" onChange={handleChangeFile} accept="image/*" />
+        <br/>
+        <br/>
+        {image && <img src={image} style={{ width: '1200px', height: '250px' }} alt="Preview" />}
       </Box>
 
-    <Button onClick={handleReset}>
-      <h1>Reset</h1>
-    </Button>
-    </Box>
-    </Box>
-  </div>
+      {/* Topic and Message */}
+      {/* <Box sx={{  m: 1, width: "25ch",}}>
+        <Box sx={{ mb: 2 }}>
+        <TextField
+            focused
+            label="หัวข้อ"
+            name="topic"
+            onBlur={formik2.handleBlur}
+            onChange={formik2.handleChange}
+            value={formik2.values.topic}
+            error={formik2.touched.topic && !!formik2.errors.topic}
+            helperText={formik2.touched.topic && formik2.errors.topic}
+          />
+        </Box>
+        <Box sx={{ mb: 2 }}>
+        <TextField
+            focused
+            label="ข้อความ"
+            name="message"
+            onBlur={formik2.handleBlur}
+            onChange={formik2.handleChange}
+            value={formik2.values.message}
+            error={formik2.touched.message && !!formik2.errors.message}
+            helperText={formik2.touched.message && formik2.errors.message}
+          />
+        </Box>
+
+      <Button onClick={handleReset}>
+        <h1>Reset</h1>
+      </Button>
+      </Box> */}
+      </Box>
+    </div>
   );
 }
 

@@ -63,4 +63,6 @@ TablePaginationActions.propTypes = {
     onPageChange: PropTypes.func.isRequired,
     page: PropTypes.number.isRequired,
     rowsPerPage: PropTypes.number.isRequired,
-  };
+};
+
+export { TablePaginationActions };

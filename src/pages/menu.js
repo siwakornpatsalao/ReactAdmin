@@ -1,6 +1,4 @@
 import Head from "next/head";
-import ArrowUpOnSquareIcon from "@heroicons/react/24/solid/ArrowUpOnSquareIcon";
-import ArrowDownOnSquareIcon from "@heroicons/react/24/solid/ArrowDownOnSquareIcon";
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import Swal from "sweetalert2";
 import {
@@ -23,6 +21,7 @@ import MenuItem from "@mui/material/MenuItem";
 import ClearIcon from '@mui/icons-material/Clear';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from "@mui/material/IconButton";
+import TablePagination from '@mui/material/TablePagination';
 
 function Menu() {
   const [menus, setMenus] = useState([]);
@@ -30,7 +29,18 @@ function Menu() {
   const [originalMenus, setOriginalMenus] = useState([]);
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState("");
-  const [value, setValue] = useState("Original Val");
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(8);
+  const [paginatedMenus, setPaginatedMenus] = useState(menus);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   function handleAddCategory() {
     Swal.fire({
@@ -63,8 +73,12 @@ function Menu() {
     });
   }
 
+  const clearCategoryFilter = () => {
+    setCategory('');
+    setMenus(originalMenus);
+  };
+
   const handleSearchMenu = (searchValue) => {
-    console.log(searchValue);
     if (searchValue !== "") {
       const filteredMenus = originalMenus.filter((menu) =>
         menu.name.toLowerCase().includes(searchValue.toLowerCase())
@@ -75,18 +89,18 @@ function Menu() {
     }
   };
 
-  function handleFilterCategory() {
-    if (category !== "") {
-      const filterCategory = originalMenus.filter((menu) => menu.category.includes(category));
+  const handleCategoryChange = (selectedCategory) => {
+    setCategory(selectedCategory); 
+    if (selectedCategory !== "") {
+      const filterCategory = originalMenus.filter((menu) =>
+        menu.category.includes(selectedCategory)
+      );
       setMenus(filterCategory);
     } else {
       setMenus(originalMenus);
     }
-  }
+  };
 
-  function handleClearClick() {
-    setCategory("");
-  }
 
   useEffect(() => {
     async function fetchMenus() {
@@ -118,7 +132,13 @@ function Menu() {
       fetchMenus();
       fetchCategory();
     }
-  }, [menus]);
+  }, []);
+
+  useEffect(() => {
+    const startIndex = page * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+    setPaginatedMenus(menus.slice(startIndex, endIndex));
+  }, [menus, page, rowsPerPage]);
 
   return (
     <>
@@ -167,7 +187,7 @@ function Menu() {
       <br/>
       <div style={{ display: "flex", alignItems: "flex-end" }}>
         <div style={{ flex: 1 }}>
-          <MenuSearch onSearch={handleSearchMenu} />
+        <MenuSearch onSearch={(searchValue) => handleSearchMenu(searchValue)} />
         </div>
 
         <div style={{ justifyContent: "flex-end" }}>
@@ -181,12 +201,12 @@ function Menu() {
             helperText="Please select your category"
             onChange={(e) => {
               setCategory(e.target.value);
-              handleFilterCategory();
+              handleCategoryChange(e.target.value);
             }}
             InputProps={{
               endAdornment: category && (
                 <InputAdornment position="start">
-                  <IconButton onClick={() => setCategory("")}>
+                  <IconButton onClick={() => clearCategoryFilter()}>
                     <ClearIcon />
                   </IconButton>
                 </InputAdornment>
@@ -209,7 +229,7 @@ function Menu() {
 
 
             <Grid container spacing={3}>
-              {menus.map((menu) => (
+              {paginatedMenus.map((menu) => (
                 <Grid
                   /* xs={12}
                 md={6} */
@@ -226,7 +246,15 @@ function Menu() {
                 justifyContent: "center",
               }}
             >
-              <Pagination count={3} size="small" />
+              <TablePagination
+                component="div"
+                rowsPerPageOptions={[4, 8, 24, { label: "All", value: 1000000 }]}
+                count={menus.length}
+                page={page}
+                onPageChange={handleChangePage}
+                rowsPerPage={rowsPerPage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
             </Box>
           </Stack>
         </Container>

@@ -1,6 +1,4 @@
 import Head from 'next/head';
-import ArrowUpOnSquareIcon from '@heroicons/react/24/solid/ArrowUpOnSquareIcon';
-import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
 import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
 import PropTypes from 'prop-types';
 import {
@@ -22,9 +20,17 @@ import { OptionSearch } from 'src/sections/adds/option-search';
 import Link from 'next/link';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import TablePagination from '@mui/material/TablePagination';
 
 function CustomTabPanel(props) {
-  const { children, value, index, ...other } = props;
+  const { children, value, index, resetState,setRowsPerPage,setPage, ...other } = props;
+
+  useEffect(() => {
+    if (resetState) {
+      setRowsPerPage(8);
+      setPage(0);
+    }
+  }, [value, resetState]);
 
   return (
     <div
@@ -47,6 +53,7 @@ CustomTabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.number.isRequired,
   value: PropTypes.number.isRequired,
+  resetState: PropTypes.bool.isRequired,
 };
 
 function a11yProps(index) {
@@ -63,6 +70,19 @@ function Addon(){
     const [optionGroups, setOptionGroups] = useState([]);
     const [originalAddons, setOriginalAddons] = useState([]);
     const [originalOptions, setOriginalOptions] = useState([]);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(8);
+    const [paginatedAddon, setPaginatedAddon] = useState(Addons);
+    const [paginatedOptions, setPaginatedOptions] = useState(optionGroups);
+
+    const handleChangePage = (event, newPage) => {
+      setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+      setRowsPerPage(parseInt(event.target.value, 10));
+      setPage(0);
+    };
 
     const handleChange = (event, newValue) => {
       setValue(newValue);
@@ -115,6 +135,18 @@ function Addon(){
         }
         
       }, []);
+
+      useEffect(() => {
+        const startIndex = page * rowsPerPage;
+        const endIndex = startIndex + rowsPerPage;
+        setPaginatedAddon(Addons.slice(startIndex, endIndex));
+      }, [Addons, page, rowsPerPage]);
+
+      useEffect(() => {
+        const startIndex = page * rowsPerPage;
+        const endIndex = startIndex + rowsPerPage;
+        setPaginatedOptions(optionGroups.slice(startIndex, endIndex));
+      }, [optionGroups, page, rowsPerPage]);
 
   return (
         <>
@@ -192,13 +224,13 @@ function Addon(){
             <Tab label="เมนูเพิ่มเติม" {...a11yProps(0)} />
             <Tab label="ตัวเลือก" {...a11yProps(1)} />
           </Tabs>
-          <CustomTabPanel value={value} index={0}>
-          <AddonSearch onSearch={handleSearchAddon} />
+          <CustomTabPanel value={value} index={0} resetState={value !== 0} setRowsPerPage={setRowsPerPage} setPage={setPage}>
+          <AddonSearch onSearch={(searchValue) => handleSearchAddon(searchValue)} />
           <Grid
             container
             spacing={3}
           >
-            {Addons.map((Addon) => (
+            {paginatedAddon.map((Addon) => (
               <Grid
                 /* xs={12}
                 md={6} */
@@ -215,20 +247,25 @@ function Addon(){
               justifyContent: 'center'
             }}
           >
-            <Pagination
-              count={3}
-              size="small"
-            />
+            <TablePagination
+              component="div"
+              rowsPerPageOptions={[4, 8, 24, { label: "All", value: 1000000 }]}
+              count={Addons.length}
+              page={page}
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+          />
           </Box>
           </CustomTabPanel>
 
-          <CustomTabPanel value={value} index={1}>
-          <OptionSearch  onSearch={handleSearchOption}/>
+          <CustomTabPanel value={value} index={1} resetState={value !== 1} setRowsPerPage={setRowsPerPage} setPage={setPage}>
+          <OptionSearch onSearch={(searchValue) => handleSearchOption(searchValue)} /> 
           <Grid
             container
             spacing={3}
           >
-            {optionGroups.map((optionGroup) => (
+            {paginatedOptions.map((optionGroup) => (
               <Grid
                 /* xs={12}
                 md={6} */
@@ -245,10 +282,15 @@ function Addon(){
               justifyContent: 'center'
             }}
           >
-            <Pagination
-              count={3}
-              size="small"
-            />
+          <TablePagination
+            component="div"
+            rowsPerPageOptions={[4, 8, 24, { label: "All", value: 1000000 }]}
+            count={Addons.length}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
           </Box>
           </CustomTabPanel>
 
