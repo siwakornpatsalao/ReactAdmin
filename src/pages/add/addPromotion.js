@@ -512,8 +512,8 @@ export default function HorizontalLinearStepper() {
                 image: image,
                 topic: formik2.values.topic,
                 message: formik2.values.message,
-                menu: menu,
-                category: category,
+                menuId: menu,
+                categoryId: category,
                 amount: amount,
               }),
               headers: {

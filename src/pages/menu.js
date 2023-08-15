@@ -32,6 +32,7 @@ function Menu() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(8);
   const [paginatedMenus, setPaginatedMenus] = useState(menus);
+  const [promotion, setPromotion] = useState([]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -101,6 +102,16 @@ function Menu() {
     }
   };
 
+  function hasPromotion(menuId) {
+    console.log(`Menu ID to check: ${menuId}`);
+    const hasPromo = promotion.some(promo => {
+      console.log(`Promo Menu IDs:`, promo.menuId);
+      return promo.menuId.includes(menuId);
+    });
+    console.log(`Menu ${menuId} has promotion:`, hasPromo);
+    return hasPromo;
+  }
+  
 
   useEffect(() => {
     async function fetchMenus() {
@@ -122,7 +133,18 @@ function Menu() {
         setCategories(data);
         console.log(data);
       } catch (error) {
-        console.error("Error fetching menus:", error);
+        console.error("Error fetching category:", error);
+      }
+    }
+
+    async function fetchPromotion() {
+      try {
+        const res = await fetch("http://localhost:5000/promotions");
+        const data = await res.json();
+        setPromotion(data);
+        console.log("Promotion Data:", data);
+      } catch (error) {
+        console.error("Error fetching promotion:", error);
       }
     }
 
@@ -131,6 +153,7 @@ function Menu() {
       console.log(initial.current);
       fetchMenus();
       fetchCategory();
+      fetchPromotion();
     }
   }, []);
 
@@ -236,7 +259,7 @@ function Menu() {
                   lg={3}
                   key={menu._id}
                 >
-                  <MenuCard menu={menu} />
+                   <MenuCard menu={menu} hasPromotion={hasPromotion(menu._id)} />
                 </Grid>
               ))}
             </Grid>

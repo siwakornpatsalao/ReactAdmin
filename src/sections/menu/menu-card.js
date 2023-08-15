@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import Link from 'next/link';
 
 export const MenuCard = (props) => {
-  const { menu} = props;
+  const { menu, hasPromotion } = props;
 
   return (
     <Card
@@ -31,6 +31,7 @@ export const MenuCard = (props) => {
           />
         </Box>
         <br/>
+        {hasPromotion && <p>Special Promotion!</p>}
         <Link href={`/edit/editMenu?id=${menu._id}`} >
           <Button>Edit</Button>
         </Link>
@@ -43,7 +44,6 @@ export const MenuCard = (props) => {
           align="left"
           gutterBottom
           variant="body1"
-          nowrap
         >
           {menu.name}
         </Typography>
