@@ -55,7 +55,10 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,form
     const [categories, setCategories] = useState([]);
     const initial = useRef(false);
 
-    const isDataValid = (data) => data < 0;
+    const currentDate = new Date();
+    const formattedCurrentDate = currentDate.toISOString().slice(0, 10);
+
+    const isDataValid = (data) => typeof data === 'number' && data > 0;
 
     useEffect(() => {
       async function fetchMenus() {
@@ -120,12 +123,12 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,form
           <FormControlLabel
             control={
               <Checkbox
-                checked={selectedCategories.includes(category._id)}
+                checked={selectedCategories.includes(category.name)}
                 onChange={() =>
                   setSelectedCategories((prev) =>
-                    prev.includes(category._id)
-                      ? prev.filter((id) => id !== category._id)
-                      : [...prev, category._id]
+                    prev.includes(category.name)
+                      ? prev.filter((id) => id !== category.name)
+                      : [...prev, category.name]
                   )
                 }
               />
@@ -340,7 +343,7 @@ function Step3({formik2,image,setImage}) {
       </Box>
 
       {/* Topic and Message */}
-      {/* <Box sx={{  m: 1, width: "25ch",}}>
+      <Box sx={{  m: 1, width: "25ch",}}>
         <Box sx={{ mb: 2 }}>
         <TextField
             focused
@@ -366,10 +369,10 @@ function Step3({formik2,image,setImage}) {
           />
         </Box>
 
-      <Button onClick={handleReset}>
+{/*      <Button onClick={handleReset}>
         <h1>Reset</h1>
-      </Button>
-      </Box> */}
+      </Button> */}
+      </Box>
       </Box>
     </div>
   );
@@ -391,9 +394,11 @@ export default function HorizontalLinearStepper() {
 
   const validationSchema = Yup.object().shape({
     start_date: Yup.string().required('กรุณาใส่วันเริ่ม'),
-    finish_date: Yup.string().required('กรุณาใส่วันสิ้นสุด'),
+    finish_date: Yup.date().required('กรุณาใส่วันสิ้นสุด').min(Yup.ref('start_date'), 'วันสิ้นสุดต้องหลังวันเริ่มต้น'),
     start_time: Yup.string().required('กรุณาใส่เวลาเริ่ม'),
-    finish_time: Yup.string().required('กรุณาใส่เวลาสิ้นสุด'),
+    finish_time: Yup.string().required('กรุณาใส่เวลาสิ้นสุด').when('start_time', (start, schema) => {
+      return schema.min(start, 'เวลาสิ้นสุดต้องหลังเวลาเริ่ม');
+    }),
   });
 
   const formik = useFormik({
@@ -408,7 +413,7 @@ export default function HorizontalLinearStepper() {
 
   const validationSchema2 = Yup.object().shape({
     topic: Yup.string().required('กรุณาใส่หัวข้อ'),
-    message: Yup.string().required('กรุณาใส่หัวข้อ'),
+    message: Yup.string().required('กรุณาใส่ข้อความ'),
   });
 
   const formik2 = useFormik({
@@ -485,8 +490,15 @@ export default function HorizontalLinearStepper() {
 
     const menu = selectedMenus;
     const category = selectedCategories;
+    console.log(menu);
+    console.log(category);
     if (!image || !type || !productType || !data || !selectedDays) {
       Swal.fire("Error", "กรุณากรอกข้อมูลให้ถูกต้อง", "error");
+      return;
+    }
+
+    if(formik.values.start_time> formik.values.finish_time){
+      Swal.fire("Error", "เวลาเริ่มต้นห้ามมากกว่าเวลาสิ้นสุด", "error");
       return;
     }
     Swal.fire({
@@ -513,7 +525,7 @@ export default function HorizontalLinearStepper() {
                 topic: formik2.values.topic,
                 message: formik2.values.message,
                 menuId: menu,
-                categoryId: category,
+                category: category,
                 amount: amount,
               }),
               headers: {

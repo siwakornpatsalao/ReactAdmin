@@ -53,6 +53,13 @@ function Menu() {
       denyButtonText: `ยกเลิก`,
     }).then(async (result) => {
       if (result.isConfirmed && result.value !== "") {
+        const categoryName = result.value;
+      
+        if (categories.some(category => category.name === categoryName)) {
+          Swal.fire("ชื่อหมวดหมู่ซ้ำ", "", "error");
+          return;
+        }  
+
         Swal.fire(`เพิ่มหมวดหมู่แล้ว`, "", "success");
         console.log(result.value);
 
@@ -90,6 +97,7 @@ function Menu() {
     }
   };
 
+  // แก้ไข promotion เก็บ category ในรูปแบบ string ok, ใน promotion เก็บ category name ok, category name ห้ามซ้ำ ok
   const handleCategoryChange = (selectedCategory) => {
     setCategory(selectedCategory); 
     if (selectedCategory !== "") {
@@ -103,15 +111,35 @@ function Menu() {
   };
 
   function hasPromotion(menuId) {
-    console.log(`Menu ID to check: ${menuId}`);
     const hasPromo = promotion.some(promo => {
-      console.log(`Promo Menu IDs:`, promo.menuId);
       return promo.menuId.includes(menuId);
     });
-    console.log(`Menu ${menuId} has promotion:`, hasPromo);
+    return hasPromo;
+  }
+
+  function promoData(menuId){
+    const promo = promotion.filter(promo => {
+      return promo.menuId.includes(menuId);
+    });
+    return promo;
+  }
+
+  function hasPromotionCategory(category){
+    const hasPromo = promotion.some(promo => {
+      return promo.category.includes(category);
+    });
     return hasPromo;
   }
   
+  function promoCategoryData(category){
+    console.log(`Category ID to check: ${category}`);
+    const promo = promotion.filter(promo => {
+      console.log(`Promo Category IDs:`, promo.category);
+      return promo.category.includes(category);
+    });
+    console.log(`Category ${category} has promotion:`, promo);
+    return promo;
+  }
 
   useEffect(() => {
     async function fetchMenus() {
@@ -259,7 +287,8 @@ function Menu() {
                   lg={3}
                   key={menu._id}
                 >
-                   <MenuCard menu={menu} hasPromotion={hasPromotion(menu._id)} />
+                   <MenuCard menu={menu} hasPromotion={hasPromotion(menu._id)} promoData={promoData(menu._id)} 
+                   hasPromotionCategory={hasPromotionCategory(menu.category)} promoCategoryData={promoCategoryData(menu.category)}/> {/* // show promotion of category */}
                 </Grid>
               ))}
             </Grid>

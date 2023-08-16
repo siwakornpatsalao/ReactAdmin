@@ -48,14 +48,15 @@ function Step1({setType,type,setProductType,productType}) {
 }
 
 
-function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,start_date,setStart_Date,finish_date,setFinish_Date,start_time,setStart_Time,finish_time,setFinish_Time }) {
+function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,start_date,setStart_Date,finish_date,setFinish_Date,start_time,setStart_Time,finish_time,setFinish_Time
+                ,selectedMenus,setSelectedMenus,selectedCategories,setSelectedCategories,amount,setAmount }) {
     const [menus, setMenus] = useState([]);
     const [categories, setCategories] = useState([]);
     const initial = useRef(false);
     const [prev,setPrev] = useState(selectedDays);
 
 
-    const isDataValid = (data) => data < 0;
+    const isDataValid = (data) => typeof data === 'number' && data > 0;
     const isStartDateValid = (start_date) => start_date == '';
     const isFinishDateValid = (finish_date) => finish_date == '';
     const isStartTimeValid = (start_time) => start_time == '';
@@ -93,7 +94,6 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,star
     }, [selectedDays]);
 
     const handleDaySelect = (event, newSelectedDays) => {
-      // Create a new array with the selected days
       setSelectedDays(newSelectedDays);
     };
 
@@ -101,7 +101,18 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,star
       return menus.map((menu) => (
         <FormGroup key={menu._id}>
           <FormControlLabel
-            control={<Checkbox defaultChecked />}
+            control={
+              <Checkbox
+                checked={selectedMenus.includes(menu._id)}
+                onChange={() =>
+                  setSelectedMenus((prev) =>
+                    prev.includes(menu._id)
+                      ? prev.filter((id) => id !== menu._id)
+                      : [...prev, menu._id]
+                  )
+                }
+              />
+            }
             label={menu.name}
           />
         </FormGroup>
@@ -112,7 +123,18 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,star
       return categories.map((category) => (
         <FormGroup key={category._id}>
           <FormControlLabel
-            control={<Checkbox defaultChecked />}
+            control={
+              <Checkbox
+                checked={selectedCategories.includes(category.name)}
+                onChange={() =>
+                  setSelectedCategories((prev) =>
+                    prev.includes(category.name)
+                      ? prev.filter((id) => id !== category.name)
+                      : [...prev, category.name]
+                  )
+                }
+              />
+            }
             label={category.name}
           />
         </FormGroup>
@@ -197,7 +219,7 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,star
               shrink: true,
             }}
             inputProps={{
-              step: 300, // 5 min
+              step: 300,
             }}
           />
         </div>
@@ -269,7 +291,14 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,star
           ): productType === 'amount' ? (
             <div>
               <h2>คำสั่งซื้อ</h2>
-              ขั้นต่ำคำสั่งซื้อ
+              <TextField
+                label="free"
+                color="secondary"
+                helperText="ขั้นต่ำคำสั่งซื้อ"
+                value= {amount}
+                onChange={(e) => setAmount(e.target.value)}
+                focused
+              />
             </div>
           ):null}
         </div>
@@ -282,8 +311,8 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,star
 
 function Step3({topic,setTopic,message,setMessage,image,setImage}) {
 
- /*  const isTopicValid = (topic) => topic=='';
-  const isMessageValid = (message) => message==''; */
+  const isTopicValid = (topic) => topic=='';
+  const isMessageValid = (message) => message=='';
 
   function handleChangeFile(e) {
     const file = e.target.files[0];
@@ -318,17 +347,16 @@ function Step3({topic,setTopic,message,setMessage,image,setImage}) {
       </Box>
 
       {/* Topic and Message */}
-      {/* <Box sx={{  m: 1, width: "25ch",}}>
+      <Box sx={{  m: 1, width: "25ch",}}>
         <Box sx={{ mb: 2 }}>
         <TextField
             focused
             label="หัวข้อ"
             name="topic"
-            onBlur={formik2.handleBlur}
-            onChange={formik2.handleChange}
-            value={formik2.values.topic}
-            error={formik2.touched.topic && !!formik2.errors.topic}
-            helperText={formik2.touched.topic && formik2.errors.topic}
+            value={topic}
+            color="secondary"
+            error={isTopicValid(topic)}
+            onChange={(e) => setTopic(e.target.value)}
           />
         </Box>
         <Box sx={{ mb: 2 }}>
@@ -336,18 +364,17 @@ function Step3({topic,setTopic,message,setMessage,image,setImage}) {
             focused
             label="ข้อความ"
             name="message"
-            onBlur={formik2.handleBlur}
-            onChange={formik2.handleChange}
-            value={formik2.values.message}
-            error={formik2.touched.message && !!formik2.errors.message}
-            helperText={formik2.touched.message && formik2.errors.message}
+            value={message}
+            color="secondary"
+            error={isMessageValid(message)}
+            onChange={(e) => setMessage(e.target.value)}
           />
         </Box>
 
-      <Button onClick={handleReset}>
+      {/* <Button onClick={handleReset}>
         <h1>Reset</h1>
-      </Button>
-      </Box> */}
+      </Button> */}
+      </Box>
       </Box>
     </div>
   );
@@ -371,6 +398,9 @@ export default function HorizontalLinearStepper() {
   const initial = useRef(false);
   const router = useRouter();
   const { id } = router.query;
+  const [selectedMenus, setSelectedMenus] = useState([]);
+  const [selectedCategories, setSelectedCategories]  = useState([]);
+  const [amount, setAmount] = useState(0);
 
   const isStepOptional = (step) => {
     return step === 1;
@@ -397,6 +427,8 @@ export default function HorizontalLinearStepper() {
         setTopic(data.topic);
         setMessage(data.message);
         setImage(data.image);
+        setSelectedMenus(data.menuId);
+        setSelectedCategories(data.category);
       } catch (error) {
         console.error("Error fetching promotion:", error);
       }
@@ -466,6 +498,12 @@ export default function HorizontalLinearStepper() {
             setStart_Time={setStart_Time}
             finish_time={finish_time}
             setFinish_Time={setFinish_Time}
+            selectedMenus={selectedMenus}
+            setSelectedMenus={setSelectedMenus}
+            selectedCategories={selectedCategories}
+            setSelectedCategories={setSelectedCategories}
+            amount={amount}
+            setAmount={setAmount}
           />
       case 2:
         return <Step3 topic={topic} setTopic={setTopic} message={message} setMessage={setMessage} image={image} setImage={setImage}/>;
@@ -539,6 +577,9 @@ export default function HorizontalLinearStepper() {
             image: image,
             topic: topic,
             message: message,
+            menuId: selectedMenus,
+            category: selectedCategories,
+            amount: amount,
             updated_at: new Date().toISOString(),
           }),
           headers: {

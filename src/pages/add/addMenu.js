@@ -102,7 +102,7 @@ export default function BasicTabs() {
                   price: values.price,
                   category: category,
                   addonId: addonIds,
-                  optionGroupId: optionGroupIds, 
+                  optionGroupId: optionGroupIds,
                 }),
                 headers: {
                   "Content-Type": "application/json",
@@ -118,6 +118,8 @@ export default function BasicTabs() {
               formik.resetForm();
               setImage(null);
               setCategory("");
+              setSelectedAddons([]);
+              setSelectedOptionGroups([]);
               document.getElementById("file-input").value = "";
             } catch (error) {
               console.log("Error:", error.message);
@@ -266,7 +268,7 @@ export default function BasicTabs() {
               onChange={(e) => setCategory(e.target.value)}
             >
               {categories.map((option) => (
-                <MenuItem key={option._id} value={option.name}>
+                <MenuItem key={option._id} value={option._id}>
                   {option.name}
                 </MenuItem>
               ))}
