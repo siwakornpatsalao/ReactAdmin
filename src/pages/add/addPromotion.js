@@ -15,6 +15,11 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Swal from "sweetalert2";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import dayjs from 'dayjs';
 
 const steps = ['เลือกรูปแบบโปรโมชั่น', 'เพิ่มรายละเอียดโปรโมชั่น', 'ตัวอย่างโปรโมชั่น'];
 const daysOfWeek = ['วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัส', 'วันศุกร์', 'วันเสาร์', 'วันอาทิตย์'];
@@ -49,8 +54,9 @@ function Step1({setType,type,setProductType,productType}) {
 }
 
 
-function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,formik,selectedMenus,setSelectedMenus,
-                  selectedCategories,setSelectedCategories,amount,setAmount }) {
+function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,selectedMenus,setSelectedMenus,
+                 selectedCategories,setSelectedCategories,amount,setAmount,selectedStartDate,setSelectedStartDate,
+                 selectedFinishDate,setSelectedFinishDate,selectedStartTime,setSelectedStartTime,selectedFinishTime,setSelectedFinishTime }) {
     const [menus, setMenus] = useState([]);
     const [categories, setCategories] = useState([]);
     const initial = useRef(false);
@@ -138,41 +144,65 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,form
         </FormGroup>
       ))
     };
-  
+
     const renderPromotionDetails = () => {
+
+      const handleStartDateChange = (date) => {
+        setSelectedStartDate(date);
+      
+        if (selectedFinishDate && dayjs(date).isAfter(selectedFinishDate)) {
+          Swal.fire('วันเริ่มต้นห้ามมากกว่าวันสิ้นสุด');
+        }
+      };
+      
+      const handleFinishDateChange = (date) => {
+        setSelectedFinishDate(date);
+      
+        if (date && dayjs(date).isBefore(selectedStartDate)) {
+          Swal.fire('วันเริ่มต้นห้ามมากกว่าวันสิ้นสุด');
+        }
+      };
+      
+
+      const handleStartTimeChange = (event) => {
+        const newTime = event.target.value;
+        setSelectedStartTime(newTime);
+      
+        if (selectedFinishTime && dayjs(newTime, 'HH:mm').isAfter(dayjs(selectedFinishTime, 'HH:mm'))) {
+          Swal.fire('เวลาเริ่มห้ามมากกว่าเวลาสิ้นสุด');
+        }
+      };
+      
+      const handleFinishTimeChange = (event) => {
+        const newTime = event.target.value;
+        setSelectedFinishTime(newTime);
+      
+        if (newTime && dayjs(newTime, 'HH:mm').isBefore(dayjs(selectedStartTime, 'HH:mm'))) {
+          Swal.fire('เวลาเริ่มห้ามมากกว่าเวลาสิ้นสุด');
+        }
+      };
+      
+
       return (
         <div>
           <h2>ระยะเวลาโปรโมชั่น</h2>
           <h4>วันเริ่มต้น</h4>
-          <TextField
-            focused
-            label="วันเริ่ม"
-            name="start_date"
-            type="date"
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-            value={formik.values.start_date}
-            error={formik.touched.start_date && !!formik.errors.start_date}
-            helperText={formik.touched.start_date && formik.errors.start_date}
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              renderInput={(props) => <TextField {...props} />}
+              value={selectedStartDate}
+              onChange={handleStartDateChange} 
+            />
+          </LocalizationProvider>
           <h4>วันสิ้นสุด</h4>
-          <TextField
-            focused
-            label="วันสิ้นสุด"
-            name="finish_date"
-            type="date"
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-            value={formik.values.finish_date}
-            error={formik.touched.finish_date && !!formik.errors.finish_date}
-            helperText={formik.touched.finish_date && formik.errors.finish_date}
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              renderInput={(props) => <TextField {...props} />}
+              value={selectedFinishDate}
+              onChange={handleFinishDateChange} 
+            />
+          </LocalizationProvider>
+
           <h4>วัน</h4>
           <ToggleButtonGroup
             value={selectedDays}
@@ -185,42 +215,33 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,form
               </ToggleButton>
             ))}
           </ToggleButtonGroup>
-          <h4>เวลาเริ่ม</h4>
+
+        <h4>เวลาเริ่ม</h4>
           <TextField
             focused
             label="เวลาเริ่ม"
             name="start_time"
             type="time"
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-            value={formik.values.start_time}
-            error={formik.touched.start_time && !!formik.errors.start_time}
-            helperText={formik.touched.start_time && formik.errors.start_time}
-            InputLabelProps={{
-              shrink: true,
-            }}
+            onChange={handleStartTimeChange}
+            value={selectedStartTime}
             inputProps={{
-              step: 300, // 5 min
+              step: 300, 
             }}
           />
-          <h4>เวลาสิ้นสุด</h4>
+
+        <h4>เวลาสิ้นสุด</h4>
           <TextField
             focused
             label="เวลาสิ้นสุด"
             name="finish_time"
             type="time"
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-            value={formik.values.finish_time}
-            error={formik.touched.finish_time && !!formik.errors.finish_time}
-            helperText={formik.touched.finish_time && formik.errors.finish_time}
-            InputLabelProps={{
-              shrink: true,
-            }}
+            onChange={handleFinishTimeChange}
+            value={selectedFinishTime}
             inputProps={{
-              step: 300, // 5 min
+              step: 300, 
             }}
           />
+
         </div>
       );
     };
@@ -236,7 +257,7 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,form
                 label="percent"
                 value={data}
                 color="secondary"
-                error={isDataValid(data)}
+                error={!isDataValid(data)}
                 helperText="กรุณาใส่มูลค่าส่วนลด (เปอร์เซ็น)"
                 focused
                 onChange={(e) => setData(e.target.value)}
@@ -250,7 +271,7 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,form
                 label="specific"
                 value={data}
                 color="secondary"
-                error={isDataValid(data)}
+                error={!isDataValid(data)}
                 helperText="กรุณาใส่มูลค่าส่วนลด (ราคา)"
                 focused
                 onChange={(e) => setData(e.target.value)}
@@ -264,7 +285,7 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,form
                 label="free"
                 value={data}
                 color="secondary"
-                error={isDataValid(data)}
+                error={!isDataValid(data)}
                 helperText="ขั้นต่ำคำสั่งซื้อ"
                 focused
                 onChange={(e) => setData(e.target.value)}
@@ -308,7 +329,7 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,form
   
 
 
-function Step3({formik2,image,setImage}) {
+function Step3({formik,image,setImage}) {
 
   function handleChangeFile(e) {
     const file = e.target.files[0];
@@ -349,11 +370,11 @@ function Step3({formik2,image,setImage}) {
             focused
             label="หัวข้อ"
             name="topic"
-            onBlur={formik2.handleBlur}
-            onChange={formik2.handleChange}
-            value={formik2.values.topic}
-            error={formik2.touched.topic && !!formik2.errors.topic}
-            helperText={formik2.touched.topic && formik2.errors.topic}
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
+            value={formik.values.topic}
+            error={formik.touched.topic && !!formik.errors.topic}
+            helperText={formik.touched.topic && formik.errors.topic}
           />
         </Box>
         <Box sx={{ mb: 2 }}>
@@ -361,11 +382,11 @@ function Step3({formik2,image,setImage}) {
             focused
             label="ข้อความ"
             name="message"
-            onBlur={formik2.handleBlur}
-            onChange={formik2.handleChange}
-            value={formik2.values.message}
-            error={formik2.touched.message && !!formik2.errors.message}
-            helperText={formik2.touched.message && formik2.errors.message}
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
+            value={formik.values.message}
+            error={formik.touched.message && !!formik.errors.message}
+            helperText={formik.touched.message && formik.errors.message}
           />
         </Box>
 
@@ -384,44 +405,29 @@ export default function HorizontalLinearStepper() {
   const [type, setType] = useState('');
   const [productType, setProductType] = useState('');
   const [selectedDays, setSelectedDays] = useState([]);
-  const [data, setData] = useState('');
+  const [data, setData] = useState(0);
   const [image, setImage] = useState(null);
   const [selectedMenus, setSelectedMenus] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [amount, setAmount] = useState(0);
   const [id, setId] = useState(0);
   const initial = useRef(false);
+  const [selectedStartDate, setSelectedStartDate] = useState(null);
+  const [selectedFinishDate, setSelectedFinishDate] = useState(null);
+  const [selectedStartTime, setSelectedStartTime] = useState(null);
+  const [selectedFinishTime, setSelectedFinishTime] = useState(null);
 
   const validationSchema = Yup.object().shape({
-    start_date: Yup.string().required('กรุณาใส่วันเริ่ม'),
-    finish_date: Yup.date().required('กรุณาใส่วันสิ้นสุด').min(Yup.ref('start_date'), 'วันสิ้นสุดต้องหลังวันเริ่มต้น'),
-    start_time: Yup.string().required('กรุณาใส่เวลาเริ่ม'),
-    finish_time: Yup.string().required('กรุณาใส่เวลาสิ้นสุด').when('start_time', (start, schema) => {
-      return schema.min(start, 'เวลาสิ้นสุดต้องหลังเวลาเริ่ม');
-    }),
-  });
-
-  const formik = useFormik({
-    initialValues: {
-      start_date:'',
-      finish_date:'',
-      start_time:'',
-      finish_time:'',
-    },
-    validationSchema
-  })
-
-  const validationSchema2 = Yup.object().shape({
     topic: Yup.string().required('กรุณาใส่หัวข้อ'),
     message: Yup.string().required('กรุณาใส่ข้อความ'),
   });
 
-  const formik2 = useFormik({
+  const formik = useFormik({
     initialValues: {
       topic:'',
       message:'',
     },
-    validationSchema2
+    validationSchema
   })
 
   const isStepOptional = (step) => {
@@ -474,10 +480,13 @@ export default function HorizontalLinearStepper() {
         return <Step1 setType={setType} type={type} setProductType={setProductType} productType={productType} />;
       case 1:
         return <Step2 type={type} productType={productType} selectedDays={selectedDays} setSelectedDays={setSelectedDays} 
-        data={data} setData={setData} formik={formik} selectedMenus={selectedMenus} setSelectedMenus={setSelectedMenus}
-        selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories} amount={amount} setAmount={setAmount}/>;
+        data={data} setData={setData} selectedMenus={selectedMenus} setSelectedMenus={setSelectedMenus}
+        selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories} amount={amount} setAmount={setAmount}
+        selectedStartDate={selectedStartDate} setSelectedStartDate={setSelectedStartDate} selectedFinishDate={selectedFinishDate} setSelectedFinishDate={setSelectedFinishDate}
+        selectedStartTime={selectedStartTime} setSelectedStartTime={setSelectedStartTime} selectedFinishTime={selectedFinishTime} setSelectedFinishTime={setSelectedFinishTime}
+        />;
       case 2:
-        return <Step3 formik2={formik2} image={image} setImage={setImage}/>;
+        return <Step3 formik={formik} image={image} setImage={setImage}/>;
       default:
         return null;
     }
@@ -492,15 +501,12 @@ export default function HorizontalLinearStepper() {
     const category = selectedCategories;
     console.log(menu);
     console.log(category);
-    if (!image || !type || !productType || !data || !selectedDays) {
+    if (!image || !type || !productType || !data || !selectedDays || !selectedStartDate || !selectedFinishDate || !selectedStartTime || !selectedFinishTime 
+      || selectedStartDate>selectedFinishDate || selectedStartTime>selectedFinishTime || !formik.values.topic || !formik.values.message ) {
       Swal.fire("Error", "กรุณากรอกข้อมูลให้ถูกต้อง", "error");
       return;
     }
 
-    if(formik.values.start_time> formik.values.finish_time){
-      Swal.fire("Error", "เวลาเริ่มต้นห้ามมากกว่าเวลาสิ้นสุด", "error");
-      return;
-    }
     Swal.fire({
       title: "ต้องการเพิ่ม Promotion นี้หรือไม่",
       confirmButtonText: "ยืนยัน",
@@ -517,13 +523,13 @@ export default function HorizontalLinearStepper() {
                 productType: productType,
                 data: data,
                 days: selectedDays,
-                start_date: formik.values.start_date,
-                finish_date: formik.values.finish_date,
-                start_time: formik.values.start_time,
-                finish_time: formik.values.finish_time,
+                start_date: selectedStartDate,
+                finish_date: selectedFinishDate,
+                start_time: selectedStartTime,
+                finish_time: selectedFinishTime,
                 image: image,
-                topic: formik2.values.topic,
-                message: formik2.values.message,
+                topic: formik.values.topic,
+                message: formik.values.message,
                 menuId: menu,
                 category: category,
                 amount: amount,

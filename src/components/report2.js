@@ -49,6 +49,8 @@ export default function Report2(){
     const timeArray = sortAndPage.timeArray;
     const formatDate = sortAndPage.formatDate;
 
+    //const [filteredFinishTimeArray, setFilteredFinishTimeArray] = useState(timeArray);
+
     function handleReset() {
       setYear("");
       setMonth("");
@@ -74,6 +76,9 @@ export default function Report2(){
 
     const handleChangeStartTime = (event) => {
       setStartTime(event.target.value);
+      /* const filteredFinishTimes = timeArray.filter((time) => time >= event.target.value);
+      console.log(filteredFinishTimes)
+      setFilteredFinishTimeArray(filteredFinishTimes); */
     };
 
     const handleChangeFinishTime = (event) => {
@@ -121,8 +126,8 @@ export default function Report2(){
             initial.current = true;
             console.log(initial.current);
             fetchReport2();
-          }
-    }, []);
+        }
+    }, [formatDate]);
 
     useEffect(() => {
         function isTimeInRange(time, range) {

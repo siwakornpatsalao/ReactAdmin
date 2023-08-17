@@ -386,7 +386,7 @@ export default function HorizontalLinearStepper() {
   const [type, setType] = useState('');
   const [productType, setProductType] = useState('');
   const [selectedDays, setSelectedDays] = useState([]);
-  const [data, setData] = useState('');
+  const [data, setData] = useState(0);
   const [start_date, setStart_Date] = useState('');
   const [finish_date, setFinish_Date] = useState('');
   const [start_time, setStart_Time] = useState('');
