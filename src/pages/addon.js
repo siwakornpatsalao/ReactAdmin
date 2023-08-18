@@ -158,8 +158,6 @@ function Addon(){
     <Box
       component="main"
     >
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-      </Box>
       <Container maxWidth="xl">
         <Stack spacing={3}>
           <Stack
@@ -171,35 +169,8 @@ function Addon(){
               <Typography variant="h4">
                 Addons
               </Typography>
-              {/* <Stack
-                alignItems="center"
-                direction="row"
-                spacing={1}
-              >
-                <Button
-                  color="inherit"
-                  startIcon={(
-                    <SvgIcon fontSize="small">
-                      <ArrowUpOnSquareIcon />
-                    </SvgIcon>
-                  )}
-                >
-                  Import
-                </Button>
-                <Button
-                  color="inherit"
-                  startIcon={(
-                    <SvgIcon fontSize="small">
-                      <ArrowDownOnSquareIcon />
-                    </SvgIcon>
-                  )}
-                >
-                  Export
-                </Button>
-              </Stack> */}
             </Stack>
-            <div>
-                <Link href="./add/addAddon">
+              <Link href="./add/addAddon">
               <Button
                 startIcon={(
                   <SvgIcon fontSize="small">
@@ -211,7 +182,6 @@ function Addon(){
                 Add Addon
               </Button>
               </Link>
-            </div>
           </Stack>
           <Tabs
             textColor="secondary"

@@ -282,8 +282,8 @@ function Menu() {
             <Grid container spacing={3}>
               {paginatedMenus.map((menu) => (
                 <Grid
-                  /* xs={12}
-                md={6} */
+                  xs={12}
+                  md={6}
                   lg={3}
                   key={menu._id}
                 >

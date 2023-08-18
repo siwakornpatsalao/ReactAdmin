@@ -29,6 +29,7 @@ export const MenuCard = (props) => {
         flexDirection: 'column',
         height: '100%',
         maxWidth: 350,
+        
       }}
     >
       <CardContent>
@@ -46,13 +47,6 @@ export const MenuCard = (props) => {
         </Box>
         <br/>
 
-        {/* {hasPromotion && (
-          <Typography variant="body2" color="text.secondary">
-            Promotion: {promoData.map((promo)=>(
-                <p>{promo.topic}</p>
-            ))}
-          </Typography>
-        )} */}
         <Link href={`/edit/editMenu?id=${menu._id}`} >
           <Button>Edit</Button>
         </Link>
@@ -124,8 +118,8 @@ export const MenuCard = (props) => {
                 MenuListProps={{ 'aria-labelledby': 'basic-button' }}
               >
                 Promotion Menu: {promoData.map((promo) => (
-                <MenuItem color="text.secondary">
-                    <p key={promo.id}>Topic: {promo.topic}</p>
+                <MenuItem key={promo.id}>
+                    <p>Topic: {promo.topic}</p>
                 </MenuItem>
                  ))}
                  {hasPromotionCategory && (

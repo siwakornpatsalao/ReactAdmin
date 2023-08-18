@@ -95,32 +95,6 @@ export default function Promotion(){
               <Typography variant="h4">
                 Promotions
               </Typography>
-              {/* <Stack
-                alignItems="center"
-                direction="row"
-                spacing={1}
-              >
-                <Button
-                  color="inherit"
-                  startIcon={(
-                    <SvgIcon fontSize="small">
-                      <ArrowUpOnSquareIcon />
-                    </SvgIcon>
-                  )}
-                >
-                  Import
-                </Button>
-                <Button
-                  color="inherit"
-                  startIcon={(
-                    <SvgIcon fontSize="small">
-                      <ArrowDownOnSquareIcon />
-                    </SvgIcon>
-                  )}
-                >
-                  Export
-                </Button>
-              </Stack> */}
             </Stack>
             <div>
                 <Link href="./add/addPromotion">
@@ -139,7 +113,6 @@ export default function Promotion(){
            </Stack>
         </Stack>
         <br/>
-        {/* <PromotionSearch onSearch={handleSearchPromotion} /> */}
           <Grid
             container
             spacing={3}>

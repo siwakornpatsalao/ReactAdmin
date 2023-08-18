@@ -61,8 +61,6 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
     const [categories, setCategories] = useState([]);
     const initial = useRef(false);
 
-    const currentDate = new Date();
-    const formattedCurrentDate = currentDate.toISOString().slice(0, 10);
 
     const isDataValid = (data) => typeof data === 'number' && data > 0;
 
@@ -152,6 +150,7 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
       
         if (selectedFinishDate && dayjs(date).isAfter(selectedFinishDate)) {
           Swal.fire('วันเริ่มต้นห้ามมากกว่าวันสิ้นสุด');
+          setSelectedStartDate(null);
         }
       };
       
@@ -160,6 +159,7 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
       
         if (date && dayjs(date).isBefore(selectedStartDate)) {
           Swal.fire('วันเริ่มต้นห้ามมากกว่าวันสิ้นสุด');
+          setSelectedFinishDate(null);
         }
       };
       
@@ -170,6 +170,7 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
       
         if (selectedFinishTime && dayjs(newTime, 'HH:mm').isAfter(dayjs(selectedFinishTime, 'HH:mm'))) {
           Swal.fire('เวลาเริ่มห้ามมากกว่าเวลาสิ้นสุด');
+          setSelectedStartTime('');
         }
       };
       
@@ -179,6 +180,7 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
       
         if (newTime && dayjs(newTime, 'HH:mm').isBefore(dayjs(selectedStartTime, 'HH:mm'))) {
           Swal.fire('เวลาเริ่มห้ามมากกว่าเวลาสิ้นสุด');
+          setSelectedFinishTime('');
         }
       };
       
@@ -210,7 +212,8 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
             aria-label="Days of Week"
           >
             {daysOfWeek.map((day) => (
-              <ToggleButton key={day} value={day}>
+              <ToggleButton  sx={{ "&.Mui-selected, &.Mui-selected:hover": {color: "green"}}} 
+              key={day} value={day}>
                 {day}
               </ToggleButton>
             ))}
@@ -222,6 +225,7 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
             label="เวลาเริ่ม"
             name="start_time"
             type="time"
+            error={!selectedStartTime}
             onChange={handleStartTimeChange}
             value={selectedStartTime}
             inputProps={{
@@ -235,6 +239,7 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
             label="เวลาสิ้นสุด"
             name="finish_time"
             type="time"
+            error={!selectedFinishTime}
             onChange={handleFinishTimeChange}
             value={selectedFinishTime}
             inputProps={{
@@ -257,8 +262,8 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
                 label="percent"
                 value={data}
                 color="secondary"
-                error={!isDataValid(data)}
-                helperText="กรุณาใส่มูลค่าส่วนลด (เปอร์เซ็น)"
+                error={data<=0 && typeof data !== 'number'}
+                helperText={"กรุณาใส่มูลค่าส่วนลด (เปอร์เซ็น)"}
                 focused
                 onChange={(e) => setData(e.target.value)}
               />
@@ -271,7 +276,7 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
                 label="specific"
                 value={data}
                 color="secondary"
-                error={!isDataValid(data)}
+                error={data<=0 && typeof data !== 'number'}
                 helperText="กรุณาใส่มูลค่าส่วนลด (ราคา)"
                 focused
                 onChange={(e) => setData(e.target.value)}
@@ -285,7 +290,7 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
                 label="free"
                 value={data}
                 color="secondary"
-                error={!isDataValid(data)}
+                error={data<=0 && typeof data !== 'number'}
                 helperText="ขั้นต่ำคำสั่งซื้อ"
                 focused
                 onChange={(e) => setData(e.target.value)}
@@ -315,6 +320,7 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
                 label="free"
                 color="secondary"
                 helperText="ขั้นต่ำคำสั่งซื้อ"
+                error={amount<0 && typeof amount !== 'number'}
                 value= {amount}
                 onChange={(e) => setAmount(e.target.value)}
                 focused
@@ -348,6 +354,10 @@ function Step3({formik,image,setImage}) {
     setImage(null)
   }
 
+  /* function handlePreview(){
+
+  } */
+
 
   return (
     <div>
@@ -375,6 +385,8 @@ function Step3({formik,image,setImage}) {
             value={formik.values.topic}
             error={formik.touched.topic && !!formik.errors.topic}
             helperText={formik.touched.topic && formik.errors.topic}
+            multiline
+            fullWidth
           />
         </Box>
         <Box sx={{ mb: 2 }}>
@@ -387,11 +399,13 @@ function Step3({formik,image,setImage}) {
             value={formik.values.message}
             error={formik.touched.message && !!formik.errors.message}
             helperText={formik.touched.message && formik.errors.message}
+            multiline
+            fullWidth
           />
         </Box>
 
-{/*      <Button onClick={handleReset}>
-        <h1>Reset</h1>
+     {/* <Button onClick={handlePreview}>
+        <h1>Preview</h1>
       </Button> */}
       </Box>
       </Box>
@@ -414,8 +428,8 @@ export default function HorizontalLinearStepper() {
   const initial = useRef(false);
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [selectedFinishDate, setSelectedFinishDate] = useState(null);
-  const [selectedStartTime, setSelectedStartTime] = useState(null);
-  const [selectedFinishTime, setSelectedFinishTime] = useState(null);
+  const [selectedStartTime, setSelectedStartTime] = useState('12:00');
+  const [selectedFinishTime, setSelectedFinishTime] = useState("12:00");
 
   const validationSchema = Yup.object().shape({
     topic: Yup.string().required('กรุณาใส่หัวข้อ'),
@@ -591,8 +605,8 @@ export default function HorizontalLinearStepper() {
 
   return (
     <DashboardLayout>
-      <Box sx={{ width: '100%', padding: '20px' }}>
-        <Stepper activeStep={activeStep} sx={{ padding: '50px' }}>
+      <Box sx={{ width: '100%', padding: '25px' }}>
+        <Stepper activeStep={activeStep} sx={{ mt: '20px',padding: '10px' }}>
           {steps.map((label, index) => {
             const stepProps = {};
             const labelProps = {};

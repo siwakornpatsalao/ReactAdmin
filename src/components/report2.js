@@ -12,6 +12,7 @@ import Collapse from "@mui/material/Collapse";
 import { IconButton } from "@mui/material";
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import SortAndPage from "./sortAndPage";
+import Swal from "sweetalert2";
 
 export default function Report2(){
     const initial = useRef(false);
@@ -76,13 +77,24 @@ export default function Report2(){
 
     const handleChangeStartTime = (event) => {
       setStartTime(event.target.value);
-      /* const filteredFinishTimes = timeArray.filter((time) => time >= event.target.value);
-      console.log(filteredFinishTimes)
+/* 
+      const selectedHours = parseInt(event.target.value);
+    
+      const filteredFinishTimes = timeArray.filter((time) => {
+        const timeHours = parseInt(time);
+        return timeHours > selectedHours;
+      });
+    
       setFilteredFinishTimeArray(filteredFinishTimes); */
     };
+    
 
     const handleChangeFinishTime = (event) => {
       setFinishTime(event.target.value);
+      if(startTime>event.target.value){
+        Swal.fire('เวลาเริ่มมากกว่าเวลาสิ้นสุดไม่ได้');
+        setFinishTime("");
+      }
     };
 
     function convertTimeToMinutes(timeString) {

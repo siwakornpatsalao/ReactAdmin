@@ -108,13 +108,13 @@ export const TopNav = (props) => {
             direction="row"
             spacing={2}
           >
-            <Tooltip title="Contacts">
+            {/* <Tooltip title="Contacts">
               <IconButton>
                 <SvgIcon fontSize="small">
                   <UsersIcon />
                 </SvgIcon>
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
 
             <Tooltip title="แจ้งเตือนรายการอาหาร">
       <IconButton onClick={handleOrderPage}>
@@ -128,17 +128,23 @@ export const TopNav = (props) => {
         </Badge>
       </IconButton>
     </Tooltip>
-
-            <Avatar
-              onClick={accountPopover.handleOpen}
-              ref={accountPopover.anchorRef}
-              sx={{
-                cursor: 'pointer',
-                height: 40,
-                width: 40
-              }}
-              src="/assets/avatars/avatar-anika-visser.png"
-            />
+    {/* <Avatar
+      onClick={accountPopover.handleOpen}
+      ref={accountPopover.anchorRef}
+      sx={{
+         cursor: 'pointer',
+         height: 40,
+         width: 40
+         }}
+        src="/assets/avatars/avatar-anika-visser.png"
+         /> */}
+      <SvgIcon 
+        onClick={accountPopover.handleOpen}
+        ref={accountPopover.anchorRef} 
+        sx={{cursor: 'pointer'}}
+        ontSize="small">
+          <UsersIcon />
+      </SvgIcon>
           </Stack>
         </Stack>
       </Box>

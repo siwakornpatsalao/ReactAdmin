@@ -105,7 +105,7 @@ export const items = [
       </SvgIcon>
     )
   }, */
-  {
+  /* {
     title: 'Login',
     path: '/auth/login',
     icon: (
@@ -122,7 +122,7 @@ export const items = [
         <UserPlusIcon />
       </SvgIcon>
     )
-  },
+  }, */
 /*   {
     title: 'Error',
     path: '/404',

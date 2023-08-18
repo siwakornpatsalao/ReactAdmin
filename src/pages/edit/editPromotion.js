@@ -14,6 +14,11 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Swal from "sweetalert2";
 import { useRouter } from 'next/router';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import dayjs from 'dayjs';
 
 const steps = ['เลือกรูปแบบโปรโมชั่น', 'เพิ่มรายละเอียดโปรโมชั่น', 'ตัวอย่างโปรโมชั่น'];
 const daysOfWeek = ['วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัส', 'วันศุกร์', 'วันเสาร์', 'วันอาทิตย์'];
@@ -146,33 +151,67 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,star
     };
   
     const renderPromotionDetails = () => {
+
+      const handleStartDateChange = (date) => {
+        setStart_Date(date);
+      
+        if (finish_date && dayjs(date).isAfter(finish_date)) {
+          Swal.fire('วันเริ่มต้นห้ามมากกว่าวันสิ้นสุด');
+          setStart_Date(null);
+        }
+      };
+      
+      const handleFinishDateChange = (date) => {
+        setFinish_Date(date);
+      
+        if (date && dayjs(date).isBefore(start_date)) {
+          Swal.fire('วันเริ่มต้นห้ามมากกว่าวันสิ้นสุด');
+          setFinish_Date(null);
+        }
+      };
+      
+
+      const handleStartTimeChange = (event) => {
+        const newTime = event.target.value;
+        setStart_Time(newTime);
+      
+        if (finish_time && dayjs(newTime, 'HH:mm').isAfter(dayjs(finish_time, 'HH:mm'))) {
+          Swal.fire('เวลาเริ่มห้ามมากกว่าเวลาสิ้นสุด');
+          setStart_Time('');
+        }
+      };
+      
+      const handleFinishTimeChange = (event) => {
+        const newTime = event.target.value;
+        setFinish_Time(newTime);
+      
+        if (newTime && dayjs(newTime, 'HH:mm').isBefore(dayjs(start_time, 'HH:mm'))) {
+          Swal.fire('เวลาเริ่มห้ามมากกว่าเวลาสิ้นสุด');
+          setFinish_Time('');
+        }
+      };
+
       return (
         <div>
           <h2>ระยะเวลาโปรโมชั่น</h2>
           <h4>วันเริ่มต้น</h4>
-          <TextField
-            label="วันเริ่มต้น"
-            type="date"
-            value={formatDate(start_date)}
-            onChange={(e) => setStart_Date(e.target.value)}
-            error={isStartDateValid(start_date)}
-            helperText='กรุณาใส่วันเริ่มต้น'
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              renderInput={(props) => <TextField {...props} />}
+              value={start_date}
+              onChange={handleStartDateChange} 
+            />
+          </LocalizationProvider>
+
           <h4>วันสิ้นสุด</h4>
-          <TextField
-            label="วันสิ้นสุด"
-            type="date"
-            value={formatDate(finish_date)}
-            onChange={(e) => setFinish_Date(e.target.value)}
-            error={isFinishDateValid(finish_date)}
-            helperText='กรุณาใส่วันสิ้นสุด'
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              renderInput={(props) => <TextField {...props} />}
+              value={finish_date}
+              onChange={handleFinishDateChange} 
+            />
+          </LocalizationProvider>
+
           <h4>วัน</h4>
           <div>
             {prev.map((day) => (
@@ -187,7 +226,8 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,star
             aria-label="Days of Week"
           >
             {daysOfWeek.map((day) => (
-              <ToggleButton key={day} value={day} >
+              <ToggleButton sx={{ "&.Mui-selected, &.Mui-selected:hover": {color: "green"}}} 
+               key={day} value={day} >
                 {day}
               </ToggleButton>
             ))}
@@ -197,14 +237,14 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,star
             label="Alarm clock"
             type="time"
             value={start_time}
-            onChange={(e) => setStart_Time(e.target.value)}
+            onChange={handleStartTimeChange}
             error={isStartTimeValid(start_time)}
             helperText='กรุณาใส่เวลาเริ่ม'
             InputLabelProps={{
               shrink: true,
             }}
             inputProps={{
-              step: 300, // 5 min
+              step: 300, 
             }}
           />
           <h4>เวลาสิ้นสุด</h4>
@@ -212,7 +252,7 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,star
             label="Alarm clock"
             type="time"
             value={finish_time}
-            onChange={(e) => setFinish_Time(e.target.value)}
+            onChange={handleFinishTimeChange}
             error={isFinishTimeValid(finish_time)}
             helperText='กรุณาใส่เวลาสิ้นสุด'
             InputLabelProps={{
@@ -237,8 +277,8 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,star
                 label="percent"
                 value={data}
                 color="secondary"
-                error={isDataValid(data)}
-                helperText="กรุณาใส่มูลค่าส่วนลด (เปอร์เซ็น)"
+                error={data<=0 && typeof data !== 'number'}
+                helperText={"กรุณาใส่มูลค่าส่วนลด (เปอร์เซ็น)"}
                 focused
                 onChange={(e) => setData(e.target.value)}
               />
@@ -251,7 +291,7 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,star
                 label="specific"
                 value={data}
                 color="secondary"
-                error={isDataValid(data)}
+                error={data<=0 && typeof data !== 'number'}
                 helperText="กรุณาใส่มูลค่าส่วนลด (ราคา)"
                 focused
                 onChange={(e) => setData(e.target.value)}
@@ -265,7 +305,7 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,star
                 label="free"
                 value={data}
                 color="secondary"
-                error={isDataValid(data)}
+                error={data<=0 && typeof data !== 'number'}
                 helperText="ขั้นต่ำคำสั่งซื้อ"
                 focused
                 onChange={(e) => setData(e.target.value)}
@@ -295,6 +335,7 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,star
                 label="free"
                 color="secondary"
                 helperText="ขั้นต่ำคำสั่งซื้อ"
+                error={amount<0 && typeof amount !== 'number'}
                 value= {amount}
                 onChange={(e) => setAmount(e.target.value)}
                 focused
@@ -387,10 +428,10 @@ export default function HorizontalLinearStepper() {
   const [productType, setProductType] = useState('');
   const [selectedDays, setSelectedDays] = useState([]);
   const [data, setData] = useState(0);
-  const [start_date, setStart_Date] = useState('');
-  const [finish_date, setFinish_Date] = useState('');
-  const [start_time, setStart_Time] = useState('');
-  const [finish_time, setFinish_Time] = useState('');
+  const [start_date, setStart_Date] = useState(null);
+  const [finish_date, setFinish_Date] = useState(null);
+  const [start_time, setStart_Time] = useState('12:00');
+  const [finish_time, setFinish_Time] = useState('12:00');
   const [topic, setTopic] = useState('');
   const [message, setMessage] = useState('');
   const [image, setImage] = useState(null);
@@ -603,9 +644,9 @@ export default function HorizontalLinearStepper() {
 
   return (
     <DashboardLayout>
-      <Box sx={{ width: '100%', padding: '20px' }}>
+      <Box sx={{ width: '100%', padding: '25px' }}>
       <Button style={{ background: 'red' }} variant="contained" onClick={handleDeletePromotion}>ลบ Promotion</Button>
-        <Stepper activeStep={activeStep} sx={{ padding: '50px' }}>
+        <Stepper activeStep={activeStep} sx={{ mt: '20px',padding: '10px' }}>
           {steps.map((label, index) => {
             const stepProps = {};
             const labelProps = {};
