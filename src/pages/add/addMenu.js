@@ -4,7 +4,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import { useState, useEffect, useRef } from "react";
-import { TextField, MenuItem, Button } from "@mui/material";
+import { TextField, MenuItem, Button,Card,CardContent } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -12,6 +12,10 @@ import Checkbox from "@mui/material/Checkbox";
 import Swal from "sweetalert2";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import Grid from '@mui/material/Grid';
+import { styled } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
+import Typography from "@mui/material/Typography";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -47,6 +51,15 @@ function a11yProps(index) {
     "aria-controls": `simple-tabpanel-${index}`,
   };
 }
+
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+}));
 
 export default function BasicTabs() {
   const [value, setValue] = useState(0);
@@ -209,21 +222,36 @@ export default function BasicTabs() {
 
         <CustomTabPanel value={value} index={0}>
         <form noValidate onSubmit={formik.handleSubmit}>
-          <Box sx={{ display: 'flex',marginLeft: '300px' }}>
+          <Box sx={{ display: 'flex' }}>
+          <Grid container
+            justifyContent="space-evenly"
+            alignItems="flex-start"  
+            rowSpacing={1} 
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
             <Box sx={{ m: 1 }}>
             <input id="file-input" type="file" onChange={handleChangeFile} accept="image/*" />
-            <br/>
-            <br/>
+            <br/><br/>
             {image && (
-              <img src={image} style={{ maxWidth: "100%", height: "500px" }} alt="Preview" variant="square"
-              height="200px"/>
+              <img style={{
+                maxWidth: "100%", // Set maximum width to fit the container
+                height: "auto", // Maintain aspect ratio
+              }} src={image} alt="Preview" variant="square" width='600px'
+                />
             )}
             </Box>
+            </Grid>
 
+        <Grid container
+            justifyContent="space-evenly"
+            alignItems="flex-start"  
+            rowSpacing={1} 
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
             <Box sx={{
-                "& > :not(style)": { m: 1, width: "25ch", marginLeft:'50px' },
+                "& > :not(style)": { m: 3 },
               }} noValidate autoComplete="off">
+                  <Item>
               <TextField
+                fullWidth
                 focused
                 label="ชื่อสินค้า"
                 name="name"
@@ -232,11 +260,11 @@ export default function BasicTabs() {
                 value={formik.values.name}
                 error={formik.touched.name && !!formik.errors.name}
                 helperText={formik.touched.name && formik.errors.name}
-                /* inputProps={{style: {fontSize: 30}}} 
-                   font-family: Roboto; */
               />
-              <br/>
+              </Item>
+              <Item>
               <TextField
+                fullWidth
                 focused
                 label="คำอธิบาย"
                 name="description"
@@ -246,7 +274,8 @@ export default function BasicTabs() {
                 error={formik.touched.description && !!formik.errors.description}
                 helperText={formik.touched.description && formik.errors.description}
               />
-              <br/>
+              </Item>
+              
               <TextField
                 focused
                 label="ราคา"
@@ -257,7 +286,6 @@ export default function BasicTabs() {
                 error={formik.touched.price && !!formik.errors.price}
                 helperText={formik.touched.price && formik.errors.price}
               />
-
             <TextField
               value={category}
               select
@@ -274,19 +302,39 @@ export default function BasicTabs() {
               ))}
             </TextField>
             <br/>
-
-            <Button variant="contained" type="submit">สร้างเมนูใหม่</Button>
+            
+            <Item>
+            <Button fullWidth variant="contained" type="submit">สร้างเมนูใหม่</Button>
+            </Item>
             </Box>
+            </Grid>
             </Box>
           </form>
         </CustomTabPanel>
 
         <CustomTabPanel value={value} index={1}>
-          <h1>เมนูเพิ่มเติม</h1>
-          <br/>
+          
+        <Grid container
+            justifyContent="space-evenly"
+            alignItems="flex-start"  
+            rowSpacing={1} 
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+            <div style={{width: "500px" }}>
+            <Card sx={{display: 'flex',
+                      flexDirection: 'column',
+                      height: '100%'}}> 
+            <CardContent>
+              <Grid item xs={6} md={10} sm={14}> 
+              <Typography variant="h4" component="h4">
+                    เมนูเพิ่มเติม
+              </Typography>
+                <br/>
           {addons.map((addon) => (
             <FormGroup key={addon._id}>
               <FormControlLabel
+              label={<Typography variant="h6" component="h6" style={{ color: 'black' }}>
+              {addon.name}
+                    </Typography>}
                 control={
                   <Checkbox
                     checked={selectedAddons.includes(addon._id)}
@@ -299,15 +347,31 @@ export default function BasicTabs() {
                     }
                   />
                 }
-                label={addon.name}
+                
               />
             </FormGroup>
           ))}
+          </Grid>
+          </CardContent>
+          </Card>
+          </div>
 
-          <h1>ตัวเลือก</h1>
+          <Card sx={{display: 'flex',
+                    flexDirection: 'column',
+                    height: '100%'}}>
+          <CardContent>
+          <div style={{width: "500px" }}>
+          <Grid item xs={6} md={15} sm={14}>
+          <Typography variant="h4" component="h4">
+                    ตัวเลือก
+          </Typography>
+            <br/>
           {optionGroups.map((optionGroup) => (
             <FormGroup key={optionGroup._id}>
               <FormControlLabel
+              label={<Typography variant="h6" component="h6" style={{ color: 'black' }}>
+              {optionGroup.name}
+                    </Typography>}
                 control={
                   <Checkbox
                     checked={selectedOptionGroups.includes(optionGroup._id)}
@@ -320,10 +384,15 @@ export default function BasicTabs() {
                     }
                   />
                 }
-                label={optionGroup.name}
               />
             </FormGroup>
           ))}
+          </Grid>
+          </div>
+          </CardContent>
+          </Card>
+          
+        </Grid>
         </CustomTabPanel>
       </Box>
     </DashboardLayout>
