@@ -73,7 +73,7 @@ function Step1({setType,type,setProductType,productType}) {
                                 padding="16px"
                                 display="block"
                             >
-                                <Typography variant="h5" component="h5">
+                                <Typography variant="h5" component="h5" style={{ color: "black" }}>
                                     เปอร์เซ็นต์
                                     <Typography variant="h6" component="h6" style={{ color: "#64748B" }}>
                                         ระบุส่วนลดให้ลูกค้าแบบเป็น % เช่น อเมริกาโน่ลด 10%
@@ -89,7 +89,7 @@ function Step1({setType,type,setProductType,productType}) {
                             padding="16px"
                             display="block"
                         >
-                            <Typography variant="h5" component="h5">
+                            <Typography variant="h5" component="h5" style={{ color: "black" }}>
                                 ราคาแบบเจาะจง <Typography variant="h6" component="h6" style={{ color: "#64748B" }}>ระบุส่วนลดให้ลูกค้าแบบเป็นราคาเฉพาะเจาะจง เช่น อเมริกาโน่ลด 5 บาท</Typography>
                             </Typography>
                         </Box>} />
@@ -102,7 +102,7 @@ function Step1({setType,type,setProductType,productType}) {
                             padding="16px"
                             display="block"
                         >
-                            <Typography variant="h5" component="h5">
+                            <Typography variant="h5" component="h5" style={{ color: "black" }}>
                                 เมนูแถมฟรี <Typography variant="h6" component="h6" style={{ color: "#64748B" }}>ระบุส่วนลดให้ลูกค้าแบบเป็นราคาเฉพาะเจาะจง เช่น อเมริกาโน่ลด 5 บาท</Typography>
                             </Typography>
                         </Box>} />
@@ -112,8 +112,8 @@ function Step1({setType,type,setProductType,productType}) {
             </div>
 
 
-        <div style={{ width: '290px' }}>
-          <Grid item xs={6} md={15} sm={14}>
+        <div style={{ width: '350px' }}>
+          <Grid item xs={6} md={10} sm={14}>
                 <Typography variant="h5" component="h5">
                     เลือกรูปแบบโปรโมชั่น
                 </Typography>
@@ -127,7 +127,7 @@ function Step1({setType,type,setProductType,productType}) {
                         padding="16px"
                         display="block"
                     >
-                        <Typography variant="h5" component="h5">
+                        <Typography variant="h5" component="h5" style={{ color: "black" }}>
                             เฉพาะรายการ <Typography variant="h6" component="h6" style={{ color: "#64748B" }}>ลดราคาเฉพาะเมนูที่ต้องการ</Typography>
                         </Typography>
                     </Box>} />
@@ -140,7 +140,7 @@ function Step1({setType,type,setProductType,productType}) {
                         padding="16px"
                         display="block"
                     >
-                        <Typography variant="h5" component="h5">
+                        <Typography variant="h5" component="h5" style={{ color: "black" }}>
                             หมวดหมู่ <Typography variant="h6" component="h6" style={{ color: "#64748B" }}>ลดราคาทุกรายการในหมวดหมู่</Typography>
                         </Typography>
                     </Box>} />
@@ -153,7 +153,7 @@ function Step1({setType,type,setProductType,productType}) {
                         padding="16px"
                         display="block"
                     >
-                        <Typography variant="h5" component="h5">
+                        <Typography variant="h5" component="h5" style={{ color: "black" }}>
                             คำสั่งซื้อ <Typography variant="h6" component="h6" style={{ color: "#64748B" }}>ลดราคาสำหรับทั้งคำสั้งซื้อ</Typography>
                         </Typography>
                     </Box>} />
@@ -302,8 +302,21 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
 
       return (
         <div>
-          <h2>ระยะเวลาโปรโมชั่น</h2>
-          <h4>วันเริ่มต้น</h4>
+           <Grid container
+            justifyContent="space-evenly"
+            alignItems="flex-start"  
+            spacing={3}
+            rowSpacing={1}
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+              <Box sx={{
+                "& > :not(style)": { m: 2 },
+              }} noValidate autoComplete="off">
+          <Typography variant="h5" component="h5">
+                  ระยะเวลาโปรโมชั่น
+          </Typography>
+          <Typography variant="h6" component="h6">
+                  วันเริ่มต้น
+          </Typography>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               renderInput={(props) => <TextField {...props} />}
@@ -311,7 +324,9 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
               onChange={handleStartDateChange} 
             />
           </LocalizationProvider>
-          <h4>วันสิ้นสุด</h4>
+          <Typography variant="h6" component="h6">
+                  วันสิ้นสุด
+          </Typography>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               renderInput={(props) => <TextField {...props} />}
@@ -320,7 +335,9 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
             />
           </LocalizationProvider>
 
-          <h4>วัน</h4>
+          <Typography variant="h6" component="h6">
+                  วัน
+          </Typography>
           <ToggleButtonGroup
             value={selectedDays}
             onChange={handleDaySelect}
@@ -334,7 +351,9 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
             ))}
           </ToggleButtonGroup>
 
-        <h4>เวลาเริ่ม</h4>
+          <Typography variant="h6" component="h6">
+                  เวลาเริ่ม
+          </Typography>
           <TextField
             focused
             label="เวลาเริ่ม"
@@ -348,7 +367,9 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
             }}
           />
 
-        <h4>เวลาสิ้นสุด</h4>
+          <Typography variant="h6" component="h6">
+                 เวลาสิ้นสุด
+          </Typography>
           <TextField
             focused
             label="เวลาสิ้นสุด"
@@ -361,7 +382,8 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
               step: 300, 
             }}
           />
-
+          </Box>
+        </Grid>
         </div>
       );
     };
@@ -373,7 +395,10 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
         <div>
         {type === "percent" ? (
           <div>
-            <h2>เปอร์เซ็นต์</h2>
+            <Typography variant="h5" component="h5">
+                  เปอร์เซ็นต์
+          </Typography>
+          <br/>
             <TextField
                 label="percent"
                 value={data}
@@ -387,7 +412,10 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
           </div>
         ) : type === "specific" ? (
           <div>
-            <h2>เจาะจง</h2>
+             <Typography variant="h5" component="h5">
+                  เจาะจง
+          </Typography>
+          <br/>
             <TextField
                 label="specific"
                 value={data}
@@ -401,7 +429,10 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
           </div>
         ) : type === "free" ? (
           <div>
-            <h2>ฟรี</h2>
+             <Typography variant="h5" component="h5">
+                  ฟรี
+          </Typography>
+          <br/>
             <TextField
                 label="free"
                 value={data}
@@ -421,17 +452,26 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
         <div>
           {productType === 'menu' ? (
             <div>
-              <h2>เลือกเมนู</h2>
+               <Typography variant="h5" component="h5">
+                  เลือกเมนู
+          </Typography>
+          <br/>
               {renderMenus()}
             </div>
           ): productType === 'category' ? (
             <div>
-              <h2>เลือกหมวดหมู่</h2>
+               <Typography variant="h5" component="h5">
+                  เลือกหมวดหมู่
+          </Typography>
+          <br/>
               {renderCategories()}
             </div>
           ): productType === 'amount' ? (
             <div>
-              <h2>คำสั่งซื้อ</h2>
+               <Typography variant="h5" component="h5">
+                  คำสั่งซื้อ
+          </Typography>
+          <br/>
               <TextField
                 label="free"
                 color="secondary"
@@ -482,7 +522,12 @@ function Step3({formik,image,setImage}) {
       กรุณาใส่รูปภาพ Banner
       <br/>
       <span style={{color:'red'}}>* รูปภาพจะแสดงในรูปแบบ 1200 x 250</span>
-      <Box  sx={{ display: 'flex', justifyContent:'center'}}>
+      <Box  sx={{ display: 'flex'}}>
+      <Grid container
+            justifyContent="space-evenly"
+            alignItems="flex-start"  
+            rowSpacing={1} 
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
       <Box >
         <input id="file-input" type="file" onChange={handleChangeFile} accept="image/*" />
         <br/>
@@ -492,8 +537,7 @@ function Step3({formik,image,setImage}) {
       {/* Image responsive */}
 
       {/* Topic and Message */}
-      <Box sx={{  m: 1, width: "25ch",}}>
-        <Box sx={{ mb: 2 }}>
+      <Box sx={{ m: 2}}>
         <TextField
             focused
             label="หัวข้อ"
@@ -506,8 +550,7 @@ function Step3({formik,image,setImage}) {
             multiline
             fullWidth
           />
-        </Box>
-        <Box sx={{ mb: 2 }}>
+          <br/>
         <TextField
             focused
             label="ข้อความ"
@@ -520,12 +563,12 @@ function Step3({formik,image,setImage}) {
             multiline
             fullWidth
           />
-        </Box>
 
      {/* <Button onClick={handlePreview}>
         <h1>Preview</h1>
       </Button> */}
       </Box>
+      </Grid>
       </Box>
     </div>
   );

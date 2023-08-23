@@ -157,6 +157,7 @@ function Addon(){
     </Head>
     <Box
       component="main"
+      /* sx={{ backgroundColor: '#f5f5f5'}} */
     >
       <Container maxWidth="xl">
         <Stack spacing={3}>
@@ -196,6 +197,7 @@ function Addon(){
           </Tabs>
           <CustomTabPanel value={value} index={0} resetState={value !== 0} setRowsPerPage={setRowsPerPage} setPage={setPage}>
           <AddonSearch onSearch={(searchValue) => handleSearchAddon(searchValue)} />
+          <br/>
           <Grid
             container
             spacing={3}
@@ -231,6 +233,7 @@ function Addon(){
 
           <CustomTabPanel value={value} index={1} resetState={value !== 1} setRowsPerPage={setRowsPerPage} setPage={setPage}>
           <OptionSearch onSearch={(searchValue) => handleSearchOption(searchValue)} /> 
+          <br/>
           <Grid
             container
             spacing={3}

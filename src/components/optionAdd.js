@@ -1,17 +1,15 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import { useState, useEffect, useRef } from 'react';
-import { TextField, MenuItem, Button, Radio, RadioGroup} from '@mui/material';
-import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
-import FormGroup from '@mui/material/FormGroup';
+import { TextField, MenuItem, Button, Radio, RadioGroup, Card, CardContent} from '@mui/material';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Swal from "sweetalert2";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import Grid from '@mui/material/Grid';
+import { styled } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
+import Typography from "@mui/material/Typography";
 
 export default function OptionAdd(){
     const [options, setOptions] = useState([]);
@@ -222,12 +220,27 @@ export default function OptionAdd(){
       }, [id2]);
 
     return(
+      <div>
         <form noValidate onSubmit={formik.handleSubmit}>
-          <Box sx={{display:'flex',marginLeft: '400px' }}>   
+          <Box sx={{display:'flex'}}>
+          <Grid container
+            justifyContent="space-evenly"
+            alignItems="flex-start"  
+            rowSpacing={1} 
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+              <Card sx={{display: 'flex',
+                      flexDirection: 'column',
+                      height: '100%'}}> 
+            <CardContent>
           <Box sx={{ m: 1 }}>
-        <h1>ชื่อกลุ่มตัวเลือก</h1>
+          <Typography variant="h4" component="h4">
+              ชื่อกลุ่มตัวเลือก
+          </Typography>
+          <br/>
+          <br/>
         <TextField
            focused
+           fullWidth
            label="ชื่อกลุ่มตัวเลือก"
            name="optionGroupName"
            onBlur={formik.handleBlur}
@@ -240,24 +253,46 @@ export default function OptionAdd(){
         <Button onClick={handleAddOption}>เพิ่มตัวเลือก</Button>
         {options.map((option,index) => (
               <MenuItem onClick={() => handleEditOption(option,index)} key={option._id}>
-                {option.name} +{option.price} บาท
+                <span style={{color:'grey'}}>{option.name} +{option.price} บาท</span>
               </MenuItem>
             ))}
-        <h1>ลูกค้าต้องเลือกตัวเลือกนี้หรือไม่</h1>
+            <br/>
+            <br/>
+        <Typography variant="h4" component="h4">
+            ลูกค้าต้องเลือกตัวเลือกนี้หรือไม่
+        </Typography>
+        <br/>
+
         <RadioGroup value={isRequired ? 'necessary' : 'not'} onChange={handleIsRequiredChange}>
-          <FormControlLabel value="necessary" control={<Radio />} label="จำเป็น" />
-          <FormControlLabel value="not" control={<Radio />} label="ไม่บังคับ" />
+          <FormControlLabel value="necessary" control={<Radio />} label={<Typography variant="h6" component="h6" style={{ color: "black", fontWeight: "normal" }}>
+                            จำเป็น
+                        </Typography>} />
+          <FormControlLabel value="not" control={<Radio />} label={<Typography variant="h6" component="h6" style={{ color: "black", fontWeight: "normal" }}>
+                            ไม่บังคับ
+                        </Typography>} />
         </RadioGroup>
-        <h1>ลูกค้าสามารถเลือกตัวเลือกได้กี่อย่าง</h1>
+        <br/>
+        <Typography variant="h4" component="h4">
+            ลูกค้าสามารถเลือกตัวเลือกได้กี่อย่าง
+        </Typography>
+        <br/>
         <RadioGroup value={isRequired2 ? 'one' : 'many'} onChange={handleIsRequiredChange2}>
-          <FormControlLabel value="one" control={<Radio />} label="1 อย่าง" />
-          <FormControlLabel value="many" control={<Radio />} label="หลายอย่าง" />
+          <FormControlLabel value="one" control={<Radio />} label={<Typography variant="h6" component="h6" style={{ color: "black", fontWeight: "normal" }}>
+                            1 อย่าง
+                        </Typography>} />
+          <FormControlLabel value="many" control={<Radio />} label={<Typography variant="h6" component="h6" style={{ color: "black", fontWeight: "normal" }}>
+                            หลายอย่าง
+                        </Typography>} />
         </RadioGroup>
         <br/>
 
-        <Button variant='contained' type="submit">สร้างตัวเลือกใหม่</Button>
+        <Button fullWidth variant='contained' type="submit">สร้างตัวเลือกใหม่</Button>
         </Box>
+        </CardContent>
+        </Card>
+        </Grid>
         </Box>
         </form>
+        </div>
     )
 }

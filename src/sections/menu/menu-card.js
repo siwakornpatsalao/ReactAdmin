@@ -29,8 +29,10 @@ export const MenuCard = (props) => {
         flexDirection: 'column',
         height: '100%',
         maxWidth: 350,
-        
       }}
+      /* style={{
+        boxShadow: '10px rgba(0, 0, 0, 0.2)',
+      }} */
     >
       <CardContent>
         <Box
@@ -39,11 +41,10 @@ export const MenuCard = (props) => {
             justifyContent: 'center',
           }}
         >
-          <img
-            src={menu.thumbnail}
-            variant="square"
-            height="200px"
-          />
+          <img style={{
+                maxWidth: "100%",
+              }} src={menu.thumbnail} alt="Preview" variant="square" width='300px' height='200px'
+                />
         </Box>
         <br/>
 

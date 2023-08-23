@@ -4,13 +4,16 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import { useState, useEffect, useRef } from 'react';
-import { TextField, MenuItem, Button, Radio, RadioGroup} from '@mui/material';
+import { TextField, MenuItem, Button, Radio, RadioGroup, Card, CardContent} from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Swal from "sweetalert2";
 import { useRouter } from 'next/router';
+import Grid from '@mui/material/Grid';
+import Typography from "@mui/material/Typography";
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 
 const disabledTabStyle = {
   pointerEvents: 'none',
@@ -386,31 +389,61 @@ export default function BasicTabs() {
       <CustomTabPanel value={value} index={0}>
         <form onSubmit={handleSubmit}>
         <Button style={{ background: 'red' }} variant="contained" onClick={handleDeleteAddon}>ลบเมนูเพิ่มเติมชิ้นนี้</Button>
-        <Box sx={{ display: 'flex',marginLeft: '300px'  }}>
+        <br/>
+        <Box sx={{ display: 'flex'  }}>
+          <Grid container
+            justifyContent="space-evenly"
+            alignItems="flex-start"  
+            rowSpacing={1} 
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Box sx={{ m: 1 }}>
-          <input
-            id="file-input"
-            type="file"
-            onChange={handleChangeFile}
-            accept="image/*"
-          />
-          <br/>
-          <br/>
-          {image && (
-            <img
-              src={image}
-              style={{ maxWidth: '100%', height: '500px' }}
-              alt="Preview"
-            />
-          )}
+          <label htmlFor="upload-photo">
+                {image ? (
+                  <img
+                    style={{
+                      maxWidth: '100%',
+                      height: 'auto',
+                    }}
+                    src={image}
+                    alt="Preview"
+                    variant="square"
+                    width="600px"
+                  />
+                ) : (
+                  <AddPhotoAlternateIcon
+                    style={{
+                      maxWidth: '100%',
+                      height: 'auto',
+                      color: '#DCD9D8', 
+                      width: "400px",
+                      cursor: 'pointer',
+                    }}
+                  />
+                )}
+              </label>
+              <input
+                style={{ display: 'none' }}
+                id="upload-photo"
+                name="upload-photo"
+                type="file"
+                onChange={handleChangeFile}
+                accept="image/*"
+              />
           </Box>
+          </Grid>
 
+          <Grid container
+            justifyContent="space-evenly"
+            alignItems="flex-start"  
+            rowSpacing={1} 
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Box
-            sx={{ '& > :not(style)': { m: 1, width: '25ch', marginLeft:'50px' } }}
+            sx={{ '& > :not(style)': { m: 3 } }}
             noValidate
             autoComplete="off"
           >
             <TextField
+              fullWidth
               label="ชื่อเมนู"
               value={name}
               color="secondary"
@@ -428,6 +461,15 @@ export default function BasicTabs() {
               helperText="ราคาควรมีค่า 0 ขึ้นไป"
               focused
               onChange={(e) => setPrice(e.target.value)}
+            />
+            <TextField
+              label="หน่วย"
+              value={unit}
+              color="secondary"
+              error={isUnitValid(unit)}
+              helperText="กรุณาใส่หน่วย"
+              focused
+              onChange={(e) => setUnit(e.target.value)}
             />
             <br/>
             <TextField
@@ -447,61 +489,76 @@ export default function BasicTabs() {
               focused
               onChange={(e) => setEditAmount(e.target.value)}
             />
-            <br/>
-            <TextField
-              label="หน่วย"
-              value={unit}
-              color="secondary"
-              error={isUnitValid(unit)}
-              helperText="กรุณาใส่หน่วย"
-              focused
-              onChange={(e) => setUnit(e.target.value)}
-            />
           <br/>
 
-          <Button variant="contained" type="submit">แก้ไขเมนูเพิ่มเติม</Button>
+          <Button fullWidth variant="contained" type="submit">แก้ไขเมนูเพิ่มเติม</Button>
           </Box>
+          </Grid>
         </Box>
         </form>
       </CustomTabPanel>
 
       <CustomTabPanel value={value} index={1}>
         <form onSubmit={handleSubmitOption}>
-        <Box sx={{display:'flex',marginLeft: '400px' }}>   
-        <Box sx={{ m: 1 }}>
         <Button style={{ background: 'red' }} variant="contained" onClick={handleDeleteOption}>ลบกลุ่มตัวเลือก</Button>
-        <h1>ชื่อกลุ่มตัวเลือก</h1>
+        <Box sx={{display:'flex' }}>   
+        <Grid container
+            justifyContent="space-evenly"
+            alignItems="flex-start"  
+            rowSpacing={1} 
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+              <Card sx={{display: 'flex',
+                      flexDirection: 'column',
+                      height: '100%'}}> 
+            <CardContent>
+        <Box sx={{ m: 1 }}>
+        <Typography variant="h4" component="h4">
+              ชื่อกลุ่มตัวเลือก
+        </Typography>
+        <br/>
+        <br/>
         <TextField
-              label="ชื่อกลุ่มตัวเลือก"
-              value={optionGroupName}
-              color="secondary"
-              error={isOptionGroupNameValid(optionGroupName)}
-              helperText="กรุณาใส่ชื่อกลุ่มตัวเลือก"
-              focused
-              onChange={(e) => setOptionGroupName(e.target.value)}
+            fullWidth
+            label="ชื่อกลุ่มตัวเลือก"
+            value={optionGroupName}
+            color="secondary"
+            error={isOptionGroupNameValid(optionGroupName)}
+            helperText="กรุณาใส่ชื่อกลุ่มตัวเลือก"
+            focused
+            onChange={(e) => setOptionGroupName(e.target.value)}
         />
         <br/>
         <Button onClick={handleAddOption}>เพิ่มตัวเลือก</Button>
         {/* If edit addon disable */}
         {options.map((option) => (
               <MenuItem onClick={() => handleEditOption(option)} key={option._id}>
-                {option.name} +{option.price} บาท
+                <span style={{color:'grey'}}>{option.name} +{option.price} บาท</span>
               </MenuItem>
             ))}
-        <h1>ลูกค้าต้องเลือกตัวเลือกนี้หรือไม่</h1>
+        <br/>
+        <Typography variant="h4" component="h4">
+            ลูกค้าต้องเลือกตัวเลือกนี้หรือไม่
+        </Typography>
+        <br/>
         <RadioGroup value={isRequired ? 'necessary' : 'not'} onChange={handleIsRequiredChange}>
           <FormControlLabel value="necessary" control={<Radio />} label="จำเป็น" />
           <FormControlLabel value="not" control={<Radio />} label="ไม่บังคับ" />
         </RadioGroup>
-        <h1>ลูกค้าสามารถเลือกตัวเลือกได้กี่อย่าง</h1>
+        <Typography variant="h4" component="h4">
+            ลูกค้าสามารถเลือกตัวเลือกได้กี่อย่าง
+        </Typography>
+        <br/>
         <RadioGroup value={isRequired2 ? 'one' : 'many'} onChange={handleIsRequiredChange2}>
           <FormControlLabel value="one" control={<Radio />} label="1 อย่าง" />
           <FormControlLabel value="many" control={<Radio />} label="หลายอย่าง" />
         </RadioGroup>
         <br/>
 
-        <Button variant='contained' type="submit">แก้ไขกลุ่มตัวเลือก</Button>
+        <Button fullWidth variant='contained' type="submit">แก้ไขกลุ่มตัวเลือก</Button>
         </Box>
+        </CardContent>
+        </Card>
+        </Grid>
         </Box>
         </form>
       </CustomTabPanel>

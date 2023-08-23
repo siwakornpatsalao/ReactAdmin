@@ -4,13 +4,18 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import { useState, useEffect, useRef } from "react";
-import { TextField, MenuItem, Button } from "@mui/material";
+import { TextField, MenuItem, Button, Card, CardContent  } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
+import Grid from "@mui/material/Grid";
+import { styled } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
+import Typography from "@mui/material/Typography";
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -46,6 +51,14 @@ function a11yProps(index) {
     "aria-controls": `simple-tabpanel-${index}`,
   };
 }
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+}));
 
 export default function BasicTabs() {
   const [value, setValue] = useState(0);
@@ -253,20 +266,61 @@ export default function BasicTabs() {
         <CustomTabPanel value={value} index={0}>
           <form onSubmit={handleSubmit}>
           <Button style={{ background: 'red' }} variant="contained" onClick={handleDeleteMenu}>ลบสินค้า</Button>
-          <Box sx={{ display: 'flex',marginLeft: '300px' }}>
+          <Box sx={{ display: 'flex' ,marginTop: {
+          xs: '60px',sm: '70px',md: '80px',lg: '90px',xl: '100px',       
+          },}}>
+          <Grid container
+            justifyContent="space-evenly"
+            alignItems="flex-start"  
+            rowSpacing={1} 
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
             <Box sx={{ m: 1 }}>
-            <input id="file-input" type="file" onChange={handleChangeFile} accept="image/*" />
-            <br/>
-            <br/>
-            {image && (
-              <img src={image} style={{ maxWidth: "100%", height: "500px" }} alt="Preview" />
-            )}
+            <label htmlFor="upload-photo">
+                {image ? (
+                  <img
+                    style={{
+                      maxWidth: '100%',
+                      height: 'auto',
+                    }}
+                    src={image}
+                    alt="Preview"
+                    variant="square"
+                    width="600px"
+                  />
+                ) : (
+                  <AddPhotoAlternateIcon
+                    style={{
+                      maxWidth: '100%',
+                      height: 'auto',
+                      color: '#DCD9D8', 
+                      width: "400px",
+                      cursor: 'pointer',
+                    }}
+                  />
+                )}
+              </label>
+              <input
+                style={{ display: 'none' }}
+                id="upload-photo"
+                name="upload-photo"
+                type="file"
+                onChange={handleChangeFile}
+                accept="image/*"
+              />
             </Box>
+          </Grid>
 
+          <Grid container
+            justifyContent="space-evenly"
+            alignItems="flex-start"  
+            rowSpacing={1} 
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
             <Box sx={{
-                "& > :not(style)": { m: 1, width: "25ch", marginLeft:'50px' },
+                "& > :not(style)": { m: 1 },
               }} noValidate autoComplete="off">
+                <Item>
               <TextField
+                fullWidth
                 label="ชื่อเมนู"
                 value={name}
                 color="secondary"
@@ -275,8 +329,10 @@ export default function BasicTabs() {
                 focused
                 onChange={(e) => setName(e.target.value)}
               />
-              <br/>
+              </Item>
+              <Item>
               <TextField
+                fullWidth
                 label="คำอธิบาย"
                 value={description}
                 color="secondary"
@@ -285,7 +341,7 @@ export default function BasicTabs() {
                 focused
                 onChange={(e) => setDescription(e.target.value)}
               />
-              <br/>
+              </Item>
               <TextField
                 label="ราคา"
                 value={price}
@@ -313,18 +369,37 @@ export default function BasicTabs() {
             </TextField>
             <br/>
 
-            <Button variant="contained" type="submit">แก้ไขเมนู</Button>
+            <Item>
+            <Button fullWidth variant="contained" type="submit">แก้ไขเมนู</Button>
+            </Item>
             </Box>
+            </Grid>
             </Box>
           </form>
         </CustomTabPanel>
 
         <CustomTabPanel value={value} index={1}>
-          <h1>เมนูเพิ่มเติม</h1>
+        <Grid container
+            justifyContent="space-evenly"
+            alignItems="flex-start"  
+            rowSpacing={1} 
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+            <div style={{width: "500px" }}>
+            <Card sx={{display: 'flex',
+                      flexDirection: 'column',
+                      height: '100%'}}> 
+            <CardContent>
+              <Grid item xs={6} md={10} sm={14}> 
+              <Typography variant="h4" component="h4">
+                  เมนูเพิ่มเติม
+              </Typography>
           <br/>
           {addons.map((addon) => (
             <FormGroup key={addon._id}>
               <FormControlLabel
+              label={<Typography variant="h6" component="h6" style={{ color: 'black', fontWeight: "normal" }}>
+              {addon.name}
+                    </Typography>}
                 control={
                   <Checkbox
                     checked={selectedAddons.includes(addon._id)}
@@ -337,15 +412,30 @@ export default function BasicTabs() {
                     }
                   />
                 }
-                label={addon.name}
               />
             </FormGroup>
           ))}
+          </Grid>
+          </CardContent>
+          </Card>
+          </div>
 
-          <h1>ตัวเลือก</h1>
+          <Card sx={{display: 'flex',
+                    flexDirection: 'column',
+                    height: '100%'}}>
+          <CardContent>
+          <div style={{width: "500px" }}>
+          <Grid item xs={6} md={15} sm={14}>
+          <Typography variant="h4" component="h4">
+              ตัวเลือก
+          </Typography>
+          <br/>
           {optionGroups.map((optionGroup) => (
             <FormGroup key={optionGroup._id}>
               <FormControlLabel
+              label={<Typography variant="h6" component="h6" style={{ color: 'black', fontWeight: "normal" }}>
+              {optionGroup.name}
+                    </Typography>}
                 control={
                   <Checkbox
                     checked={selectedOptionGroups.includes(optionGroup._id)}
@@ -358,10 +448,14 @@ export default function BasicTabs() {
                     }
                   />
                 }
-                label={optionGroup.name}
               />
             </FormGroup>
           ))}
+          </Grid>
+          </div>
+          </CardContent>
+          </Card>
+          </Grid>
         </CustomTabPanel>
       </Box>
     </DashboardLayout>

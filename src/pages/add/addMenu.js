@@ -4,7 +4,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import { useState, useEffect, useRef } from "react";
-import { TextField, MenuItem, Button,Card,CardContent } from "@mui/material";
+import { TextField, MenuItem, Button, Card, CardContent } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -16,6 +16,7 @@ import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import Typography from "@mui/material/Typography";
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -146,6 +147,9 @@ export default function BasicTabs() {
   function handleChangeFile(e) {
     const file = e.target.files[0];
     const reader = new FileReader();
+    if (!file) {
+      return;
+    }
 
     reader.onloadend = () => {
       const base64String = reader.result;
@@ -222,29 +226,57 @@ export default function BasicTabs() {
 
         <CustomTabPanel value={value} index={0}>
         <form noValidate onSubmit={formik.handleSubmit}>
-          <Box sx={{ display: 'flex' }}>
+          <Box sx={{ display: 'flex' ,marginTop: {
+          xs: '60px',sm: '70px',md: '80px',lg: '90px',xl: '100px',       
+          },}}>
           <Grid container
             justifyContent="space-evenly"
             alignItems="flex-start"  
-            rowSpacing={1} 
+            spacing={3}
+            rowSpacing={1}
             columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
             <Box sx={{ m: 1 }}>
-            <input id="file-input" type="file" onChange={handleChangeFile} accept="image/*" />
-            <br/><br/>
-            {image && (
-              <img style={{
-                maxWidth: "100%", // Set maximum width to fit the container
-                height: "auto", // Maintain aspect ratio
-              }} src={image} alt="Preview" variant="square" width='600px'
-                />
-            )}
+              <label htmlFor="upload-photo">
+                {image ? (
+                  <img
+                    style={{
+                      maxWidth: '100%',
+                      height: 'auto',
+                    }}
+                    src={image}
+                    alt="Preview"
+                    variant="square"
+                    width="600px"
+                  />
+                ) : (
+                  <AddPhotoAlternateIcon
+                    style={{
+                      maxWidth: '100%',
+                      height: 'auto',
+                      color: '#DCD9D8', 
+                      width: "400px",
+                      cursor: 'pointer',
+                    }}
+                  />
+                )}
+              </label>
+              <input
+                style={{ display: 'none' }}
+                id="upload-photo"
+                name="upload-photo"
+                type="file"
+                onChange={handleChangeFile}
+                accept="image/*"
+              />
             </Box>
-            </Grid>
+
+          </Grid>
 
         <Grid container
             justifyContent="space-evenly"
             alignItems="flex-start"  
-            rowSpacing={1} 
+            spacing={3}
+            rowSpacing={1}
             columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
             <Box sx={{
                 "& > :not(style)": { m: 3 },
@@ -313,7 +345,9 @@ export default function BasicTabs() {
         </CustomTabPanel>
 
         <CustomTabPanel value={value} index={1}>
-          
+        <Box sx={{ display: 'flex' ,marginTop: {
+          xs: '60px',sm: '70px',md: '80px',lg: '90px',xl: '100px',       
+          },}}>
         <Grid container
             justifyContent="space-evenly"
             alignItems="flex-start"  
@@ -326,13 +360,13 @@ export default function BasicTabs() {
             <CardContent>
               <Grid item xs={6} md={10} sm={14}> 
               <Typography variant="h4" component="h4">
-                    เมนูเพิ่มเติม
+                  เมนูเพิ่มเติม
               </Typography>
                 <br/>
           {addons.map((addon) => (
             <FormGroup key={addon._id}>
               <FormControlLabel
-              label={<Typography variant="h6" component="h6" style={{ color: 'black' }}>
+              label={<Typography variant="h6" component="h6" style={{ color: "black", fontWeight: "normal" }}>
               {addon.name}
                     </Typography>}
                 control={
@@ -363,13 +397,13 @@ export default function BasicTabs() {
           <div style={{width: "500px" }}>
           <Grid item xs={6} md={15} sm={14}>
           <Typography variant="h4" component="h4">
-                    ตัวเลือก
+              ตัวเลือก
           </Typography>
             <br/>
           {optionGroups.map((optionGroup) => (
             <FormGroup key={optionGroup._id}>
               <FormControlLabel
-              label={<Typography variant="h6" component="h6" style={{ color: 'black' }}>
+              label={<Typography variant="h6" component="h6" style={{ color: "black", fontWeight: "normal" }}>
               {optionGroup.name}
                     </Typography>}
                 control={
@@ -393,6 +427,7 @@ export default function BasicTabs() {
           </Card>
           
         </Grid>
+        </Box>
         </CustomTabPanel>
       </Box>
     </DashboardLayout>

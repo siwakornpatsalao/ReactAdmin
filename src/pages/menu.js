@@ -22,6 +22,16 @@ import ClearIcon from '@mui/icons-material/Clear';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from "@mui/material/IconButton";
 import TablePagination from '@mui/material/TablePagination';
+import { styled } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+}));
 
 function Menu() {
   const [menus, setMenus] = useState([]);
@@ -196,7 +206,7 @@ function Menu() {
       <Head>
         <title>Menu | Devias Kit</title>
       </Head>
-      <Box component="main">
+      <Box component="main" sx={{ backgroundColor: '#f5f5f5'}}>
         <Container maxWidth="xl">
           <Stack spacing={1}>
             <Stack direction="row" justifyContent="space-between" spacing={4}>
@@ -207,6 +217,11 @@ function Menu() {
                 </Stack>
               </div>
 
+              <Grid container
+            justifyContent="space-evenly"
+            alignItems="flex-start"  
+            rowSpacing={1} 
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
               <div style={{ display: "flex", justifyContent: "flex-end" }}>
                 <Link href="./add/addMenu">
                   <Button
@@ -227,12 +242,14 @@ function Menu() {
                       <PlusIcon />
                     </SvgIcon>
                   }
+                  sx={{backgroundColor: 'white'}}
                   variant="outlined"
                   onClick={handleAddCategory}
                 >
                   เพิ่มหมวดหมู่
                 </Button>
               </div>
+              </Grid>
 
             </Stack>
       <br/>
@@ -240,13 +257,15 @@ function Menu() {
         <div style={{ flex: 1 }}>
         <MenuSearch onSearch={(searchValue) => handleSearchMenu(searchValue)} />
         </div>
+        <span style={{ marginRight: "20px" }}></span>
 
         <div style={{ justifyContent: "flex-end" }}>
           <TextField
             value={category}
-            style={{ width: "280px" }}
+            fullWidth
             select
             focused
+            sx={{backgroundColor: 'white'}}
             label="หมวดหมู่"
             defaultValue="เครื่องดื่ม"
             helperText="Please select your category"
@@ -288,7 +307,7 @@ function Menu() {
                   key={menu._id}
                 >
                    <MenuCard menu={menu} hasPromotion={hasPromotion(menu._id)} promoData={promoData(menu._id)} 
-                   hasPromotionCategory={hasPromotionCategory(menu.category)} promoCategoryData={promoCategoryData(menu.category)}/> {/* // show promotion of category */}
+                   hasPromotionCategory={hasPromotionCategory(menu.category)} promoCategoryData={promoCategoryData(menu.category)}/>
                 </Grid>
               ))}
             </Grid>

@@ -1,26 +1,17 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import { useState, useEffect, useRef } from 'react';
-import { TextField, MenuItem, Button, Radio, RadioGroup} from '@mui/material';
-import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+import { TextField, Button, Card, CardContent} from '@mui/material';
 import Swal from "sweetalert2";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import Grid from '@mui/material/Grid';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 
 function AddonAdd(){
     const [value, setValue] = useState(0);
     const [image, setImage] = useState(null);
-    const [name, setName] = useState('');
-    const [price, setPrice] = useState(0);
-    const [amount, setAmount] = useState(0);
     const [editAmount, setEditAmount] = useState(0);
-    const [unit, setUnit] = useState('');
     const initial = useRef(false);
     const [id, setId] = useState(0);
     const [addons, setAddons] = useState([]);
@@ -86,59 +77,13 @@ function AddonAdd(){
       }
     })
 
-
-
-    /* async function handleSubmit(e) {
-        e.preventDefault();
-        if (!image || isNameValid(name) || isPriceValid(price) || isAmountValid(amount) || isUnitValid(unit)) {
-          Swal.fire("Error", "กรุณากรอกข้อมูลให้ถูกต้อง", "error");
-          return;
-        }
-        Swal.fire({
-          title: "ต้องการเพิ่มเมนูเพิ่มเติมนี้หรือไม่",
-          confirmButtonText: "ยืนยัน",
-          showDenyButton: true,
-          denyButtonText: "ยกเลิก", 
-        }).then(async (result) => {
-          if (result.isConfirmed) {
-            Swal.fire(`เพิ่มเมนูเพิ่มเติมชิ้นนี้แล้ว`, "", "success");
-            try {
-              const response = await fetch('http://localhost:5000/addons', {
-                method: 'POST',
-                body: JSON.stringify({
-                  id: id+1,
-                  name: name,
-                  thumbnail: image,
-                  price: price,
-                  amount: amount,
-                  editAmount: editAmount,
-                  unit: unit,
-                }),
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-              });
-              if (!response.ok) {
-                throw new Error('Failed to add new menu');
-              }
-              const resJson = await response.json();
-              console.log(resJson);
-              setImage(null);
-              setName('');
-              setPrice(0);
-              setAmount(0);
-              setUnit("");
-              fetchAddons();
-              document.getElementById('file-input').value = '';
-            } catch (error) {
-              console.log('Error:', error.message);
-            }
-          }})
-      } */
     
       function handleChangeFile(e) {
         const file = e.target.files[0];
         const reader = new FileReader();
+        if (!file) {
+          return;
+        }
       
         reader.onloadend = () => {
           const base64String = reader.result;
@@ -180,32 +125,62 @@ function AddonAdd(){
 
     return(
       <form noValidate onSubmit={formik.handleSubmit}>
-        <Box sx={{ display: 'flex',marginLeft: '300px'  }}>
+        <Box sx={{ display: 'flex' ,marginTop: {
+          xs: '60px',sm: '70px',md: '80px',lg: '90px',xl: '100px', }}}>
+        <Grid container
+            justifyContent="space-evenly"
+            alignItems="flex-start"  
+            rowSpacing={1} 
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Box sx={{ m: 1 }}>
-          <input
-            id="file-input"
-            type="file"
-            onChange={handleChangeFile}
-            accept="image/*"
-          />
-          <br/>
-          <br/>
-          {image && (
-            <img
-              src={image}
-              style={{ maxWidth: '100%', height: '500px' }}
-              alt="Preview"
-            />
-          )}
+          <label htmlFor="upload-photo">
+                {image ? (
+                  <img
+                    style={{
+                      maxWidth: '100%',
+                      height: 'auto',
+                    }}
+                    src={image}
+                    alt="Preview"
+                    variant="square"
+                    width="600px"
+                  />
+                ) : (
+                  <AddPhotoAlternateIcon
+                    style={{
+                      maxWidth: '100%',
+                      height: 'auto',
+                      color: '#DCD9D8', 
+                      width: "400px",
+                      cursor: 'pointer',
+                    }}
+                  />
+                )}
+              </label>
+              <input
+                style={{ display: 'none' }}
+                id="upload-photo"
+                name="upload-photo"
+                type="file"
+                onChange={handleChangeFile}
+                accept="image/*"
+              />
           </Box>
+        </Grid>
 
+          <Grid container
+            justifyContent="space-evenly"
+            alignItems="flex-start"  
+            rowSpacing={1} 
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Box
-            sx={{ '& > :not(style)': { m: 1, width: '25ch', marginLeft:'50px' } }}
+            sx={{ '& > :not(style)': { m: 3 } }}
             noValidate
             autoComplete="off"
           >
             <TextField
               focused
+              fullWidth
               label="ชื่อสินค้า"
               name="name"
               onBlur={formik.handleBlur}
@@ -224,6 +199,16 @@ function AddonAdd(){
               value={formik.values.price}
               error={formik.touched.price && !!formik.errors.price}
               helperText={formik.touched.price && formik.errors.price}
+            />
+            <TextField
+              focused
+              label="หน่วย"
+              name="unit"
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              value={formik.values.unit}
+              error={formik.touched.unit && !!formik.errors.unit}
+              helperText={formik.touched.unit && formik.errors.unit}
             />
             <br/>
             <TextField
@@ -244,21 +229,11 @@ function AddonAdd(){
               focused
               onChange={(e) => setEditAmount(e.target.value)}
             />
-            <br/>
-            <TextField
-              focused
-              label="หน่วย"
-              name="unit"
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-              value={formik.values.unit}
-              error={formik.touched.unit && !!formik.errors.unit}
-              helperText={formik.touched.unit && formik.errors.unit}
-            />
           <br/>
 
-          <Button variant="contained" type="submit">สร้างเมนูเพิ่มเติมใหม่</Button>
+          <Button fullWidth variant="contained" type="submit">สร้างเมนูเพิ่มเติมใหม่</Button>
           </Box>
+          </Grid>
         </Box>
         </form>
     )
