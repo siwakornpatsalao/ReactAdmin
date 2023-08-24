@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Head from "next/head";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
@@ -7,10 +7,11 @@ import * as Yup from "yup";
 import { Box, Button, Link, Stack, TextField, Typography } from "@mui/material";
 import { useAuth } from "src/hooks/use-auth";
 import { Layout as AuthLayout } from "src/layouts/auth/layout";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 
 const Page = () => {
   const [store, setStore] = useState([]);
+  const [emailExists, setEmailExists] = useState(false);
   const router = useRouter();
   const auth = useAuth();
   const formik = useFormik({
@@ -20,7 +21,7 @@ const Page = () => {
       number: "",
       password: "",
       passwordConfirm: "",
-    }, 
+    },
     validationSchema: Yup.object({
       email: Yup.string()
         .max(255)
@@ -50,16 +51,23 @@ const Page = () => {
           throw new Error("รหัสผ่านไม่ตรงกัน");
         }
 
+        // Check if the email exists
+        const emailAlreadyExists = store.some((user) => user.email === storedValues.email);
+        if (emailAlreadyExists) {
+          setEmailExists(true);
+          return;
+        }
+
         Swal.fire({
           title: "ต้องการเพิ่มร้านค้านี้หรือไม่",
           confirmButtonText: "ยืนยัน",
           showDenyButton: true,
-          denyButtonText: "ยกเลิก", 
+          denyButtonText: "ยกเลิก",
         }).then(async (result) => {
           if (result.isConfirmed) {
             try {
-              const response = await fetch('http://localhost:5000/shops', {
-                method: 'POST',
+              const response = await fetch("http://localhost:5000/shops", {
+                method: "POST",
                 body: JSON.stringify({
                   name: storedValues.name,
                   phone: storedValues.number,
@@ -67,20 +75,32 @@ const Page = () => {
                   password: storedValues.password,
                 }),
                 headers: {
-                  'Content-Type': 'application/json',
+                  "Content-Type": "application/json",
                 },
               });
               if (!response.ok) {
-                throw new Error('Failed to add new User');
+                throw new Error("Failed to add new User");
               }
-              Swal.fire(`เพิ่มผู้ใช้แล้ว`, "", "success");
+              Swal.fire({
+                text: `เพิ่มผู้ใช้แล้ว`,
+                icon: "success",
+                confirmButtonText: "ไปที่หน้า Login",
+                allowOutsideClick: false,
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  handleGoLogin();
+                }
+              });
+
               const resJson = await response.json();
               console.log(resJson);
+              setEmailExists(false);
               formik.resetForm();
             } catch (error) {
-              console.log('Error:', error.message);
+              console.log("Error:", error.message);
             }
-          }})
+          }
+        });
 
         await auth.signUp(
           values.email,
@@ -90,11 +110,14 @@ const Page = () => {
           values.number
         );
         router.push("/");
-      } catch (err) {
-
-      }
+      } catch (err) {}
     },
   });
+
+  const handleGoLogin = useCallback(() => {
+    auth.skip();
+    router.push("/auth/login");
+  }, [auth, router]);
 
   useEffect(() => {
     const storedValuesString = localStorage.getItem("registrationValues");
@@ -151,7 +174,7 @@ const Page = () => {
               <Typography color="text.secondary" variant="body2">
                 คุณมีร้านค้าอยู่แล้วหรือไม่ &nbsp;
                 <Link component={NextLink} href="/auth/login" underline="hover" variant="subtitle2">
-                  Log in
+                  ไปที่ Log in
                 </Link>
               </Typography>
             </Stack>
@@ -214,6 +237,11 @@ const Page = () => {
               {formik.errors.submit && (
                 <Typography color="error" sx={{ mt: 3 }} variant="body2">
                   {formik.errors.submit}
+                </Typography>
+              )}
+              {emailExists && (
+                <Typography color="error" sx={{ mt: 1 }} variant="body2">
+                  อีเมลนี้ถูกใช้งานแล้ว
                 </Typography>
               )}
               <Button fullWidth size="large" sx={{ mt: 3 }} type="submit" variant="contained">
