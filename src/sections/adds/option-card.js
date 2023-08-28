@@ -16,18 +16,17 @@ export const OptionCard = (props) => {
     >
       <CardContent>
         <Link href={`/edit/editAddon?id=${OptionGroups._id}`} >
-        <Button>Edit</Button>
+        <Button variant='outlined'>Edit</Button>
         </Link>
         <Typography
           sx={{
             marginLeft: '10px',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
+            fontSize: '30px',
+            marginTop: '10px'
           }}
-          align="left"
-          gutterBottom
-          variant="h6"
-          nowrap
+
         >
           {OptionGroups.name}
         </Typography>
@@ -36,6 +35,7 @@ export const OptionCard = (props) => {
             align="left"
             variant="body1"
             color="grey"
+            sx={{fontSize: '20px',}}
           >
             Options:<br/> {OptionGroups.options.map((option) => (
             <span key={option._id}>{option.name}  <span style={{ marginRight: '20px' }}></span> +{option.price}.-<br/> </span>

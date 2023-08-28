@@ -364,8 +364,8 @@ export default function BasicTabs() {
             aria-label="basic tabs example"
             centered
           >
-            <Tab label="ชำระเงินแล้ว" {...a11yProps(0)} />
-            <Tab label="รอการชำระเงิน" {...a11yProps(1)} />
+            <Tab sx={{fontSize:'20px'}} label="ชำระเงินแล้ว" {...a11yProps(0)} />
+            <Tab sx={{fontSize:'20px'}} label="รอการชำระเงิน" {...a11yProps(1)} />
           </Tabs>
           </Box>
           <h1>{currentDate}</h1>
@@ -375,23 +375,23 @@ export default function BasicTabs() {
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell> <Button onClick={() => {sortByInt(paidOrders, "id", sortOrder, setSortOrder);}}>เลขที่ออเดอร์</Button></TableCell>
-                  <TableCell> <Button onClick={() => {sortByString(paidOrders, "menu", sortMenu, setSortMenu);}}>เมนู</Button></TableCell>
-                  <TableCell> <Button onClick={() => {sortByTime(paidOrders, "time", sortTime, setSortTime);}}> เวลา </Button></TableCell>
-                  <TableCell> <Button onClick={() => {sortByString(paidOrders, "status", sortStatus, setSortStatus);}}> สถานะ</Button></TableCell>
+                  <TableCell> <Button sx={{fontSize:'22px'}} onClick={() => {sortByInt(paidOrders, "id", sortOrder, setSortOrder);}}>เลขที่ออเดอร์</Button></TableCell>
+                  <TableCell> <Button sx={{fontSize:'22px'}} onClick={() => {sortByString(paidOrders, "menu", sortMenu, setSortMenu);}}>เมนู</Button></TableCell>
+                  <TableCell> <Button sx={{fontSize:'22px'}} onClick={() => {sortByTime(paidOrders, "time", sortTime, setSortTime);}}> เวลา </Button></TableCell>
+                  <TableCell> <Button sx={{fontSize:'22px'}} onClick={() => {sortByString(paidOrders, "status", sortStatus, setSortStatus);}}> สถานะ</Button></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {paidOrders.map((row) => (
                   <TableRow key={row._id}
                   /* onClick={() => handlePopUpPaid(row)} */>
-                    <TableCell component="th" scope="row">
+                    <TableCell sx={{fontSize:'18px'}}>
                       {row.id}
                     </TableCell>
-                    <TableCell>{row.menu}</TableCell>
-                    <TableCell>{row.time}</TableCell>
+                    <TableCell sx={{fontSize:'18px'}}>{row.menu}</TableCell>
+                    <TableCell sx={{fontSize:'18px'}}>{row.time}</TableCell>
                     <TableCell>
-                      <SeverityPill onClick={() => handlePopUpPaid(row)} color={statusMap[row.status]}>
+                      <SeverityPill sx={{fontSize:'18px'}} onClick={() => handlePopUpPaid(row)} color={statusMap[row.status]}>
                         {row.status}
                       </SeverityPill>
                     </TableCell>
@@ -411,11 +411,11 @@ export default function BasicTabs() {
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                   <TableRow>
-                    <TableCell> <Button onClick={() => {sortByInt(paginatedRows, "id", sortOrder, setSortOrder);}}>เลขที่ออเดอร์</Button></TableCell>
-                    <TableCell> <Button onClick={() => {sortByString(paginatedRows, "menu", sortMenu, setSortMenu);}}> เมนู </Button> </TableCell>
+                    <TableCell> <Button sx={{fontSize:'22px'}} onClick={() => {sortByInt(paginatedRows, "id", sortOrder, setSortOrder);}}>เลขที่ออเดอร์</Button></TableCell>
+                    <TableCell> <Button sx={{fontSize:'22px'}} onClick={() => {sortByString(paginatedRows, "menu", sortMenu, setSortMenu);}}> เมนู </Button> </TableCell>
                     {/* <TableCell> <Button onClick={() => {sortByDate(rows, "date", sortDate, setSortDate);}}> วันที่ </Button> </TableCell> */}
-                    <TableCell> <Button onClick={() => {sortByTime(paginatedRows, "time", sortTime, setSortTime);}}> เวลา </Button> </TableCell>
-                    <TableCell> <Button onClick={() => {sortByString(paginatedRows, "status", sortStatus, setSortStatus);}}> สถานะ</Button> </TableCell>
+                    <TableCell> <Button sx={{fontSize:'22px'}} onClick={() => {sortByTime(paginatedRows, "time", sortTime, setSortTime);}}> เวลา </Button> </TableCell>
+                    <TableCell> <Button sx={{fontSize:'22px'}} onClick={() => {sortByString(paginatedRows, "status", sortStatus, setSortStatus);}}> สถานะ</Button> </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -425,14 +425,14 @@ export default function BasicTabs() {
                       key={row._id}
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                     >
-                      <TableCell component="th" scope="row">
+                      <TableCell sx={{fontSize:'18px'}}>
                         {row.id}
                       </TableCell>
-                      <TableCell>{row.menu}</TableCell>
+                      <TableCell sx={{fontSize:'18px'}}>{row.menu}</TableCell>
                       {/* <TableCell>{row.date}</TableCell> */}
-                      <TableCell>{row.time}</TableCell>
+                      <TableCell sx={{fontSize:'18px'}}>{row.time}</TableCell>
                       <TableCell>
-                        <SeverityPill onClick={() => handlePopUp(row)} color={statusMap[row.status]}>
+                        <SeverityPill sx={{fontSize:'18px'}} onClick={() => handlePopUp(row)} color={statusMap[row.status]}>
                         {row.status}
                       </SeverityPill>
                         </TableCell>

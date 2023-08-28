@@ -24,6 +24,7 @@ import IconButton from "@mui/material/IconButton";
 import TablePagination from '@mui/material/TablePagination';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
+import { SeverityPill } from "../components/severity-pill";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -206,8 +207,8 @@ function Menu() {
       <Head>
         <title>Menu | Devias Kit</title>
       </Head>
-      <Box component="main" sx={{ backgroundColor: '#f5f5f5'}}>
-        <Container maxWidth="xl">
+      <Box component="main" sx={{ backgroundColor: '#EEF8F7'}}>
+        <Container maxWidth="xl" sx={{marginTop: '40px'}}>
           <Stack spacing={1}>
             <Stack direction="row" justifyContent="space-between" spacing={4}>
 
@@ -231,6 +232,7 @@ function Menu() {
                       </SvgIcon>
                     }
                     variant="contained"
+                    sx={{fontSize:'20px'}}
                   >
                     Add Menu
                   </Button>
@@ -242,7 +244,7 @@ function Menu() {
                       <PlusIcon />
                     </SvgIcon>
                   }
-                  sx={{backgroundColor: 'white'}}
+                  sx={{backgroundColor: 'white',width:'210px',fontSize:'20px'}}
                   variant="outlined"
                   onClick={handleAddCategory}
                 >

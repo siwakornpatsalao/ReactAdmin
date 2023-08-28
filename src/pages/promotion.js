@@ -83,9 +83,9 @@ export default function Promotion(){
     </Head>
     <Box
       component="main"
-      sx={{ backgroundColor: '#f5f5f5'}}
+      sx={{ backgroundColor: '#EEF8F7'}}
     >
-      <Container maxWidth="xl">
+      <Container maxWidth="xl" sx={{marginTop: '40px'}}>
         <Stack spacing={3}>
           <Stack
             direction="row"
@@ -106,6 +106,7 @@ export default function Promotion(){
                   </SvgIcon>
                 )}
                 variant="contained"
+                sx={{fontSize:'20px'}}
               >
                 Add Promotion
               </Button>

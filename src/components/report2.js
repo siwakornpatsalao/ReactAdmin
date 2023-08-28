@@ -189,22 +189,22 @@ export default function Report2(){
             {renderDropdown("เวลาเริ่มต้น", timeArray, startTime, handleChangeStartTime)}
             {renderDropdown("เวลาสิ้นสุด", timeArray, finishTime, handleChangeFinishTime)}
             <Box sx={{marginTop:'15px', marginLeft:'20px'}}>
-              <Button variant="contained" onClick={handleReset}>
-                Reset
+              <Button sx={{fontSize:'16px'}} variant="contained" onClick={handleReset}>
+                RESET
               </Button>
             </Box>
           </Box>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell> <Button onClick={() => { sortByInt(paginatedRows2, "order", sortOrder, setSortOrder); }} > ลำดับ </Button> </TableCell>
-                  <TableCell> <Button onClick={() => { sortByDate(paginatedRows2, "date", sortDate, setSortDate); }} > วันที่ </Button> </TableCell>
-                  <TableCell> <Button onClick={() => { sortByTime(paginatedRows2, "time", sortTime, setSortTime); }} > เวลา </Button> </TableCell>
-                  <TableCell> <Button onClick={() => { sortByString(paginatedRows2, "name", sortName, setSortName); }} > ชื่อรายการ </Button> </TableCell>
-                  <TableCell> <Button onClick={() => { sortByInt(paginatedRows2, "count", sortCount, setSortCount); }} > จำนวน </Button> </TableCell>
-                  <TableCell> <Button onClick={() => { sortByInt(paginatedRows2, "price", sortPrice, setSortPrice); }} > ราคา </Button> </TableCell>
-                  <TableCell> <Button onClick={() => { sortByString(paginatedRows2, "status", sortStatus, setSortStatus); }} > สถานะ </Button> </TableCell>
-                  <TableCell> <Button onClick={() => { sortByString(paginatedRows2, "type", sortType, setSortType); }} > ประเภท </Button> </TableCell>
+                  <TableCell> <Button sx={{fontSize:'20px'}} onClick={() => { sortByInt(paginatedRows2, "order", sortOrder, setSortOrder); }} > ลำดับ </Button> </TableCell>
+                  <TableCell> <Button sx={{fontSize:'20px'}} onClick={() => { sortByDate(paginatedRows2, "date", sortDate, setSortDate); }} > วันที่ </Button> </TableCell>
+                  <TableCell> <Button sx={{fontSize:'20px'}} onClick={() => { sortByTime(paginatedRows2, "time", sortTime, setSortTime); }} > เวลา </Button> </TableCell>
+                  <TableCell> <Button sx={{fontSize:'20px'}} onClick={() => { sortByString(paginatedRows2, "name", sortName, setSortName); }} > ชื่อรายการ </Button> </TableCell>
+                  <TableCell> <Button sx={{fontSize:'20px'}} onClick={() => { sortByInt(paginatedRows2, "count", sortCount, setSortCount); }} > จำนวน </Button> </TableCell>
+                  <TableCell> <Button sx={{fontSize:'20px'}} onClick={() => { sortByInt(paginatedRows2, "price", sortPrice, setSortPrice); }} > ราคา </Button> </TableCell>
+                  <TableCell> <Button sx={{fontSize:'20px'}} onClick={() => { sortByString(paginatedRows2, "status", sortStatus, setSortStatus); }} > สถานะ </Button> </TableCell>
+                  <TableCell> <Button sx={{fontSize:'20px'}} onClick={() => { sortByString(paginatedRows2, "type", sortType, setSortType); }} > ประเภท </Button> </TableCell>
                   <TableCell></TableCell>
                 </TableRow>
               </TableHead>
@@ -214,16 +214,16 @@ export default function Report2(){
                   <TableRow
                     key={row._id}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                    <TableCell component="th" scope="row">
+                    <TableCell component="th" scope="row" sx={{fontSize:'18px'}}>
                       {row.id}
                     </TableCell>
-                    <TableCell>{row.date}</TableCell>
-                    <TableCell>{row.time}</TableCell>
-                    <TableCell>{row.name}</TableCell>
-                    <TableCell>{row.count}</TableCell>
-                    <TableCell>{row.price}</TableCell>
-                    <TableCell>{row.status}</TableCell>
-                    <TableCell>{row.type}</TableCell>
+                    <TableCell sx={{fontSize:'18px'}}>{row.date}</TableCell>
+                    <TableCell sx={{fontSize:'18px'}}>{row.time}</TableCell>
+                    <TableCell sx={{fontSize:'18px'}}>{row.name}</TableCell>
+                    <TableCell sx={{fontSize:'18px'}}>{row.count}</TableCell>
+                    <TableCell sx={{fontSize:'18px'}}>{row.price}</TableCell>
+                    <TableCell sx={{fontSize:'18px'}}>{row.status}</TableCell>
+                    <TableCell sx={{fontSize:'18px'}}>{row.type}</TableCell>
                     {row.type == 'ตัวเลือก' ? <TableCell>
                           <IconButton
                             aria-label="expand row"
@@ -244,23 +244,21 @@ export default function Report2(){
                         <Collapse in={open[index]} timeout="auto" unmountOnExit>
                           <Box sx={{ margin: 1 }}>
                             <Table size="small" aria-label="purchases">
-                              <TableHead>
                                 <TableRow>
-                                  <TableCell>ตัวเลือก</TableCell>
-                                  <TableCell>ราคา</TableCell>
-                                  <TableCell>จำนวน</TableCell>
-                                  <TableCell>หน่วย</TableCell>
+                                  <TableCell sx={{fontSize:'18px'}}>ตัวเลือก</TableCell>
+                                  <TableCell sx={{fontSize:'18px'}}>ราคา</TableCell>
+                                  <TableCell sx={{fontSize:'18px'}}>จำนวน</TableCell>
+                                  <TableCell sx={{fontSize:'18px'}}>หน่วย</TableCell>
                                 </TableRow>
-                              </TableHead>
                               <TableBody>
                                 {row.detail.map((AddonRow) => (
                                   <TableRow key={AddonRow.id}>
-                                    <TableCell component="th" scope="row">
+                                    <TableCell component="th" scope="row" sx={{fontSize:'18px'}}>
                                       {AddonRow.name}
                                     </TableCell>
-                                    <TableCell>{AddonRow.price}</TableCell>
-                                    <TableCell>{AddonRow.amount}</TableCell>
-                                    <TableCell>{AddonRow.unit}</TableCell>
+                                    <TableCell sx={{fontSize:'18px'}}>{AddonRow.price}</TableCell>
+                                    <TableCell sx={{fontSize:'18px'}}>{AddonRow.amount}</TableCell>
+                                    <TableCell sx={{fontSize:'18px'}}>{AddonRow.unit}</TableCell>
                                   </TableRow>
                                 ))}
                               </TableBody>

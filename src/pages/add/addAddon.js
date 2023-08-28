@@ -65,7 +65,7 @@ export default function BasicTabs() {
   const [id, setId] = useState(0);
   const [id2, setId2] = useState(0);
 
-  /* async function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     if (!image || isNameValid(name) || isPriceValid(price) || isAmountValid(amount) || isUnitValid(unit)) {
       Swal.fire("Error", "กรุณากรอกข้อมูลให้ถูกต้อง", "error");
@@ -123,7 +123,7 @@ export default function BasicTabs() {
     };
   
     reader.readAsDataURL(file);
-  } */
+  }
 
   //---------------------------------------------------------------------------------------------------------
 
@@ -346,7 +346,7 @@ export default function BasicTabs() {
               label="ชื่อเมนู"
               value={name}
               color="secondary"
-              error={isNameValid(name)}
+
               helperText="กรุณาใส่ชื่อสินค้า"
               focused
               onChange={(e) => setName(e.target.value)}
@@ -356,7 +356,7 @@ export default function BasicTabs() {
               label="ราคา"
               value={price}
               color="secondary"
-              error={isPriceValid(price)}
+
               helperText="ราคาควรมีค่า 0 ขึ้นไป"
               focused
               onChange={(e) => setPrice(e.target.value)}
@@ -366,7 +366,7 @@ export default function BasicTabs() {
               label="จำนวน"
               value={amount}
               color="secondary"
-              error={isAmountValid(amount)}
+
               helperText="จำนวนควรมีค่า 0 ขึ้นไป"
               focused
               onChange={(e) => setAmount(e.target.value)}
@@ -384,7 +384,7 @@ export default function BasicTabs() {
               label="หน่วย"
               value={unit}
               color="secondary"
-              error={isUnitValid(unit)}
+
               helperText="กรุณาใส่หน่วย"
               focused
               onChange={(e) => setUnit(e.target.value)}
@@ -407,7 +407,7 @@ export default function BasicTabs() {
               label="ชื่อกลุ่มตัวเลือก"
               value={optionGroupName}
               color="secondary"
-              error={isOptionGroupNameValid(optionGroupName)}
+
               helperText="กรุณาชื่อกลุ่มตัวเลือก"
               focused
               onChange={(e) => setOptionGroupName(e.target.value)}

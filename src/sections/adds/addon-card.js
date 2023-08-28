@@ -32,13 +32,15 @@ export const AddonCard = (props) => {
           />
         </Box>
         <Link href={`/edit/editAddon?id=${Addon._id}`} >
-        <Button>Edit</Button>
+        <Button variant="outlined">Edit</Button>
         </Link>
         <Typography
           sx={{
             marginLeft: '10px',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
+            fontSize: '23px',
+            marginTop: '10px'
           }}
           align="left"
           gutterBottom
@@ -52,6 +54,7 @@ export const AddonCard = (props) => {
           align="left"
           variant="body1"
           color="red"
+          sx={{fontSize: '20px',}}
         >
           {Addon.price}.-
         </Typography>

@@ -157,9 +157,10 @@ function Addon(){
     </Head>
     <Box
       component="main"
+      sx={{ backgroundColor: '#EEF8F7'}}
       /* sx={{ backgroundColor: '#f5f5f5'}} */
     >
-      <Container maxWidth="xl">
+      <Container maxWidth="xl" sx={{marginTop: '40px'}}>
         <Stack spacing={3}>
           <Stack
             direction="row"
@@ -179,6 +180,7 @@ function Addon(){
                   </SvgIcon>
                 )}
                 variant="contained"
+                sx={{fontSize:'20px'}}
               >
                 Add Addon
               </Button>
@@ -192,8 +194,8 @@ function Addon(){
             aria-label="basic tabs example"
             centered
           >
-            <Tab label="เมนูเพิ่มเติม" {...a11yProps(0)} />
-            <Tab label="ตัวเลือก" {...a11yProps(1)} />
+            <Tab sx={{fontSize: '20px'}} label="เมนูเพิ่มเติม" {...a11yProps(0)} />
+            <Tab sx={{fontSize: '20px'}} label="ตัวเลือก" {...a11yProps(1)} />
           </Tabs>
           <CustomTabPanel value={value} index={0} resetState={value !== 0} setRowsPerPage={setRowsPerPage} setPage={setPage}>
           <AddonSearch onSearch={(searchValue) => handleSearchAddon(searchValue)} />

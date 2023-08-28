@@ -192,19 +192,19 @@ export default function Report1(){
                 {renderDropdown("รายปี", years, year, handleChangeYear)}
                 {renderDropdown("รายเดือน", months, month, handleChangeMonth)}
                 <Box sx={{marginTop:'15px', marginLeft:'20px'}}>
-                  <Button variant="contained" onClick={handleReset}>
-                    Reset
+                  <Button sx={{fontSize:'16px'}} variant="contained" onClick={handleReset}>
+                    RESET
                   </Button>
                 </Box>
               </Box>
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                   <TableRow>
-                    <TableCell><Button onClick={() => {sortByInt(paginatedRows, "order", sortOrder, setSortOrder);}}>ลำดับ</Button></TableCell>
-                    <TableCell><Button onClick={() => {sortByDate(paginatedRows, "date", sortDate, setSortDate);}}>วันที่</Button></TableCell>
-                    <TableCell><Button onClick={() => {sortByInt(paginatedRows, "orderCount", sortOrderCount, setSortOrderCount);}}>จำนวนออเดอร์</Button></TableCell>
-                    <TableCell><Button onClick={() => {sortByInt(paginatedRows, "menuCount", sortMenuCount, setSortMenuCount);}}>จำนวนสินค้า</Button></TableCell>
-                    <TableCell><Button onClick={() => {sortByInt(paginatedRows, "total", sortTotal, setSortTotal);}}>จำนวนยอดขาย</Button></TableCell>
+                    <TableCell><Button sx={{fontSize:'20px'}} onClick={() => {sortByInt(paginatedRows, "order", sortOrder, setSortOrder);}}>ลำดับ</Button></TableCell>
+                    <TableCell><Button sx={{fontSize:'20px'}} onClick={() => {sortByDate(paginatedRows, "date", sortDate, setSortDate);}}>วันที่</Button></TableCell>
+                    <TableCell><Button sx={{fontSize:'20px'}} onClick={() => {sortByInt(paginatedRows, "orderCount", sortOrderCount, setSortOrderCount);}}>จำนวนออเดอร์</Button></TableCell>
+                    <TableCell><Button sx={{fontSize:'20px'}} onClick={() => {sortByInt(paginatedRows, "menuCount", sortMenuCount, setSortMenuCount);}}>จำนวนสินค้า</Button></TableCell>
+                    <TableCell><Button sx={{fontSize:'20px'}} onClick={() => {sortByInt(paginatedRows, "total", sortTotal, setSortTotal);}}>จำนวนยอดขาย</Button></TableCell>
                     <TableCell></TableCell>
                   </TableRow>
                 </TableHead>
@@ -215,11 +215,11 @@ export default function Report1(){
                       <TableRow
                         key={row._id}
                         sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                        <TableCell>{row.id}</TableCell>
-                        <TableCell>{row.date}</TableCell>
-                        <TableCell>{row.countOrder}</TableCell>
-                        <TableCell>{row.countMenu}</TableCell>
-                        <TableCell>{`${row.total} บาท`}</TableCell>
+                        <TableCell sx={{fontSize:'18px'}}>{row.id}</TableCell>
+                        <TableCell sx={{fontSize:'18px'}}>{row.date}</TableCell>
+                        <TableCell sx={{fontSize:'18px'}}>{row.countOrder}</TableCell>
+                        <TableCell sx={{fontSize:'18px'}}>{row.countMenu}</TableCell>
+                        <TableCell sx={{fontSize:'18px'}}>{`${row.total} บาท`}</TableCell>
                         <TableCell>
                           <IconButton
                             aria-label="expand row"
@@ -237,15 +237,13 @@ export default function Report1(){
                         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                           <Collapse in={open[index]} timeout="auto" unmountOnExit>
                             <Box sx={{ margin: 1 }}>
-                              <Table size="small" aria-label="purchases">
-                                <TableHead>
+                              <Table aria-label="purchases">
                                   <TableRow>
-                                    <TableCell>ลำดับ</TableCell>
-                                    <TableCell>เมนู</TableCell>
-                                    <TableCell>เวลา</TableCell>
-                                    <TableCell>ราคา</TableCell>
+                                    <TableCell sx={{fontSize:'18px'}}>ลำดับ</TableCell>
+                                    <TableCell sx={{fontSize:'18px'}}>เมนู</TableCell>
+                                    <TableCell sx={{fontSize:'18px'}}>เวลา</TableCell>
+                                    <TableCell sx={{fontSize:'18px'}}>ราคา</TableCell>
                                   </TableRow>
-                                </TableHead>
 
                                 <TableBody>
                                   {row.history.map((historyRow) => (
@@ -255,9 +253,9 @@ export default function Report1(){
                                       <TableCell component="th" scope="row">
                                         {historyRow.id}
                                       </TableCell>
-                                      <TableCell>{historyRow.name}</TableCell>
-                                      <TableCell>{historyRow.time}</TableCell>
-                                      <TableCell>{historyRow.price} บาท</TableCell>
+                                      <TableCell sx={{fontSize:'16px'}}>{historyRow.name}</TableCell>
+                                      <TableCell sx={{fontSize:'16px'}}>{historyRow.time}</TableCell>
+                                      <TableCell sx={{fontSize:'16px'}}>{historyRow.price} บาท</TableCell>
                                     </TableRow>
                                   ))}
                                   {/* <TablePagination

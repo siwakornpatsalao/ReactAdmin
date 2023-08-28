@@ -9,6 +9,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { useEffect, useState, useRef } from "react";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CelebrationIcon from '@mui/icons-material/Celebration';
+import { fontWeight } from '@mui/system';
 
 export const MenuCard = (props) => {
   const { menu, hasPromotion, promoData, hasPromotionCategory, promoCategoryData } = props;
@@ -49,13 +50,15 @@ export const MenuCard = (props) => {
         <br/>
 
         <Link href={`/edit/editMenu?id=${menu._id}`} >
-          <Button>Edit</Button>
+          <Button variant="outlined">Edit</Button>
         </Link>
         <Typography
           sx={{
+            marginTop: '10px',
             marginLeft: '10px',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
+            fontSize: '20px'
           }}
           align="left"
           gutterBottom
@@ -68,6 +71,7 @@ export const MenuCard = (props) => {
           align="left"
           variant="body1"
           color="red"
+          sx={{fontSize: '18px'}}
         >
           {menu.price}.-
         </Typography>

@@ -64,9 +64,9 @@ export default function BasicTabs() {
             onChange={handleChange}
             aria-label="basic tabs example"
             centered>
-            <Tab label="รายงานสินค้า" {...a11yProps(0)} />
-            <Tab label="รายงาน stock" {...a11yProps(1)} />
-            <Tab label="รายงานสินค้าขายดี" {...a11yProps(2)} />
+            <Tab sx={{fontSize:'20px'}} label="รายงานสินค้า" {...a11yProps(0)} />
+            <Tab sx={{fontSize:'20px'}} label="รายงาน stock" {...a11yProps(1)} />
+            <Tab sx={{fontSize:'20px'}} label="รายงานสินค้าขายดี" {...a11yProps(2)} />
           </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
