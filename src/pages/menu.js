@@ -264,13 +264,13 @@ function Menu() {
 
         <div style={{ justifyContent: "flex-end" }}>
           <TextField
+            InputLabelProps={{style: {fontSize: 20}}}
             value={category}
             fullWidth
             select
             focused
             sx={{backgroundColor: 'white'}}
             label="หมวดหมู่"
-            defaultValue="เครื่องดื่ม"
             helperText="Please select your category"
             onChange={(e) => {
               setCategory(e.target.value);
@@ -288,7 +288,7 @@ function Menu() {
           >
             {categories.map((option) => (
               <MenuItem key={option._id} value={option.name}>
-                {option.name}
+                <span style={{fontSize:20}}>{option.name}</span>
               </MenuItem>
             ))}
 

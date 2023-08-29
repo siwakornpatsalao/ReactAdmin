@@ -381,7 +381,7 @@ export default function BasicTabs() {
             >
               {categories.map((option) => (
                 <MenuItem key={option._id} value={option.name}>
-                  {option.name}
+                  <span style={{fontSize:20}}>{option.name}</span>
                 </MenuItem>
               ))}
             </TextField>
