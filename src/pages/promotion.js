@@ -93,8 +93,8 @@ export default function Promotion(){
             spacing={4}
           >
             <Stack spacing={1}>
-              <Typography variant="h4">
-                Promotions
+              <Typography style={{marginLeft: '5px', marginTop: '7px'}} variant="h4">
+                Promotion
               </Typography>
             </Stack>
             <div>
@@ -108,7 +108,7 @@ export default function Promotion(){
                 variant="contained"
                 sx={{fontSize:'20px'}}
               >
-                Add Promotion
+                เพิ่มโปรโมชั่น
               </Button>
               </Link>
             </div>

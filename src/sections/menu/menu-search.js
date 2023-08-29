@@ -11,7 +11,7 @@ export const MenuSearch = ({ onSearch }) => {
   };
 
   return (
-    <Card sx={{ p: 2 }}>
+    <Card sx={{ p: 2,marginLeft:'10px' }}>
       <OutlinedInput
         value={searchValue}
         onChange={(e) => handleSearch(e.target.value)}
@@ -24,7 +24,7 @@ export const MenuSearch = ({ onSearch }) => {
             </SvgIcon>
           </InputAdornment>
         )}
-        sx={{ maxWidth: 700 }}
+        sx={{ maxWidth: 1200 }}
       />
     </Card>
   );

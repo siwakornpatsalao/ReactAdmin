@@ -363,21 +363,21 @@ export default function BasicTabs() {
                       Swal.fire({
                         title: "ตัวอย่าง",
                         html: `
-        <style>
-          .content {
-            text-align: left;
-          }
-          .price {
-            color: red;
-          }
-        </style>
-        <div class="content">
-          <img src="${image}" alt="Preview" style="max-width: 100%; height: auto;" />
-          <p><strong>ชื่อเมนู:</strong> ${formik.values.name}</p>
-          <p><strong>คำอธิบาย:</strong> ${formik.values.description}</p>
-          <p><strong>ราคา: <span class="price">${formik.values.price}</span></strong></p>
-        </div>
-      `,
+                        <style>
+                          .content {
+                            text-align: left;
+                          }
+                          .price {
+                            color: red;
+                          }
+                        </style>
+                        <div class="content">
+                          <img src="${image}" alt="Preview" style="max-width: 100%; height: auto;" />
+                          <p><strong>ชื่อเมนู:</strong> ${formik.values.name}</p>
+                          <p><strong>คำอธิบาย:</strong> ${formik.values.description}</p>
+                          <p><strong>ราคา: <span class="price">${formik.values.price}</span></strong></p>
+                        </div>
+                      `,
                         showCloseButton: true,
                         showConfirmButton: false,
                       });

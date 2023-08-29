@@ -12,12 +12,11 @@ export const OptionCard = (props) => {
       sx={{
         display: 'flex',
         flexDirection: 'column',
+        height: '100%',
+        maxWidth: 350,
       }}
     >
       <CardContent>
-        <Link href={`/edit/editAddon?id=${OptionGroups._id}`} >
-        <Button variant='outlined'>Edit</Button>
-        </Link>
         <Typography
           sx={{
             marginLeft: '10px',
@@ -67,7 +66,7 @@ export const OptionCard = (props) => {
             display="inline"
             variant="body2"
           >
-            Updated: {new Date(OptionGroups.updated_at).toDateString()}
+            อัพเดต: {new Date(OptionGroups.updated_at).toLocaleDateString('th-TH')}
           </Typography>
         </Stack>
         <Stack
@@ -75,17 +74,14 @@ export const OptionCard = (props) => {
           direction="row"
           spacing={1}
         >
-          <SvgIcon
-            color="action"
-            fontSize="small"
-          >
-            <ArrowDownOnSquareIcon />
-          </SvgIcon>
           <Typography
             color="text.secondary"
             display="inline"
             variant="body2"
           >
+            <Link href={`/edit/editAddon?id=${OptionGroups._id}`} >
+            <Button>แก้ไข</Button>
+            </Link>
 
           </Typography>
         </Stack>

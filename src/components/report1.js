@@ -215,7 +215,7 @@ export default function Report1(){
                       <TableRow
                         key={row._id}
                         sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                        <TableCell sx={{fontSize:'18px'}}>{row.id}</TableCell>
+                        <TableCell sx={{fontSize:'18px'}}><p style={{marginLeft:'35px'}}>{row.id}</p></TableCell>
                         <TableCell sx={{fontSize:'18px'}}>{row.date}</TableCell>
                         <TableCell sx={{fontSize:'18px'}}>{row.countOrder}</TableCell>
                         <TableCell sx={{fontSize:'18px'}}>{row.countMenu}</TableCell>
@@ -251,7 +251,7 @@ export default function Report1(){
                                       onClick={() => handlePopUp(historyRow, row)}
                                       key={historyRow.id}>
                                       <TableCell component="th" scope="row">
-                                        {historyRow.id}
+                                      <p style={{marginLeft:'15px'}}>{historyRow.id}</p>
                                       </TableCell>
                                       <TableCell sx={{fontSize:'16px'}}>{historyRow.name}</TableCell>
                                       <TableCell sx={{fontSize:'16px'}}>{historyRow.time}</TableCell>

@@ -372,13 +372,13 @@ export default function BasicTabs() {
             <CustomTabPanel value={value} index={0}>
 
             <TableContainer>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell> <Button sx={{fontSize:'22px'}} onClick={() => {sortByInt(paidOrders, "id", sortOrder, setSortOrder);}}>เลขที่ออเดอร์</Button></TableCell>
-                  <TableCell> <Button sx={{fontSize:'22px'}} onClick={() => {sortByString(paidOrders, "menu", sortMenu, setSortMenu);}}>เมนู</Button></TableCell>
-                  <TableCell> <Button sx={{fontSize:'22px'}} onClick={() => {sortByTime(paidOrders, "time", sortTime, setSortTime);}}> เวลา </Button></TableCell>
-                  <TableCell> <Button sx={{fontSize:'22px'}} onClick={() => {sortByString(paidOrders, "status", sortStatus, setSortStatus);}}> สถานะ</Button></TableCell>
+                  <TableCell width="20%"> <Button sx={{fontSize:'22px'}} onClick={() => {sortByInt(paidOrders, "id", sortOrder, setSortOrder);}}>เลขที่ออเดอร์</Button></TableCell>
+                  <TableCell width="20%"> <Button sx={{fontSize:'22px'}} onClick={() => {sortByString(paidOrders, "menu", sortMenu, setSortMenu);}}>เมนู</Button></TableCell>
+                  <TableCell width="20%"> <Button sx={{fontSize:'22px'}} onClick={() => {sortByTime(paidOrders, "time", sortTime, setSortTime);}}> เวลา </Button></TableCell>
+                  <TableCell width="20%"> <Button sx={{fontSize:'22px'}} onClick={() => {sortByString(paidOrders, "status", sortStatus, setSortStatus);}}> สถานะ</Button></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -386,7 +386,7 @@ export default function BasicTabs() {
                   <TableRow key={row._id}
                   /* onClick={() => handlePopUpPaid(row)} */>
                     <TableCell sx={{fontSize:'18px'}}>
-                      {row.id}
+                    <p style={{marginLeft:'60px'}}>{row.id}</p>
                     </TableCell>
                     <TableCell sx={{fontSize:'18px'}}>{row.menu}</TableCell>
                     <TableCell sx={{fontSize:'18px'}}>{row.time}</TableCell>
@@ -411,11 +411,11 @@ export default function BasicTabs() {
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                   <TableRow>
-                    <TableCell> <Button sx={{fontSize:'22px'}} onClick={() => {sortByInt(paginatedRows, "id", sortOrder, setSortOrder);}}>เลขที่ออเดอร์</Button></TableCell>
-                    <TableCell> <Button sx={{fontSize:'22px'}} onClick={() => {sortByString(paginatedRows, "menu", sortMenu, setSortMenu);}}> เมนู </Button> </TableCell>
+                    <TableCell  width="20%"> <Button sx={{fontSize:'22px'}} onClick={() => {sortByInt(paginatedRows, "id", sortOrder, setSortOrder);}}>เลขที่ออเดอร์</Button></TableCell>
+                    <TableCell  width="20%"> <Button sx={{fontSize:'22px'}} onClick={() => {sortByString(paginatedRows, "menu", sortMenu, setSortMenu);}}> เมนู </Button> </TableCell>
                     {/* <TableCell> <Button onClick={() => {sortByDate(rows, "date", sortDate, setSortDate);}}> วันที่ </Button> </TableCell> */}
-                    <TableCell> <Button sx={{fontSize:'22px'}} onClick={() => {sortByTime(paginatedRows, "time", sortTime, setSortTime);}}> เวลา </Button> </TableCell>
-                    <TableCell> <Button sx={{fontSize:'22px'}} onClick={() => {sortByString(paginatedRows, "status", sortStatus, setSortStatus);}}> สถานะ</Button> </TableCell>
+                    <TableCell  width="20%"> <Button sx={{fontSize:'22px'}} onClick={() => {sortByTime(paginatedRows, "time", sortTime, setSortTime);}}> เวลา </Button> </TableCell>
+                    <TableCell  width="20%"> <Button sx={{fontSize:'22px'}} onClick={() => {sortByString(paginatedRows, "status", sortStatus, setSortStatus);}}> สถานะ</Button> </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -426,7 +426,7 @@ export default function BasicTabs() {
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                     >
                       <TableCell sx={{fontSize:'18px'}}>
-                        {row.id}
+                      <p style={{marginLeft:'60px'}}>{row.id}</p>
                       </TableCell>
                       <TableCell sx={{fontSize:'18px'}}>{row.menu}</TableCell>
                       {/* <TableCell>{row.date}</TableCell> */}

@@ -215,7 +215,7 @@ export default function Report2(){
                     key={row._id}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                     <TableCell component="th" scope="row" sx={{fontSize:'18px'}}>
-                      {row.id}
+                    <p style={{marginLeft:'35px'}}>{row.id}</p>
                     </TableCell>
                     <TableCell sx={{fontSize:'18px'}}>{row.date}</TableCell>
                     <TableCell sx={{fontSize:'18px'}}>{row.time}</TableCell>

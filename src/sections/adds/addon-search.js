@@ -24,7 +24,7 @@ export const AddonSearch = ({ onSearch }) => {
             </SvgIcon>
           </InputAdornment>
         )}
-        sx={{ maxWidth: 500 }}
+        sx={{ maxWidth: 1500 }}
       />
     </Card>
   );

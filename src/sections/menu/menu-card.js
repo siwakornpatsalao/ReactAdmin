@@ -44,14 +44,11 @@ export const MenuCard = (props) => {
         >
           <img style={{
                 maxWidth: "100%",
-              }} src={menu.thumbnail} alt="Preview" variant="square" width='300px' height='200px'
+              }} src={menu.thumbnail} alt="Preview" variant="square"  height='200px'
                 />
         </Box>
         <br/>
 
-        <Link href={`/edit/editMenu?id=${menu._id}`} >
-          <Button variant="outlined">Edit</Button>
-        </Link>
         <Typography
           sx={{
             marginTop: '10px',
@@ -101,7 +98,7 @@ export const MenuCard = (props) => {
             display="inline"
             variant="body2"
           >
-            Updated: {new Date(menu.updated_at).toDateString()}
+            อัพเดต: {new Date(menu.updated_at).toLocaleDateString('th-TH')}
           </Typography>
 
           {hasPromotion && (
@@ -122,17 +119,17 @@ export const MenuCard = (props) => {
                 onClose={handleClose}
                 MenuListProps={{ 'aria-labelledby': 'basic-button' }}
               >
-                Promotion Menu: {promoData.map((promo) => (
+                โปรโมชั่นสำหรับเมนู: {promoData.map((promo) => (
                 <MenuItem key={promo.id}>
-                    <p>Topic: {promo.topic}</p>
+                    <p>หัวข้อ: {promo.topic}</p>
                 </MenuItem>
                  ))}
                  {hasPromotionCategory && (
                   <div>
-                    <p>Promotion Category:</p>
+                    <p>โปรโมชั่นสำหรับหมวดหมู่:</p>
                     {promoCategoryData.map((promo) => (
                       <MenuItem key={promo.id} sx={{ color: 'text.secondary' }}>
-                        Topic: {promo.topic}
+                        หัวข้อ: {promo.topic}
                       </MenuItem>
                     ))}
                   </div>
@@ -141,52 +138,22 @@ export const MenuCard = (props) => {
               </Menu>
             </div>
           )}
-
-          {/* {hasPromotionCategory && (
-            <div>
-              <Button
-                id="basic-button"
-                aria-controls={open ? 'basic-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? 'true' : undefined}
-                onClick={handleClick}
-              >
-                <KeyboardArrowDownIcon />
-              </Button>
-              <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                MenuListProps={{ 'aria-labelledby': 'basic-button' }}
-              >
-                Promotion Category: {promoCategoryData.map((promo) => (
-                <MenuItem color="text.secondary">
-                    <p key={promo.id}>Topic: {promo.topic}</p>
-                </MenuItem>
-                ))}
-              </Menu>
-            </div>
-          )} */}
-
-          {/* // category has promotion */}
+          
         </Stack>
         <Stack
           alignItems="center"
           direction="row"
           spacing={1}
         >
-          <SvgIcon
-            color="action"
-            fontSize="small"
-          >
-            <ArrowDownOnSquareIcon />
-          </SvgIcon>
+
           <Typography
             color="text.secondary"
             display="inline"
             variant="body2"
-          >
+          >        
+          <Link href={`/edit/editMenu?id=${menu._id}`} >
+            <Button>แก้ไข</Button>
+          </Link>
 
           </Typography>
         </Stack>

@@ -44,6 +44,7 @@ export const PromotionCard = (props) => {
           spacing={1}
         >
           <SvgIcon
+            style={{marginLeft:'10px'}}
             color="action"
             fontSize="small"
           >
@@ -54,7 +55,7 @@ export const PromotionCard = (props) => {
             display="inline"
             variant="body2"
           >
-            Updated: {new Date(Promotion.updated_at).toDateString()}
+            อัพเดต: {new Date(Promotion.updated_at).toLocaleDateString('th-TH')}
           </Typography>
         </Stack>
         <Stack
@@ -63,7 +64,7 @@ export const PromotionCard = (props) => {
           spacing={1}
         >
           <Link href={`/edit/editPromotion?id=${Promotion._id}`} >
-        <Button>Edit</Button>
+        <Button>แก้ไข</Button>
         </Link>
           <Typography
             color="text.secondary"

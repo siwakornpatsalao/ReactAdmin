@@ -16,6 +16,8 @@ export const AddonCard = (props) => {
       sx={{
         display: 'flex',
         flexDirection: 'column',
+        height: '100%',
+        maxWidth: 350,
       }}
     >
       <CardContent>
@@ -31,9 +33,7 @@ export const AddonCard = (props) => {
             height="200px"
           />
         </Box>
-        <Link href={`/edit/editAddon?id=${Addon._id}`} >
-        <Button variant="outlined">Edit</Button>
-        </Link>
+
         <Typography
           sx={{
             marginLeft: '10px',
@@ -84,7 +84,7 @@ export const AddonCard = (props) => {
             display="inline"
             variant="body2"
           >
-            Updated: {new Date(Addon.updated_at).toDateString()}
+            อัพเดต: {new Date(Addon.updated_at).toLocaleDateString('th-TH')}
           </Typography>
         </Stack>
         <Stack
@@ -92,17 +92,15 @@ export const AddonCard = (props) => {
           direction="row"
           spacing={1}
         >
-          <SvgIcon
-            color="action"
-            fontSize="small"
-          >
-            <ArrowDownOnSquareIcon />
-          </SvgIcon>
+
           <Typography
             color="text.secondary"
             display="inline"
             variant="body2"
           >
+          <Link href={`/edit/editAddon?id=${Addon._id}`} >
+          <Button >แก้ไข</Button>
+          </Link>
 
           </Typography>
         </Stack>

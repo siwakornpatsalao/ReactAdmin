@@ -150,7 +150,7 @@ export default function Report3(){
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell component="th" scope="row" sx={{fontSize:'18px'}}>
-                      {row.id}
+                    <p style={{marginLeft:'35px'}}>{row.id}</p>
                     </TableCell>
                     <TableCell sx={{fontSize:'18px'}}>{row.date}</TableCell>
                     <TableCell sx={{fontSize:'18px'}}>{row.name}</TableCell>
@@ -187,7 +187,7 @@ export default function Report3(){
                                     <TableRow
                                       key={rowPop.id}>
                                       <TableCell component="th" scope="row" sx={{fontSize:'16px'}}>
-                                        {rowPop.id}
+                                      <p style={{marginLeft:'15px'}}>{rowPop.id}</p>
                                       </TableCell>
                                       <TableCell sx={{fontSize:'16px'}}>{rowPop.name}</TableCell>
                                       <TableCell sx={{fontSize:'16px'}}>{rowPop.amount}</TableCell>

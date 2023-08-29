@@ -34,6 +34,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
+
 function Menu() {
   const [menus, setMenus] = useState([]);
   const initial = useRef(false);
@@ -57,11 +58,11 @@ function Menu() {
   function handleAddCategory() {
     Swal.fire({
       title: "เพิ่มหมวดหมู่",
-      text: "ชื่อหมวดหมู่",
+      html: '<span style="font-size: 28px;">ชื่อหมวดหมู่</span>',
       input: "text",
       showDenyButton: true,
-      confirmButtonText: "ยืนยัน",
-      denyButtonText: `ยกเลิก`,
+      confirmButtonText: '<span style="font-size: 20px; border-radius: 20px;">ยืนยัน</span>',
+      denyButtonText: '<span style="font-size: 20px; border-radius: 20px;">ยกเลิก</span>',
     }).then(async (result) => {
       if (result.isConfirmed && result.value !== "") {
         const categoryName = result.value;
@@ -209,21 +210,21 @@ function Menu() {
       </Head>
       <Box component="main" sx={{ backgroundColor: '#EEF8F7'}}>
         <Container maxWidth="xl" sx={{marginTop: '40px'}}>
-          <Stack spacing={1}>
+          <Stack spacing={3}>
             <Stack direction="row" justifyContent="space-between" spacing={4}>
 
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <Stack spacing={1}>
-                  <Typography variant="h4">Menus</Typography>
+                  <Typography style={{marginLeft:'20px'}} variant="h4">Menu</Typography>
                 </Stack>
               </div>
 
               <Grid container
-            justifyContent="space-evenly"
-            alignItems="flex-start"  
-            rowSpacing={1} 
-            columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-              <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                    justifyContent="space-evenly"
+                    alignItems="flex-start"  
+                    rowSpacing={1} 
+                    columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+              <div style={{ justifyContent: "flex-end" }}>
                 <Link href="./add/addMenu">
                   <Button
                     startIcon={
@@ -234,7 +235,7 @@ function Menu() {
                     variant="contained"
                     sx={{fontSize:'20px'}}
                   >
-                    Add Menu
+                    เพิ่มเมนู
                   </Button>
                 </Link>
                 <span style={{ marginRight: "20px" }}></span>
@@ -300,7 +301,7 @@ function Menu() {
       </div>
 
 
-            <Grid container spacing={3}>
+            <Grid style={{marginLeft:"15px"}}  container spacing={3}>
               {paginatedMenus.map((menu) => (
                 <Grid
                   xs={12}

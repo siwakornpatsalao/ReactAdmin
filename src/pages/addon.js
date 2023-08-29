@@ -168,8 +168,8 @@ function Addon(){
             spacing={4}
           >
             <Stack spacing={1}>
-              <Typography variant="h4">
-                Addons
+              <Typography style={{marginLeft:'24px',marginTop:'7px'}}  variant="h4">
+                Addon
               </Typography>
             </Stack>
               <Link href="./add/addAddon">
@@ -182,7 +182,7 @@ function Addon(){
                 variant="contained"
                 sx={{fontSize:'20px'}}
               >
-                Add Addon
+                เพิ่ม Addon
               </Button>
               </Link>
           </Stack>
