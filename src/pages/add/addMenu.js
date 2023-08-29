@@ -219,8 +219,8 @@ export default function BasicTabs() {
             aria-label="basic tabs example"
             centered
           >
-            <Tab label="เมนูหลัก" {...a11yProps(0)} />
-            <Tab label="ส่วนเสริม" {...a11yProps(1)} />
+            <Tab sx={{fontSize:'20px'}} label="เมนูหลัก" {...a11yProps(0)} />
+            <Tab sx={{fontSize:'20px'}} label="ส่วนเสริม" {...a11yProps(1)} />
           </Tabs>
         </Box>
 
@@ -230,11 +230,11 @@ export default function BasicTabs() {
               sx={{
                 display: "flex",
                 marginTop: {
-                  xs: "60px",
-                  sm: "70px",
-                  md: "80px",
-                  lg: "90px",
-                  xl: "100px",
+                  xs: "30px",
+                  sm: "40px",
+                  md: "50px",
+                  lg: "60px",
+                  xl: "70px",
                 },
               }}
             >
@@ -299,6 +299,8 @@ export default function BasicTabs() {
                 >
                   <Item>
                     <TextField
+                      inputProps={{style: {fontSize: 20}}}
+                      InputLabelProps={{style: {fontSize: 20}}}
                       fullWidth
                       focused
                       label="ชื่อสินค้า"
@@ -312,6 +314,8 @@ export default function BasicTabs() {
                   </Item>
                   <Item>
                     <TextField
+                      inputProps={{style: {fontSize: 20}}}
+                      InputLabelProps={{style: {fontSize: 20}}}
                       fullWidth
                       focused
                       label="คำอธิบาย"
@@ -324,7 +328,11 @@ export default function BasicTabs() {
                     />
                   </Item>
 
+                  <Box sx={{ display: 'flex',flexWrap: 'wrap'}}>
+                  <Item>
                   <TextField
+                    inputProps={{style: {fontSize: 20}}}
+                    InputLabelProps={{style: {fontSize: 20}}}
                     focused
                     label="ราคา"
                     name="price"
@@ -334,7 +342,12 @@ export default function BasicTabs() {
                     error={formik.touched.price && !!formik.errors.price}
                     helperText={formik.touched.price && formik.errors.price}
                   />
+                  </Item>
+                  
+                  <Item>
                   <TextField
+                    inputProps={{style: {fontSize: 20}}}
+                    InputLabelProps={{style: {fontSize: 20}}}
                     value={category}
                     select
                     focused
@@ -349,13 +362,17 @@ export default function BasicTabs() {
                       </MenuItem>
                     ))}
                   </TextField>
-                  <br />
-
-                  <Button fullWidth variant="contained" type="submit">
+                  </Item>
+                  </Box>
+                  
+                  <Item>
+                  <Button sx={{fontSize:20}} fullWidth variant="contained" type="submit">
                     สร้างเมนูใหม่
                   </Button>
-                  <br />
+                  </Item>
+                  <Item>
                   <Button
+                    sx={{fontSize:20}}
                     fullWidth
                     variant="contained"
                     type="button"
@@ -385,6 +402,7 @@ export default function BasicTabs() {
                   >
                     ตัวอย่าง
                   </Button>
+                  </Item>
                 </Box>
               </Grid>
             </Box>
@@ -396,11 +414,11 @@ export default function BasicTabs() {
             sx={{
               display: "flex",
               marginTop: {
-                xs: "60px",
-                sm: "70px",
-                md: "80px",
-                lg: "90px",
-                xl: "100px",
+                xs: "30px",
+                sm: "40px",
+                md: "50px",
+                lg: "60px",
+                xl: "70px",
               },
             }}
           >
@@ -412,7 +430,7 @@ export default function BasicTabs() {
               columnSpacing={{ xs: 1, sm: 2, md: 3 }}
             >
               <div style={{ width: "500px" }}>
-                <Card sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+                <Card style={{backgroundColor:'#EEF8F7'}} sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
                   <CardContent>
                     <Grid item xs={6} md={10} sm={14}>
                       <Typography variant="h4" component="h4">
@@ -423,10 +441,8 @@ export default function BasicTabs() {
                         <FormGroup key={addon._id}>
                           <FormControlLabel
                             label={
-                              <Typography
-                                variant="h6"
-                                component="h6"
-                                style={{ color: "black", fontWeight: "normal" }}
+                              <Typography  
+                                style={{fontSize:26 }}
                               >
                                 {addon.name}
                               </Typography>
@@ -451,7 +467,7 @@ export default function BasicTabs() {
                 </Card>
               </div>
 
-              <Card sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+              <Card style={{backgroundColor:'#EEF8F7'}} sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
                 <CardContent>
                   <div style={{ width: "500px" }}>
                     <Grid item xs={6} md={15} sm={14}>
@@ -464,9 +480,7 @@ export default function BasicTabs() {
                           <FormControlLabel
                             label={
                               <Typography
-                                variant="h6"
-                                component="h6"
-                                style={{ color: "black", fontWeight: "normal" }}
+                                style={{ fontSize:26 }}
                               >
                                 {optionGroup.name}
                               </Typography>

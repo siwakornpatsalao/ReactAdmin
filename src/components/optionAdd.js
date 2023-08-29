@@ -237,8 +237,10 @@ export default function OptionAdd(){
               ชื่อกลุ่มตัวเลือก
           </Typography>
           <br/>
-          <br/>
+
         <TextField
+           inputProps={{style: {fontSize: 25}}}
+           InputLabelProps={{style: {fontSize: 25}}}
            focused
            fullWidth
            label="ชื่อกลุ่มตัวเลือก"
@@ -250,10 +252,10 @@ export default function OptionAdd(){
            helperText={formik.touched.optionGroupName && formik.errors.optionGroupName}
         />
         <br/>
-        <Button onClick={handleAddOption}>เพิ่มตัวเลือก</Button>
+        <Button sx={{fontSize: 22}} onClick={handleAddOption}>เพิ่มตัวเลือก</Button>
         {options.map((option,index) => (
               <MenuItem onClick={() => handleEditOption(option,index)} key={option._id}>
-                <span style={{color:'grey'}}>{option.name} +{option.price} บาท</span>
+                <span style={{color:'grey', fontSize:20}}>{option.name} +{option.price} บาท</span>
               </MenuItem>
             ))}
             <br/>
@@ -264,10 +266,10 @@ export default function OptionAdd(){
         <br/>
 
         <RadioGroup value={isRequired ? 'necessary' : 'not'} onChange={handleIsRequiredChange}>
-          <FormControlLabel value="necessary" control={<Radio />} label={<Typography variant="h6" component="h6" style={{ color: "black", fontWeight: "normal" }}>
+          <FormControlLabel value="necessary" control={<Radio />} label={<Typography variant="h6" component="h6" style={{ color: "black", fontWeight: "normal",fontSize:24 }}>
                             จำเป็น
                         </Typography>} />
-          <FormControlLabel value="not" control={<Radio />} label={<Typography variant="h6" component="h6" style={{ color: "black", fontWeight: "normal" }}>
+          <FormControlLabel value="not" control={<Radio />} label={<Typography variant="h6" component="h6" style={{ color: "black", fontWeight: "normal",fontSize:24 }}>
                             ไม่บังคับ
                         </Typography>} />
         </RadioGroup>
@@ -277,16 +279,16 @@ export default function OptionAdd(){
         </Typography>
         <br/>
         <RadioGroup value={isRequired2 ? 'one' : 'many'} onChange={handleIsRequiredChange2}>
-          <FormControlLabel value="one" control={<Radio />} label={<Typography variant="h6" component="h6" style={{ color: "black", fontWeight: "normal" }}>
+          <FormControlLabel value="one" control={<Radio />} label={<Typography variant="h6" component="h6" style={{ color: "black", fontWeight: "normal",fontSize:24 }}>
                             1 อย่าง
                         </Typography>} />
-          <FormControlLabel value="many" control={<Radio />} label={<Typography variant="h6" component="h6" style={{ color: "black", fontWeight: "normal" }}>
+          <FormControlLabel value="many" control={<Radio />} label={<Typography variant="h6" component="h6" style={{ color: "black", fontWeight: "normal",fontSize:24 }}>
                             หลายอย่าง
                         </Typography>} />
         </RadioGroup>
         <br/>
 
-        <Button fullWidth variant='contained' type="submit">สร้างตัวเลือกใหม่</Button>
+        <Button sx={{fontSize: 20}} fullWidth variant='contained' type="submit">สร้างตัวเลือกใหม่</Button>
         </Box>
         </CardContent>
         </Card>

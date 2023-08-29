@@ -14,11 +14,21 @@ import { useRouter } from 'next/router';
 import Grid from '@mui/material/Grid';
 import Typography from "@mui/material/Typography";
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import { styled } from "@mui/material/styles";
+import Paper from "@mui/material/Paper";
 
 const disabledTabStyle = {
   pointerEvents: 'none',
   opacity: 0.5,
 };
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+}));
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -316,20 +326,7 @@ export default function BasicTabs() {
   };
 
   useEffect(() => {
-
-    if (id) {
-        fetchAddonData();
-        fetchOptionGroup();
-    }
-
-
-    if(name==''){
-      setValue(1);
-      //disable addon tab
-    }else if(optionGroupName==''){
-      setValue(0);
-      //disable optiongroup tab
-    }
+    
     //if from addon do fetchAddonData **BUT** if from option do fetchOptionGroup
     
     async function fetchAddonData(){
@@ -343,6 +340,14 @@ export default function BasicTabs() {
           setEditAmount(data.editAmount);
           setImage(data.thumbnail);
           setUnit(data.unit);
+
+          if(data.price==''){
+            setValue(1);
+            //disable addon tab
+          }else if(data.price!=''){
+            setValue(0);
+            //disable optiongroup tab
+          }
         } catch (error) {
           console.error('Error fetching menu:', error);
         }
@@ -356,6 +361,14 @@ export default function BasicTabs() {
         setOptionGroupName(data.name);
         setOptions(data.options);
         console.log(data);
+
+        if(data.options!=[]){
+          setValue(1);
+          //disable addon tab
+        }else if(data.options==[]){
+          setValue(0);
+          //disable optiongroup tab
+        }
       } catch (error) {
         console.error("Error fetching options:", error);
       }
@@ -364,8 +377,10 @@ export default function BasicTabs() {
     if (!initial.current) {
       initial.current = true;
       console.log(initial.current);
-      fetchOptionGroup();
-      fetchAddonData();
+      if (id) {
+        fetchAddonData();
+        fetchOptionGroup();
+      }
     }
   }, [id, name,optionGroupName]);
 
@@ -381,16 +396,16 @@ export default function BasicTabs() {
           aria-label="basic tabs example"
           centered
         >
-          <Tab style={!name ? disabledTabStyle : {}} label="เมนูเพิ่มเติม" {...a11yProps(0)} />
-          <Tab style={!optionGroupName ? disabledTabStyle : {}} label="ตัวเลือก" {...a11yProps(1)} />
+          <Tab sx={{fontSize:'20px'}} style={!name ? disabledTabStyle : {}} label="เมนูเพิ่มเติม" {...a11yProps(0)} />
+          <Tab sx={{fontSize:'20px'}} style={!optionGroupName ? disabledTabStyle : {}} label="ตัวเลือก" {...a11yProps(1)} />
         </Tabs>
       </Box>
 
       <CustomTabPanel value={value} index={0}>
         <form onSubmit={handleSubmit}>
-        <Button style={{ background: 'red' }} variant="contained" onClick={handleDeleteAddon}>ลบเมนูเพิ่มเติมชิ้นนี้</Button>
+        <Button sx={{fontSize:20}} style={{ background: 'red' }} variant="contained" onClick={handleDeleteAddon}>ลบเมนูเพิ่มเติมชิ้นนี้</Button>
         <br/>
-        <Box sx={{ display: 'flex'  }}>
+        <Box sx={{ display: 'flex' }}>
           <Grid container
             justifyContent="space-evenly"
             alignItems="flex-start"  
@@ -442,7 +457,10 @@ export default function BasicTabs() {
             noValidate
             autoComplete="off"
           >
+            <Item>
             <TextField
+              inputProps={{style: {fontSize: 25}}}
+              InputLabelProps={{style: {fontSize: 25}}}
               fullWidth
               label="ชื่อเมนู"
               value={name}
@@ -452,8 +470,13 @@ export default function BasicTabs() {
               focused
               onChange={(e) => setName(e.target.value)}
             />
-            <br/>
+            </Item>
+
+            <Box sx={{ display: 'flex',flexWrap: 'wrap'}}>
+            <Item>
             <TextField
+              inputProps={{style: {fontSize: 24}}}
+              InputLabelProps={{style: {fontSize: 24}}}
               label="ราคา"
               value={price}
               color="secondary"
@@ -462,7 +485,11 @@ export default function BasicTabs() {
               focused
               onChange={(e) => setPrice(e.target.value)}
             />
+            </Item>
+            <Item>
             <TextField
+              inputProps={{style: {fontSize: 24}}}
+              InputLabelProps={{style: {fontSize: 24}}}
               label="หน่วย"
               value={unit}
               color="secondary"
@@ -471,8 +498,14 @@ export default function BasicTabs() {
               focused
               onChange={(e) => setUnit(e.target.value)}
             />
-            <br/>
+            </Item>
+            </Box>
+
+            <Box sx={{ display: 'flex',flexWrap: 'wrap'}}>
+            <Item>
             <TextField
+              inputProps={{style: {fontSize: 24}}}
+              InputLabelProps={{style: {fontSize: 24}}}
               label="จำนวน"
               value={amount}
               color="secondary"
@@ -480,7 +513,11 @@ export default function BasicTabs() {
               focused
               onChange={(e) => setAmount(e.target.value)}
             />
+            </Item>
+            <Item>
             <TextField
+              inputProps={{style: {fontSize: 24}}}
+              InputLabelProps={{style: {fontSize: 24}}}
               label="แก้ไขจำนวน"
               value={editAmount}
               color="secondary"
@@ -489,9 +526,42 @@ export default function BasicTabs() {
               focused
               onChange={(e) => setEditAmount(e.target.value)}
             />
-          <br/>
-
-          <Button fullWidth variant="contained" type="submit">แก้ไขเมนูเพิ่มเติม</Button>
+            </Item>
+            </Box>
+          <Item>
+          <Button sx={{fontSize:25}} fullWidth variant="contained" type="submit">แก้ไขเมนูเพิ่มเติม</Button>
+          </Item>
+          <Item>
+            <Button
+              sx={{fontSize:25}}
+              fullWidth
+              variant="contained"
+              type="button"
+              onClick={() => {
+                Swal.fire({
+                  title: "ตัวอย่าง",
+                  html: `
+                   <style>
+                     .content {
+                       text-align: left;
+                      }
+                    .price {
+                      color: red;
+                      }
+                  </style>
+                  <div class="content">
+                <img src="${image}" alt="Preview" style="max-width: 100%; height: auto;" />
+                  <p><strong>ชื่อเมนูเพิ่มเติม:</strong> ${name}</p>
+                  <p><strong>ราคา: <span class="price">${price}</span></strong></p>
+                 `,
+                  showCloseButton: true,
+                  showConfirmButton: false,
+                });
+              }}
+            >
+              ตัวอย่าง
+            </Button>
+            </Item>
           </Box>
           </Grid>
         </Box>
@@ -500,7 +570,7 @@ export default function BasicTabs() {
 
       <CustomTabPanel value={value} index={1}>
         <form onSubmit={handleSubmitOption}>
-        <Button style={{ background: 'red' }} variant="contained" onClick={handleDeleteOption}>ลบกลุ่มตัวเลือก</Button>
+        <Button sx={{fontSize:20}} style={{ background: 'red' }} variant="contained" onClick={handleDeleteOption}>ลบกลุ่มตัวเลือก</Button>
         <Box sx={{display:'flex' }}>   
         <Grid container
             justifyContent="space-evenly"
@@ -516,8 +586,9 @@ export default function BasicTabs() {
               ชื่อกลุ่มตัวเลือก
         </Typography>
         <br/>
-        <br/>
         <TextField
+            inputProps={{style: {fontSize: 25}}}
+            InputLabelProps={{style: {fontSize: 25}}}
             fullWidth
             label="ชื่อกลุ่มตัวเลือก"
             value={optionGroupName}
@@ -528,33 +599,42 @@ export default function BasicTabs() {
             onChange={(e) => setOptionGroupName(e.target.value)}
         />
         <br/>
-        <Button onClick={handleAddOption}>เพิ่มตัวเลือก</Button>
+        <Button sx={{fontSize: 22}} onClick={handleAddOption}>เพิ่มตัวเลือก</Button>
         {/* If edit addon disable */}
         {options.map((option) => (
               <MenuItem onClick={() => handleEditOption(option)} key={option._id}>
-                <span style={{color:'grey'}}>{option.name} +{option.price} บาท</span>
+                <span style={{color:'grey', fontSize:20}}>{option.name} +{option.price} บาท</span>
               </MenuItem>
             ))}
+        <br/>
         <br/>
         <Typography variant="h4" component="h4">
             ลูกค้าต้องเลือกตัวเลือกนี้หรือไม่
         </Typography>
         <br/>
         <RadioGroup value={isRequired ? 'necessary' : 'not'} onChange={handleIsRequiredChange}>
-          <FormControlLabel value="necessary" control={<Radio />} label="จำเป็น" />
-          <FormControlLabel value="not" control={<Radio />} label="ไม่บังคับ" />
+          <FormControlLabel value="necessary" control={<Radio />} label={<Typography variant="h6" component="h6" style={{ color: "black", fontWeight: "normal",fontSize:24 }}>
+                            จำเป็น
+                        </Typography>} />
+          <FormControlLabel value="not" control={<Radio />} label={<Typography variant="h6" component="h6" style={{ color: "black", fontWeight: "normal",fontSize:24 }}>
+                            ไม่บังคับ
+                        </Typography>} />
         </RadioGroup>
         <Typography variant="h4" component="h4">
             ลูกค้าสามารถเลือกตัวเลือกได้กี่อย่าง
         </Typography>
         <br/>
         <RadioGroup value={isRequired2 ? 'one' : 'many'} onChange={handleIsRequiredChange2}>
-          <FormControlLabel value="one" control={<Radio />} label="1 อย่าง" />
-          <FormControlLabel value="many" control={<Radio />} label="หลายอย่าง" />
+          <FormControlLabel value="one" control={<Radio />} label={<Typography variant="h6" component="h6" style={{ color: "black", fontWeight: "normal",fontSize:24 }}>
+                            1 อย่าง
+                        </Typography>} />
+          <FormControlLabel value="many" control={<Radio />} label={<Typography variant="h6" component="h6" style={{ color: "black", fontWeight: "normal",fontSize:24 }}>
+                            หลายอย่าง
+                        </Typography>}/>
         </RadioGroup>
         <br/>
 
-        <Button fullWidth variant='contained' type="submit">แก้ไขกลุ่มตัวเลือก</Button>
+        <Button sx={{fontSize: 20}} fullWidth variant='contained' type="submit">แก้ไขกลุ่มตัวเลือก</Button>
         </Box>
         </CardContent>
         </Card>

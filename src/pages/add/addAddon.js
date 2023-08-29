@@ -310,8 +310,8 @@ export default function BasicTabs() {
           aria-label="basic tabs example"
           centered
         >
-          <Tab label="เมนูเพิ่มเติม" {...a11yProps(0)} />
-          <Tab label="ตัวเลือก" {...a11yProps(1)} />
+          <Tab sx={{fontSize:'20px'}} label="เมนูเพิ่มเติม" {...a11yProps(0)} />
+          <Tab sx={{fontSize:'20px'}} label="ตัวเลือก" {...a11yProps(1)} />
         </Tabs>
       </Box>
 

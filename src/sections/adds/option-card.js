@@ -36,9 +36,15 @@ export const OptionCard = (props) => {
             color="grey"
             sx={{fontSize: '20px',}}
           >
-            Options:<br/> {OptionGroups.options.map((option) => (
-            <span key={option._id}>{option.name}  <span style={{ marginRight: '20px' }}></span> +{option.price}.-<br/> </span>
+            Options:<br/> {OptionGroups.options.slice(0,4).map((option) => (
+            <span key={option._id} style={{ display: 'flex', justifyContent: 'space-between'}}>
+            <span>{option.name}</span>
+            <span>+{option.price}.-</span>
+            </span>
           ))}
+            {OptionGroups.options.length > 4 && (
+            <span style={{ marginLeft: '10px' }}>...</span>
+            )}
           </Typography>
       </CardContent>
       <Box sx={{ flexGrow: 1 }} />

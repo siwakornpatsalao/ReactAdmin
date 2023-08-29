@@ -258,20 +258,24 @@ export default function BasicTabs() {
             aria-label="basic tabs example"
             centered
           >
-            <Tab label="เมนูหลัก" {...a11yProps(0)} />
-            <Tab label="ส่วนเสริม" {...a11yProps(1)} />
+            <Tab sx={{fontSize:'20px'}} label="เมนูหลัก" {...a11yProps(0)} />
+            <Tab sx={{fontSize:'20px'}} label="ส่วนเสริม" {...a11yProps(1)} />
           </Tabs>
         </Box>
 
         <CustomTabPanel value={value} index={0}>
           <form onSubmit={handleSubmit}>
-          <Button style={{ background: 'red' }} variant="contained" onClick={handleDeleteMenu}>ลบสินค้า</Button>
+          <Button sx={{fontSize:20}} style={{ background: 'red' }} variant="contained" onClick={handleDeleteMenu}>ลบสินค้า</Button>
           <Box sx={{ display: 'flex' ,marginTop: {
-          xs: '60px',sm: '70px',md: '80px',lg: '90px',xl: '100px',       
+              sm: "10px",
+              md: "20px",
+              lg: "30px",
+              xl: "40px",  
           },}}>
           <Grid container
             justifyContent="space-evenly"
             alignItems="flex-start"  
+            spacing={3}
             rowSpacing={1} 
             columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
             <Box sx={{ m: 1 }}>
@@ -314,12 +318,15 @@ export default function BasicTabs() {
             justifyContent="space-evenly"
             alignItems="flex-start"  
             rowSpacing={1} 
+            spacing={3}
             columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
             <Box sx={{
-                "& > :not(style)": { m: 1 },
+                "& > :not(style)": { m: 3 },
               }} noValidate autoComplete="off">
                 <Item>
               <TextField
+                inputProps={{style: {fontSize: 20}}}
+                InputLabelProps={{style: {fontSize: 20}}}
                 fullWidth
                 label="ชื่อเมนู"
                 value={name}
@@ -332,6 +339,8 @@ export default function BasicTabs() {
               </Item>
               <Item>
               <TextField
+                inputProps={{style: {fontSize: 20}}}
+                InputLabelProps={{style: {fontSize: 20}}}
                 fullWidth
                 label="คำอธิบาย"
                 value={description}
@@ -342,7 +351,12 @@ export default function BasicTabs() {
                 onChange={(e) => setDescription(e.target.value)}
               />
               </Item>
+
+              <Box sx={{ display: 'flex',flexWrap: 'wrap'}}>
+                  <Item>
               <TextField
+                inputProps={{style: {fontSize: 20}}}
+                InputLabelProps={{style: {fontSize: 20}}}
                 label="ราคา"
                 value={price}
                 color="secondary"
@@ -351,8 +365,12 @@ export default function BasicTabs() {
                 focused
                 onChange={(e) => setPrice(e.target.value)}
               />
+                </Item>
 
+            <Item>
             <TextField
+              inputProps={{style: {fontSize: 20}}}
+              InputLabelProps={{style: {fontSize: 20}}}
               value={category}
               select
               label="หมวดหมู่"
@@ -368,10 +386,45 @@ export default function BasicTabs() {
               ))}
             </TextField>
             <br/>
+            </Item>
+            </Box>
 
             <Item>
-            <Button fullWidth variant="contained" type="submit">แก้ไขเมนู</Button>
+            <Button sx={{fontSize:20}} fullWidth variant="contained" type="submit">แก้ไขเมนู</Button>
             </Item>
+            <Item>
+            <Button
+              sx={{fontSize:20}}
+              fullWidth
+              variant="contained"
+              type="button"
+              onClick={() => {
+              Swal.fire({
+              title: "ตัวอย่าง",
+              html: `
+              <style>
+               .content {
+               text-align: left;
+               }
+                .price {
+                 color: red;
+                }
+               </style>
+             <div class="content">
+               <img src="${image}" alt="Preview" style="max-width: 100%; height: auto;" />
+                <p><strong>ชื่อเมนู:</strong> ${name}</p>
+                 <p><strong>คำอธิบาย:</strong> ${description}</p>
+                  <p><strong>ราคา: <span class="price">${price}</span></strong></p>
+                 </div>
+                `,
+               showCloseButton: true,
+              showConfirmButton: false,
+            });
+             }}
+              >
+                ตัวอย่าง
+              </Button>
+              </Item>
             </Box>
             </Grid>
             </Box>
@@ -379,6 +432,16 @@ export default function BasicTabs() {
         </CustomTabPanel>
 
         <CustomTabPanel value={value} index={1}>
+          <Box
+          sx={{
+            display:'flex',
+            marginTop:{
+              sm: "10px",
+              md: "20px",
+              lg: "30px",
+              xl: "40px",  
+            }
+          }}>
         <Grid container
             justifyContent="space-evenly"
             alignItems="flex-start"  
@@ -387,7 +450,8 @@ export default function BasicTabs() {
             <div style={{width: "500px" }}>
             <Card sx={{display: 'flex',
                       flexDirection: 'column',
-                      height: '100%'}}> 
+                      height: '100%'}}
+                  style={{backgroundColor:'#EEF8F7'}}> 
             <CardContent>
               <Grid item xs={6} md={10} sm={14}> 
               <Typography variant="h4" component="h4">
@@ -397,7 +461,7 @@ export default function BasicTabs() {
           {addons.map((addon) => (
             <FormGroup key={addon._id}>
               <FormControlLabel
-              label={<Typography variant="h6" component="h6" style={{ color: 'black', fontWeight: "normal" }}>
+              label={<Typography style={{fontSize:26 }}>
               {addon.name}
                     </Typography>}
                 control={
@@ -422,7 +486,8 @@ export default function BasicTabs() {
 
           <Card sx={{display: 'flex',
                     flexDirection: 'column',
-                    height: '100%'}}>
+                    height: '100%'}}
+                style={{backgroundColor:'#EEF8F7'}}>
           <CardContent>
           <div style={{width: "500px" }}>
           <Grid item xs={6} md={15} sm={14}>
@@ -433,7 +498,7 @@ export default function BasicTabs() {
           {optionGroups.map((optionGroup) => (
             <FormGroup key={optionGroup._id}>
               <FormControlLabel
-              label={<Typography variant="h6" component="h6" style={{ color: 'black', fontWeight: "normal" }}>
+              label={<Typography style={{ fontSize:26 }}>
               {optionGroup.name}
                     </Typography>}
                 control={
@@ -456,6 +521,7 @@ export default function BasicTabs() {
           </CardContent>
           </Card>
           </Grid>
+          </Box>
         </CustomTabPanel>
       </Box>
     </DashboardLayout>

@@ -7,6 +7,17 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import Grid from "@mui/material/Grid";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import { styled } from "@mui/material/styles";
+import Paper from "@mui/material/Paper";
+
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+}));
 
 function AddonAdd() {
   const [value, setValue] = useState(0);
@@ -132,11 +143,11 @@ function AddonAdd() {
         sx={{
           display: "flex",
           marginTop: {
-            xs: "60px",
-            sm: "70px",
-            md: "80px",
-            lg: "90px",
-            xl: "100px",
+            xs: "30px",
+            sm: "40px",
+            md: "50px",
+            lg: "60px",
+            xl: "70px",
           },
         }}
       >
@@ -145,6 +156,7 @@ function AddonAdd() {
           justifyContent="space-evenly"
           alignItems="flex-start"
           rowSpacing={1}
+          spacing={3}
           columnSpacing={{ xs: 1, sm: 2, md: 3 }}
         >
           <Box sx={{ m: 1 }}>
@@ -188,11 +200,15 @@ function AddonAdd() {
           justifyContent="space-evenly"
           alignItems="flex-start"
           rowSpacing={1}
+          spacing={3}
           columnSpacing={{ xs: 1, sm: 2, md: 3 }}
         >
           <Box sx={{ "& > :not(style)": { m: 3 } }} noValidate autoComplete="off">
+          <Item>
             <TextField
               focused
+              inputProps={{style: {fontSize: 25}}}
+              InputLabelProps={{style: {fontSize: 25}}}
               fullWidth
               label="ชื่อสินค้า"
               name="name"
@@ -202,8 +218,13 @@ function AddonAdd() {
               error={formik.touched.name && !!formik.errors.name}
               helperText={formik.touched.name && formik.errors.name}
             />
-            <br />
+          </Item>
+          
+          <Box sx={{ display: 'flex',flexWrap: 'wrap'}}>
+            <Item>
             <TextField
+              inputProps={{style: {fontSize: 24}}}
+              InputLabelProps={{style: {fontSize: 24}}}
               focused
               label="ราคา"
               name="price"
@@ -213,7 +234,11 @@ function AddonAdd() {
               error={formik.touched.price && !!formik.errors.price}
               helperText={formik.touched.price && formik.errors.price}
             />
+            </Item>
+            <Item>
             <TextField
+              inputProps={{style: {fontSize: 24}}}
+              InputLabelProps={{style: {fontSize: 24}}}
               focused
               label="หน่วย"
               name="unit"
@@ -223,8 +248,14 @@ function AddonAdd() {
               error={formik.touched.unit && !!formik.errors.unit}
               helperText={formik.touched.unit && formik.errors.unit}
             />
-            <br />
+            </Item>
+            </Box>
+
+            <Box sx={{ display: 'flex',flexWrap: 'wrap'}}>
+            <Item>
             <TextField
+              inputProps={{style: {fontSize: 24}}}
+              InputLabelProps={{style: {fontSize: 24}}}
               focused
               label="จำนวน"
               name="amount"
@@ -234,7 +265,11 @@ function AddonAdd() {
               error={formik.touched.amount && !!formik.errors.amount}
               helperText={formik.touched.amount && formik.errors.amount}
             />
+            </Item>
+            <Item>
             <TextField
+              inputProps={{style: {fontSize: 24}}}
+              InputLabelProps={{style: {fontSize: 24}}}
               label="แก้ไขจำนวน"
               disabled
               value={editAmount}
@@ -242,12 +277,17 @@ function AddonAdd() {
               focused
               onChange={(e) => setEditAmount(e.target.value)}
             />
-            <br />
+            </Item>
+            </Box>
 
-            <Button fullWidth variant="contained" type="submit">
+            <Item>
+            <Button sx={{fontSize:25}} fullWidth variant="contained" type="submit">
               สร้างเมนูเพิ่มเติมใหม่
             </Button>
+            </Item>
+            <Item>
             <Button
+              sx={{fontSize:25}}
               fullWidth
               variant="contained"
               type="button"
@@ -265,9 +305,9 @@ function AddonAdd() {
                   </style>
                   <div class="content">
                 <img src="${image}" alt="Preview" style="max-width: 100%; height: auto;" />
-                  <p><strong>ชื่อเมนู:</strong> ${formik.values.name}</p>
+                  <p><strong>ชื่อเมนูเพิ่มเติม:</strong> ${formik.values.name}</p>
                   <p><strong>ราคา: <span class="price">${formik.values.price}</span></strong></p>
-      `,
+                 `,
                   showCloseButton: true,
                   showConfirmButton: false,
                 });
@@ -275,6 +315,7 @@ function AddonAdd() {
             >
               ตัวอย่าง
             </Button>
+            </Item>
           </Box>
         </Grid>
       </Box>

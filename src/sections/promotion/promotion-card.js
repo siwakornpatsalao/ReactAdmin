@@ -23,10 +23,19 @@ export const PromotionCard = (props) => {
           }}
         >
           <img
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                  }}
+                  src={Promotion.image}
+                  alt="Preview"
+                  variant="square"
+                  width="600px"/>
+          {/* <img
             src={Promotion.image}
             variant="square"
             style={{ width: '100%', height: '250px' }}
-          />
+          /> */}
         </Box>
       </div>
       <Box sx={{ flexGrow: 1 }} />
