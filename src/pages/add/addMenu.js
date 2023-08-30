@@ -78,7 +78,6 @@ export default function BasicTabs() {
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("กรุณาใส่ชื่อสินค้า"),
-    description: Yup.string().required("กรุณาใส่คำอธิบาย"),
     price: Yup.number().positive("กรุณาใส่ราคาที่มากกว่า 0").required("กรุณาใส่ราคา"),
   });
 
@@ -219,8 +218,8 @@ export default function BasicTabs() {
             aria-label="basic tabs example"
             centered
           >
-            <Tab sx={{fontSize:'20px'}} label="เมนูหลัก" {...a11yProps(0)} />
-            <Tab sx={{fontSize:'20px'}} label="ส่วนเสริม" {...a11yProps(1)} />
+            <Tab sx={{fontSize:'25px'}} label="เมนูหลัก" {...a11yProps(0)} />
+            <Tab sx={{fontSize:'25px'}} label="ส่วนเสริม" {...a11yProps(1)} />
           </Tabs>
         </Box>
 
@@ -299,7 +298,7 @@ export default function BasicTabs() {
                 >
                   <Item>
                     <TextField
-                      inputProps={{style: {fontSize: 20}}}
+                      inputProps={{style: {fontSize: 25}}}
                       InputLabelProps={{style: {fontSize: 20}}}
                       fullWidth
                       focused
@@ -314,7 +313,7 @@ export default function BasicTabs() {
                   </Item>
                   <Item>
                     <TextField
-                      inputProps={{style: {fontSize: 20}}}
+                      inputProps={{style: {fontSize: 25}}}
                       InputLabelProps={{style: {fontSize: 20}}}
                       fullWidth
                       focused
@@ -331,7 +330,7 @@ export default function BasicTabs() {
                   <Box sx={{ display: 'flex',flexWrap: 'wrap'}}>
                   <Item>
                   <TextField
-                    inputProps={{style: {fontSize: 20}}}
+                    inputProps={{style: {fontSize: 25}}}
                     InputLabelProps={{style: {fontSize: 20}}}
                     focused
                     label="ราคา"
@@ -346,7 +345,7 @@ export default function BasicTabs() {
                   
                   <Item>
                   <TextField
-                    inputProps={{style: {fontSize: 20}}}
+                    inputProps={{style: {fontSize: 25}}}
                     InputLabelProps={{style: {fontSize: 20}}}
                     value={category}
                     select
@@ -366,13 +365,13 @@ export default function BasicTabs() {
                   </Box>
                   
                   <Item>
-                  <Button sx={{fontSize:20}} fullWidth variant="contained" type="submit">
+                  <Button sx={{fontSize:25}} fullWidth variant="contained" type="submit">
                     สร้างเมนูใหม่
                   </Button>
                   </Item>
                   <Item>
                   <Button
-                    sx={{fontSize:20}}
+                    sx={{fontSize:25}}
                     fullWidth
                     variant="contained"
                     type="button"
@@ -430,7 +429,7 @@ export default function BasicTabs() {
               columnSpacing={{ xs: 1, sm: 2, md: 3 }}
             >
               <div style={{ width: "500px" }}>
-                <Card style={{backgroundColor:'#EEF8F7'}} sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+                <Card style={{backgroundColor:'white',boxShadow: ' 2px 9px #EADDCD',}}  sx={{ display: "flex", flexDirection: "column", height: "100%",border: '1px solid #ccc'  }}>
                   <CardContent>
                     <Grid item xs={6} md={10} sm={14}>
                       <Typography variant="h4" component="h4">
@@ -467,7 +466,7 @@ export default function BasicTabs() {
                 </Card>
               </div>
 
-              <Card style={{backgroundColor:'#EEF8F7'}} sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+              <Card style={{backgroundColor:'white',boxShadow: ' 2px 9px #EADDCD',}} sx={{ display: "flex", flexDirection: "column", height: "100%",border: '1px solid #ccc'  }}>
                 <CardContent>
                   <div style={{ width: "500px" }}>
                     <Grid item xs={6} md={15} sm={14}>

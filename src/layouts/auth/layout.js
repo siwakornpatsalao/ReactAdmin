@@ -79,13 +79,13 @@ export const Layout = (props) => {
               }}
               variant="h1"
             >
-              Welcome to{' '}
+              Preorder Delicious{' '}
               <Box
                 component="a"
                 sx={{ color: '#15B79E' }}
                 target="_blank"
               >
-                Devias Kit
+                Food
               </Box>
             </Typography>
             <Typography
@@ -93,11 +93,11 @@ export const Layout = (props) => {
               sx={{ mb: 3 }}
               variant="subtitle1"
             >
-              A professional kit that comes with ready-to-use MUI components.
+              Explore our collection of mouthwatering dishes available for preordering.
             </Typography>
             <img
               alt=""
-              src="/assets/auth-illustration.svg"
+              src="/assets/loginPage.jpg"
             />
           </Box>
         </Grid>

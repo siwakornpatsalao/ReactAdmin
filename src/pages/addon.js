@@ -194,13 +194,13 @@ function Addon(){
             aria-label="basic tabs example"
             centered
           >
-            <Tab sx={{fontSize: '20px'}} label="เมนูเพิ่มเติม" {...a11yProps(0)} />
-            <Tab sx={{fontSize: '20px'}} label="ตัวเลือก" {...a11yProps(1)} />
+            <Tab sx={{fontSize: '24px'}} label="เมนูเพิ่มเติม" {...a11yProps(0)} />
+            <Tab sx={{fontSize: '24px'}} label="ตัวเลือก" {...a11yProps(1)} />
           </Tabs>
           <CustomTabPanel value={value} index={0} resetState={value !== 0} setRowsPerPage={setRowsPerPage} setPage={setPage}>
           <AddonSearch onSearch={(searchValue) => handleSearchAddon(searchValue)} />
           <br/>
-          <Grid
+          <Grid style={{backgroundColor:'#FCF6EE'}} sx={{borderRadius:'20px'}}
             container
             spacing={3}
           >
@@ -236,7 +236,7 @@ function Addon(){
           <CustomTabPanel value={value} index={1} resetState={value !== 1} setRowsPerPage={setRowsPerPage} setPage={setPage}>
           <OptionSearch onSearch={(searchValue) => handleSearchOption(searchValue)} /> 
           <br/>
-          <Grid
+          <Grid style={{backgroundColor:'#FCF6EE'}}
             container
             spacing={3}
           >

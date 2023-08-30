@@ -216,7 +216,7 @@ function Menu() {
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <Stack spacing={1}>
               
-                  <Typography style={{marginLeft:'20px'}} variant="h4">Menu</Typography>
+                  <Typography style={{marginLeft:'25px'}} variant="h4">Menu</Typography>
                   
                 </Stack>
               </div>
@@ -226,7 +226,7 @@ function Menu() {
                     alignItems="flex-start"  
                     rowSpacing={1} 
                     columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-              <div style={{ justifyContent: "flex-end" }}>
+              <div style={{ justifyContent: "flex-end",display:'flex',flexWrap: 'nowrap' }}>
                 <Link href="./add/addMenu">
                   <Button
                     startIcon={
@@ -303,9 +303,10 @@ function Menu() {
       </div>
 
 
-            <Grid style={{marginLeft:"15px" , backgroundColor: '#FCF6EE'}} sx={{borderRadius:'20px'}} container spacing={3}>
+            <Grid style={{marginLeft:"15px" ,backgroundColor:'#FCF6EE' /* backgroundColor: '#F2FFF5' */}} sx={{borderRadius:'20px'}} container spacing={3}>
               {paginatedMenus.map((menu) => (
                 <Grid
+/*                   sx={{marginLeft:'65px'}} */
                   xs={12}
                   md={6}
                   lg={3}

@@ -33,7 +33,7 @@ export const MenuCard = (props) => {
         border: '1px solid #ccc', 
       }}
       style={{
-        boxShadow: ' 2px 9px #EADDCD',
+        boxShadow: ' 2px 9px #EADDCD',/* #D8E8DC */
       }}
     >
       <CardContent>
@@ -48,7 +48,6 @@ export const MenuCard = (props) => {
               }} src={menu.thumbnail} alt="Preview" variant="square"  height='200px'
                 />
         </Box>
-        <br/>
 
         <Typography
           sx={{

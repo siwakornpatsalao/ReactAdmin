@@ -83,7 +83,7 @@ export default function Promotion(){
     </Head>
     <Box
       component="main"
-      sx={{ backgroundColor: '#EEF8F7'}}
+      /* sx={{ backgroundColor: '#EEF8F7'}} */
     >
       <Container maxWidth="xl" sx={{marginTop: '40px'}}>
         <Stack spacing={3}>

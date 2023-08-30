@@ -79,7 +79,7 @@ export default function BasicTabs() {
   const router = useRouter();
   const { id } = router.query;
   const [addon, setAddon] = useState([]);
-  const [optionGroup, setOptionGroup] = useState(null);
+  const [optionGroup, setOptionGroup] = useState([]);
 
   const isNameValid = (name) => name == "";
   const isPriceValid = (price) => price<=0;
@@ -326,6 +326,11 @@ export default function BasicTabs() {
   };
 
   useEffect(() => {
+
+    if (id) {
+      fetchAddonData();
+      fetchOptionGroup();
+    }
     
     //if from addon do fetchAddonData **BUT** if from option do fetchOptionGroup
     
@@ -348,6 +353,7 @@ export default function BasicTabs() {
             setValue(0);
             //disable optiongroup tab
           }
+          console.log(data)
         } catch (error) {
           console.error('Error fetching menu:', error);
         }
@@ -369,6 +375,7 @@ export default function BasicTabs() {
           setValue(0);
           //disable optiongroup tab
         }
+        console.log(data)
       } catch (error) {
         console.error("Error fetching options:", error);
       }
@@ -377,12 +384,8 @@ export default function BasicTabs() {
     if (!initial.current) {
       initial.current = true;
       console.log(initial.current);
-      if (id) {
-        fetchAddonData();
-        fetchOptionGroup();
-      }
     }
-  }, [id, name,optionGroupName]);
+  }, [id]);
 
   return (
     <DashboardLayout>
@@ -403,7 +406,6 @@ export default function BasicTabs() {
 
       <CustomTabPanel value={value} index={0}>
         <form onSubmit={handleSubmit}>
-        <Button sx={{fontSize:20}} style={{ background: 'red' }} variant="contained" onClick={handleDeleteAddon}>ลบเมนูเพิ่มเติมชิ้นนี้</Button>
         <br/>
         <Box sx={{ display: 'flex' }}>
           <Grid container
@@ -460,7 +462,7 @@ export default function BasicTabs() {
             <Item>
             <TextField
               inputProps={{style: {fontSize: 25}}}
-              InputLabelProps={{style: {fontSize: 25}}}
+              InputLabelProps={{style: {fontSize: 20}}}
               fullWidth
               label="ชื่อเมนู"
               value={name}
@@ -476,7 +478,7 @@ export default function BasicTabs() {
             <Item>
             <TextField
               inputProps={{style: {fontSize: 24}}}
-              InputLabelProps={{style: {fontSize: 24}}}
+              InputLabelProps={{style: {fontSize: 20}}}
               label="ราคา"
               value={price}
               color="secondary"
@@ -489,7 +491,7 @@ export default function BasicTabs() {
             <Item>
             <TextField
               inputProps={{style: {fontSize: 24}}}
-              InputLabelProps={{style: {fontSize: 24}}}
+              InputLabelProps={{style: {fontSize: 20}}}
               label="หน่วย"
               value={unit}
               color="secondary"
@@ -505,7 +507,7 @@ export default function BasicTabs() {
             <Item>
             <TextField
               inputProps={{style: {fontSize: 24}}}
-              InputLabelProps={{style: {fontSize: 24}}}
+              InputLabelProps={{style: {fontSize: 20}}}
               label="จำนวน"
               value={amount}
               color="secondary"
@@ -517,7 +519,7 @@ export default function BasicTabs() {
             <Item>
             <TextField
               inputProps={{style: {fontSize: 24}}}
-              InputLabelProps={{style: {fontSize: 24}}}
+              InputLabelProps={{style: {fontSize: 20}}}
               label="แก้ไขจำนวน"
               value={editAmount}
               color="secondary"
@@ -529,11 +531,11 @@ export default function BasicTabs() {
             </Item>
             </Box>
           <Item>
-          <Button sx={{fontSize:25}} fullWidth variant="contained" type="submit">แก้ไขเมนูเพิ่มเติม</Button>
+          <Button style={{fontSize:25}} fullWidth variant="contained" type="submit">แก้ไขเมนูเพิ่มเติม</Button>
           </Item>
-          <Item>
+          {/* <Item>
             <Button
-              sx={{fontSize:25}}
+              style={{fontSize:25}}
               fullWidth
               variant="contained"
               type="button"
@@ -551,8 +553,8 @@ export default function BasicTabs() {
                   </style>
                   <div class="content">
                 <img src="${image}" alt="Preview" style="max-width: 100%; height: auto;" />
-                  <p><strong>ชื่อเมนูเพิ่มเติม:</strong> ${name}</p>
-                  <p><strong>ราคา: <span class="price">${price}</span></strong></p>
+                  <p style="font-size: 28px;"><strong>ชื่อเมนูเพิ่มเติม:</strong> ${name}</p>
+                  <p style="font-size: 28px;"><strong>ราคา: <span class="price">${price}</span></strong></p>
                  `,
                   showCloseButton: true,
                   showConfirmButton: false,
@@ -561,6 +563,9 @@ export default function BasicTabs() {
             >
               ตัวอย่าง
             </Button>
+            </Item> */}
+            <Item>
+            <Button fullWidth style={{ background: 'red',fontSize:25 }} variant="contained" onClick={handleDeleteAddon}>ลบเมนูเพิ่มเติมชิ้นนี้</Button>
             </Item>
           </Box>
           </Grid>
@@ -570,7 +575,6 @@ export default function BasicTabs() {
 
       <CustomTabPanel value={value} index={1}>
         <form onSubmit={handleSubmitOption}>
-        <Button sx={{fontSize:20}} style={{ background: 'red' }} variant="contained" onClick={handleDeleteOption}>ลบกลุ่มตัวเลือก</Button>
         <Box sx={{display:'flex' }}>   
         <Grid container
             justifyContent="space-evenly"
@@ -588,7 +592,7 @@ export default function BasicTabs() {
         <br/>
         <TextField
             inputProps={{style: {fontSize: 25}}}
-            InputLabelProps={{style: {fontSize: 25}}}
+            InputLabelProps={{style: {fontSize: 20}}}
             fullWidth
             label="ชื่อกลุ่มตัวเลือก"
             value={optionGroupName}
@@ -601,8 +605,8 @@ export default function BasicTabs() {
         <br/>
         <Button sx={{fontSize: 22}} onClick={handleAddOption}>เพิ่มตัวเลือก</Button>
         {/* If edit addon disable */}
-        {options.map((option) => (
-              <MenuItem onClick={() => handleEditOption(option)} key={option._id}>
+        {options.map((option,index) => (
+              <MenuItem onClick={() => handleEditOption(option,index)} key={option._id}>
                 <span style={{color:'grey', fontSize:20}}>{option.name} +{option.price} บาท</span>
               </MenuItem>
             ))}
@@ -635,6 +639,8 @@ export default function BasicTabs() {
         <br/>
 
         <Button sx={{fontSize: 20}} fullWidth variant='contained' type="submit">แก้ไขกลุ่มตัวเลือก</Button>
+        <br/><br/>
+        <Button sx={{fontSize:20}} fullWidth style={{ background: 'red' }} variant="contained" onClick={handleDeleteOption}>ลบกลุ่มตัวเลือก</Button>
         </Box>
         </CardContent>
         </Card>

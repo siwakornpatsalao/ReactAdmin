@@ -117,25 +117,27 @@ const Page = () => {
           <div>
             <Stack spacing={1} sx={{ mb: 2 }}>
               <Typography variant="h4">เข้าสู่ระแบบ</Typography>
-              <Typography color="text.secondary" variant="body2">
+              <Typography color="text.secondary" variant="h6">
                 ยังไม่มีร้านค้าใช่หรือไม่ &nbsp;
                 <Link
                   component={NextLink}
                   href="/auth/register"
                   underline="hover"
-                  variant="subtitle2"
+                  variant="h6"
                 >
                   ไปที่หน้าลงทะเบียนร้านค้า
                 </Link>
               </Typography>
             </Stack>
             <Tabs onChange={handleMethodChange} sx={{ mb: 3 }} value={method}>
-              <Tab label="Email" value="email" />
+              <Tab sx={{fontSize:'25px'}} label="Email" value="email" />
             </Tabs>
             {method === "email" && (
               <form noValidate onSubmit={formik.handleSubmit}>
                 <Stack spacing={3}>
                   <TextField
+                    inputProps={{style: {fontSize: 23}}}
+                    InputLabelProps={{style: {fontSize: 20}}}
                     error={!!(formik.touched.email && formik.errors.email)}
                     fullWidth
                     helperText={formik.touched.email && formik.errors.email}
@@ -147,6 +149,8 @@ const Page = () => {
                     value={formik.values.email}
                   />
                   <TextField
+                    inputProps={{style: {fontSize: 23}}}
+                    InputLabelProps={{style: {fontSize: 20}}}
                     error={!!(formik.touched.password && formik.errors.password)}
                     fullWidth
                     helperText={formik.touched.password && formik.errors.password}
@@ -164,10 +168,10 @@ const Page = () => {
                     {formik.errors.submit}
                   </Typography>
                 )}
-                <Button fullWidth size="large" sx={{ mt: 3 }} type="submit" variant="contained">
+                <Button fullWidth size="large" sx={{ mt: 3,fontSize:23 }} type="submit" variant="contained">
                   Continue
                 </Button>
-                <Button fullWidth size="large" sx={{ mt: 3 }} onClick={handleSkip}>
+                <Button  fullWidth size="large" sx={{ mt: 3,fontSize:23 }} onClick={handleSkip}>
                   Skip authentication
                 </Button>
 

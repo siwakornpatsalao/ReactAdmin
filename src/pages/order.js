@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import { useState, useEffect, useRef } from "react";
-import { TextField, MenuItem, Button } from "@mui/material";
+import { TextField, MenuItem, Button, Typography } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import * as React from "react";
 import PropTypes from "prop-types";
@@ -354,8 +354,9 @@ export default function BasicTabs() {
 
     return(
         <DashboardLayout >
-            <Box sx={{ width: "100%",pl:'50px'}}>
+            <Box sx={{ width: "100%",pl:'50px',marginTop:'40px'}}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <Typography style={{marginLeft:'20px'}} variant="h4">{currentDate}</Typography>
           <Tabs
             textColor="secondary"
             indicatorColor="secondary"
@@ -364,11 +365,10 @@ export default function BasicTabs() {
             aria-label="basic tabs example"
             centered
           >
-            <Tab sx={{fontSize:'20px'}} label="ชำระเงินแล้ว" {...a11yProps(0)} />
-            <Tab sx={{fontSize:'20px'}} label="รอการชำระเงิน" {...a11yProps(1)} />
+            <Tab sx={{fontSize:'25px'}} label="ชำระเงินแล้ว" {...a11yProps(0)} />
+            <Tab sx={{fontSize:'25px'}} label="รอการชำระเงิน" {...a11yProps(1)} />
           </Tabs>
           </Box>
-          <h1>{currentDate}</h1>
             <CustomTabPanel value={value} index={0}>
 
             <TableContainer>

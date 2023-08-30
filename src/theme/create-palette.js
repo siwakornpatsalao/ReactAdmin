@@ -22,6 +22,7 @@ export function createPalette() {
     mode: 'light',
     neutral,
     primary: warning,
+    /* primary: success, */
     success,
     text: {
       primary: neutral[900],

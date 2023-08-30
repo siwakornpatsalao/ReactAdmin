@@ -14,6 +14,10 @@ export const OptionCard = (props) => {
         flexDirection: 'column',
         height: '100%',
         maxWidth: 350,
+        border: '1px solid #ccc', 
+      }}
+      style={{
+        boxShadow: ' 2px 9px #EADDCD',/* #D8E8DC */
       }}
     >
       <CardContent>

@@ -171,9 +171,9 @@ const Page = () => {
           <div>
             <Stack spacing={1} sx={{ mb: 3 }}>
               <Typography variant="h4">ลงทะเบียนร้านค้า</Typography>
-              <Typography color="text.secondary" variant="body2">
+              <Typography color="text.secondary" variant="h6">
                 คุณมีร้านค้าอยู่แล้วหรือไม่ &nbsp;
-                <Link component={NextLink} href="/auth/login" underline="hover" variant="subtitle2">
+                <Link component={NextLink} href="/auth/login" underline="hover" variant="h6">
                   ไปที่ Log in
                 </Link>
               </Typography>
@@ -181,6 +181,8 @@ const Page = () => {
             <form noValidate onSubmit={formik.handleSubmit}>
               <Stack spacing={3}>
                 <TextField
+                  inputProps={{style: {fontSize: 23}}}
+                  InputLabelProps={{style: {fontSize: 20}}}
                   error={!!(formik.touched.name && formik.errors.name)}
                   fullWidth
                   helperText={formik.touched.name && formik.errors.name}
@@ -191,6 +193,8 @@ const Page = () => {
                   value={formik.values.name}
                 />
                 <TextField
+                  inputProps={{style: {fontSize: 23}}}
+                  InputLabelProps={{style: {fontSize: 20}}}
                   error={!!(formik.touched.number && formik.errors.number)}
                   fullWidth
                   helperText={formik.touched.number && formik.errors.number}
@@ -201,6 +205,8 @@ const Page = () => {
                   value={formik.values.number}
                 />
                 <TextField
+                  inputProps={{style: {fontSize: 23}}}
+                  InputLabelProps={{style: {fontSize: 20}}}
                   error={!!(formik.touched.email && formik.errors.email)}
                   fullWidth
                   helperText={formik.touched.email && formik.errors.email}
@@ -212,6 +218,8 @@ const Page = () => {
                   value={formik.values.email}
                 />
                 <TextField
+                  inputProps={{style: {fontSize: 23}}}
+                  InputLabelProps={{style: {fontSize: 20}}}
                   error={!!(formik.touched.password && formik.errors.password)}
                   fullWidth
                   helperText={formik.touched.password && formik.errors.password}
@@ -223,6 +231,8 @@ const Page = () => {
                   value={formik.values.password}
                 />
                 <TextField
+                  inputProps={{style: {fontSize: 23}}}
+                  InputLabelProps={{style: {fontSize: 20}}}
                   error={!!(formik.touched.passwordConfirm && formik.errors.passwordConfirm)}
                   fullWidth
                   helperText={formik.touched.passwordConfirm && formik.errors.passwordConfirm}
@@ -240,11 +250,11 @@ const Page = () => {
                 </Typography>
               )}
               {emailExists && (
-                <Typography color="error" sx={{ mt: 1 }} variant="body2">
+                <Typography color="error" sx={{ mt: 2,fontSize:23 }} variant="body2">
                   อีเมลนี้ถูกใช้งานแล้ว
                 </Typography>
               )}
-              <Button fullWidth size="large" sx={{ mt: 3 }} type="submit" variant="contained">
+              <Button fullWidth size="large" sx={{ mt: 3,fontSize:23 }} type="submit" variant="contained">
                 ยืนยัน
               </Button>
             </form>

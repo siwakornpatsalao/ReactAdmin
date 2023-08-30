@@ -14,6 +14,9 @@ export const PromotionCard = (props) => {
         display: 'flex',
         flexDirection: 'column',
       }}
+      style={{
+        boxShadow: ' 2px 9px #EADDCD'
+      }}
     >
       <div>
         <Box

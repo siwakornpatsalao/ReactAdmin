@@ -118,12 +118,13 @@ export default function BasicTabs() {
             },
           });
           if (!response.ok) {
-            Swal.fire(`ไม่สามารถแก้ไขสิ้นค้าชิ้นนี้ได้`, "", "success");
+            Swal.fire(`ไม่สามารถแก้ไขสิ้นค้าชิ้นนี้ได้`, "", "error");
             throw new Error("Failed to Edit this menu");
           }
           const resJson = await response.json();
           console.log(resJson);
           Swal.fire(`แก้ไขสินค้าชิ้นนี้แล้ว`, "", "success");
+          router.push('/menu')
 
         } catch (error) {
           console.log("Error:", error.message);
@@ -258,14 +259,13 @@ export default function BasicTabs() {
             aria-label="basic tabs example"
             centered
           >
-            <Tab sx={{fontSize:'20px'}} label="เมนูหลัก" {...a11yProps(0)} />
-            <Tab sx={{fontSize:'20px'}} label="ส่วนเสริม" {...a11yProps(1)} />
+            <Tab sx={{fontSize:'25px'}} label="เมนูหลัก" {...a11yProps(0)} />
+            <Tab sx={{fontSize:'25px'}} label="ส่วนเสริม" {...a11yProps(1)} />
           </Tabs>
         </Box>
 
         <CustomTabPanel value={value} index={0}>
           <form onSubmit={handleSubmit}>
-          <Button sx={{fontSize:20}} style={{ background: 'red' }} variant="contained" onClick={handleDeleteMenu}>ลบสินค้า</Button>
           <Box sx={{ display: 'flex' ,marginTop: {
               sm: "10px",
               md: "20px",
@@ -278,7 +278,7 @@ export default function BasicTabs() {
             spacing={3}
             rowSpacing={1} 
             columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-            <Box sx={{ m: 1 }}>
+            <Box sx={{ m: 2.5 }}>
             <label htmlFor="upload-photo">
                 {image ? (
                   <img
@@ -311,90 +311,9 @@ export default function BasicTabs() {
                 onChange={handleChangeFile}
                 accept="image/*"
               />
-            </Box>
-          </Grid>
-
-          <Grid container
-            justifyContent="space-evenly"
-            alignItems="flex-start"  
-            rowSpacing={1} 
-            spacing={3}
-            columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-            <Box sx={{
-                "& > :not(style)": { m: 3 },
-              }} noValidate autoComplete="off">
-                <Item>
-              <TextField
-                inputProps={{style: {fontSize: 20}}}
-                InputLabelProps={{style: {fontSize: 20}}}
-                fullWidth
-                label="ชื่อเมนู"
-                value={name}
-                color="secondary"
-                error={isNameValid(name)}
-                helperText="กรุณาใส่ชื่อสินค้า"
-                focused
-                onChange={(e) => setName(e.target.value)}
-              />
-              </Item>
               <Item>
-              <TextField
-                inputProps={{style: {fontSize: 20}}}
-                InputLabelProps={{style: {fontSize: 20}}}
-                fullWidth
-                label="คำอธิบาย"
-                value={description}
-                color="secondary"
-                error={isDesValid(description)}
-                helperText="กรุณาใส่คำอธิบาย"
-                focused
-                onChange={(e) => setDescription(e.target.value)}
-              />
-              </Item>
-
-              <Box sx={{ display: 'flex',flexWrap: 'wrap'}}>
-                  <Item>
-              <TextField
-                inputProps={{style: {fontSize: 20}}}
-                InputLabelProps={{style: {fontSize: 20}}}
-                label="ราคา"
-                value={price}
-                color="secondary"
-                error={isPriceValid(price)}
-                helperText="กรุณาใส่ราคา"
-                focused
-                onChange={(e) => setPrice(e.target.value)}
-              />
-                </Item>
-
-            <Item>
-            <TextField
-              inputProps={{style: {fontSize: 20}}}
-              InputLabelProps={{style: {fontSize: 20}}}
-              value={category}
-              select
-              label="หมวดหมู่"
-              defaultValue="เครื่องดื่ม"
-              error={isCategoryValid(category)}
-              helperText="Please select your category"
-              onChange={(e) => setCategory(e.target.value)}
-            >
-              {categories.map((option) => (
-                <MenuItem key={option._id} value={option.name}>
-                  <span style={{fontSize:20}}>{option.name}</span>
-                </MenuItem>
-              ))}
-            </TextField>
-            <br/>
-            </Item>
-            </Box>
-
-            <Item>
-            <Button sx={{fontSize:20}} fullWidth variant="contained" type="submit">แก้ไขเมนู</Button>
-            </Item>
-            <Item>
             <Button
-              sx={{fontSize:20}}
+              sx={{fontSize:25}}
               fullWidth
               variant="contained"
               type="button"
@@ -426,6 +345,123 @@ export default function BasicTabs() {
               </Button>
               </Item>
             </Box>
+          </Grid>
+
+          <Grid container
+            justifyContent="space-evenly"
+            alignItems="flex-start"  
+            rowSpacing={1} 
+            spacing={3}
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+            <Box sx={{
+                "& > :not(style)": { m: 3 },
+              }} noValidate autoComplete="off">
+                <Item>
+              <TextField
+                inputProps={{style: {fontSize: 25}}}
+                InputLabelProps={{style: {fontSize: 20}}}
+                fullWidth
+                label="ชื่อเมนู"
+                value={name}
+                color="secondary"
+                error={isNameValid(name)}
+                helperText="กรุณาใส่ชื่อสินค้า"
+                focused
+                onChange={(e) => setName(e.target.value)}
+              />
+              </Item>
+              <Item>
+              <TextField
+                inputProps={{style: {fontSize: 25}}}
+                InputLabelProps={{style: {fontSize: 20}}}
+                fullWidth
+                label="คำอธิบาย"
+                value={description}
+                color="secondary"
+                error={isDesValid(description)}
+                helperText="กรุณาใส่คำอธิบาย"
+                focused
+                onChange={(e) => setDescription(e.target.value)}
+              />
+              </Item>
+
+              <Box sx={{ display: 'flex',flexWrap: 'wrap'}}>
+                  <Item>
+              <TextField
+                inputProps={{style: {fontSize: 25}}}
+                InputLabelProps={{style: {fontSize: 20}}}
+                label="ราคา"
+                value={price}
+                color="secondary"
+                error={isPriceValid(price)}
+                helperText="กรุณาใส่ราคา"
+                focused
+                onChange={(e) => setPrice(e.target.value)}
+              />
+                </Item>
+
+            <Item>
+            <TextField
+              inputProps={{style: {fontSize: 25}}}
+              InputLabelProps={{style: {fontSize: 20}}}
+              value={category}
+              select
+              label="หมวดหมู่"
+              defaultValue="เครื่องดื่ม"
+              error={isCategoryValid(category)}
+              helperText="Please select your category"
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              {categories.map((option) => (
+                <MenuItem key={option._id} value={option.name}>
+                  <span style={{fontSize:20}}>{option.name}</span>
+                </MenuItem>
+              ))}
+            </TextField>
+            <br/>
+            </Item>
+            </Box>
+
+            <Item>
+            <Button sx={{fontSize:25}} fullWidth variant="contained" type="submit">แก้ไขเมนู</Button>
+            </Item>
+            {/* <Item>
+            <Button
+              sx={{fontSize:25}}
+              fullWidth
+              variant="contained"
+              type="button"
+              onClick={() => {
+              Swal.fire({
+              title: "ตัวอย่าง",
+              html: `
+              <style>
+               .content {
+               text-align: left;
+               }
+                .price {
+                 color: red;
+                }
+               </style>
+             <div class="content">
+               <img src="${image}" alt="Preview" style="max-width: 100%; height: auto;" />
+                <p><strong>ชื่อเมนู:</strong> ${name}</p>
+                 <p><strong>คำอธิบาย:</strong> ${description}</p>
+                  <p><strong>ราคา: <span class="price">${price}</span></strong></p>
+                 </div>
+                `,
+               showCloseButton: true,
+              showConfirmButton: false,
+            });
+             }}
+              >
+                ตัวอย่าง
+              </Button>
+              </Item> */}
+              <Item>
+              <Button fullWidth sx={{fontSize:25}} style={{ background: '#F83F3F' }} variant="contained" onClick={handleDeleteMenu}>ลบสินค้า</Button>
+              </Item>
+            </Box>
             </Grid>
             </Box>
           </form>
@@ -451,7 +487,7 @@ export default function BasicTabs() {
             <Card sx={{display: 'flex',
                       flexDirection: 'column',
                       height: '100%'}}
-                  style={{backgroundColor:'#EEF8F7'}}> 
+                  style={{backgroundColor:'#EEF8F7',boxShadow: ' 2px 9px #EADDCD'}}> 
             <CardContent>
               <Grid item xs={6} md={10} sm={14}> 
               <Typography variant="h4" component="h4">
@@ -487,7 +523,7 @@ export default function BasicTabs() {
           <Card sx={{display: 'flex',
                     flexDirection: 'column',
                     height: '100%'}}
-                style={{backgroundColor:'#EEF8F7'}}>
+                style={{backgroundColor:'#EEF8F7',boxShadow: ' 2px 9px #EADDCD'}}>
           <CardContent>
           <div style={{width: "500px" }}>
           <Grid item xs={6} md={15} sm={14}>

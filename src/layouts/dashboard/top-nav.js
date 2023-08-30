@@ -20,7 +20,7 @@ import { useEffect , useState, useRef} from 'react';
 import { useRouter } from 'next/navigation';
 
 const SIDE_NAV_WIDTH = 280;
-const TOP_NAV_HEIGHT = 64;
+const TOP_NAV_HEIGHT = 80;
 
 export const TopNav = (props) => {
   const { onNavOpen } = props;
@@ -61,7 +61,8 @@ export const TopNav = (props) => {
         component="header"
         sx={{
           backdropFilter: 'blur(6px)',
-          backgroundColor: '#F7A645',
+          background: "linear-gradient(90deg,  #FEFFB8, 70%, #EBA03E);",
+          /* background: "linear-gradient(90deg,  #CDFFD8, 70%, #94B9FF);", */
           position: 'sticky',
           left: {
             lg: `${SIDE_NAV_WIDTH}px`
@@ -90,7 +91,7 @@ export const TopNav = (props) => {
           >
             {!lgUp && (
               <IconButton onClick={onNavOpen}>
-                <SvgIcon fontSize="small">
+                <SvgIcon sx={{fontSize: '32px'}} fontSize="small">
                   <Bars3Icon />
                 </SvgIcon>
               </IconButton>
@@ -122,7 +123,7 @@ export const TopNav = (props) => {
           badgeContent={count}
           color="success"
         >
-          <SvgIcon fontSize="small">
+          <SvgIcon sx={{fontSize: '32px'}} fontSize="small">
             <BellIcon />
           </SvgIcon>
         </Badge>
@@ -141,7 +142,7 @@ export const TopNav = (props) => {
       <SvgIcon 
         onClick={accountPopover.handleOpen}
         ref={accountPopover.anchorRef} 
-        sx={{cursor: 'pointer'}}
+        sx={{cursor: 'pointer',fontSize: '32px'}}
         ontSize="small">
           <UsersIcon />
       </SvgIcon>
