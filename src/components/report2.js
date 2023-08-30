@@ -197,14 +197,14 @@ export default function Report2(){
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell> <Button sx={{fontSize:'20px'}} onClick={() => { sortByInt(paginatedRows2, "order", sortOrder, setSortOrder); }} > ลำดับ </Button> </TableCell>
-                  <TableCell> <Button sx={{fontSize:'20px'}} onClick={() => { sortByDate(paginatedRows2, "date", sortDate, setSortDate); }} > วันที่ </Button> </TableCell>
-                  <TableCell> <Button sx={{fontSize:'20px'}} onClick={() => { sortByTime(paginatedRows2, "time", sortTime, setSortTime); }} > เวลา </Button> </TableCell>
-                  <TableCell> <Button sx={{fontSize:'20px'}} onClick={() => { sortByString(paginatedRows2, "name", sortName, setSortName); }} > ชื่อรายการ </Button> </TableCell>
-                  <TableCell> <Button sx={{fontSize:'20px'}} onClick={() => { sortByInt(paginatedRows2, "count", sortCount, setSortCount); }} > จำนวน </Button> </TableCell>
-                  <TableCell> <Button sx={{fontSize:'20px'}} onClick={() => { sortByInt(paginatedRows2, "price", sortPrice, setSortPrice); }} > ราคา </Button> </TableCell>
-                  <TableCell> <Button sx={{fontSize:'20px'}} onClick={() => { sortByString(paginatedRows2, "status", sortStatus, setSortStatus); }} > สถานะ </Button> </TableCell>
-                  <TableCell> <Button sx={{fontSize:'20px'}} onClick={() => { sortByString(paginatedRows2, "type", sortType, setSortType); }} > ประเภท </Button> </TableCell>
+                  <TableCell> <Button sx={{fontSize:'25px'}} onClick={() => { sortByInt(paginatedRows2, "order", sortOrder, setSortOrder); }} > ลำดับ </Button> </TableCell>
+                  <TableCell> <Button sx={{fontSize:'25px'}} onClick={() => { sortByDate(paginatedRows2, "date", sortDate, setSortDate); }} > วันที่ </Button> </TableCell>
+                  <TableCell> <Button sx={{fontSize:'25px'}} onClick={() => { sortByTime(paginatedRows2, "time", sortTime, setSortTime); }} > เวลา </Button> </TableCell>
+                  <TableCell> <Button sx={{fontSize:'25px'}} onClick={() => { sortByString(paginatedRows2, "name", sortName, setSortName); }} > ชื่อรายการ </Button> </TableCell>
+                  <TableCell> <Button sx={{fontSize:'25px'}} onClick={() => { sortByInt(paginatedRows2, "count", sortCount, setSortCount); }} > จำนวน </Button> </TableCell>
+                  <TableCell> <Button sx={{fontSize:'25px'}} onClick={() => { sortByInt(paginatedRows2, "price", sortPrice, setSortPrice); }} > ราคา </Button> </TableCell>
+                  <TableCell> <Button sx={{fontSize:'25px'}} onClick={() => { sortByString(paginatedRows2, "status", sortStatus, setSortStatus); }} > สถานะ </Button> </TableCell>
+                  <TableCell> <Button sx={{fontSize:'25px'}} onClick={() => { sortByString(paginatedRows2, "type", sortType, setSortType); }} > ประเภท </Button> </TableCell>
                   <TableCell></TableCell>
                 </TableRow>
               </TableHead>
@@ -217,13 +217,13 @@ export default function Report2(){
                     <TableCell component="th" scope="row" sx={{fontSize:'18px'}}>
                     <p style={{marginLeft:'35px'}}>{row.id}</p>
                     </TableCell>
-                    <TableCell sx={{fontSize:'18px'}}>{row.date}</TableCell>
-                    <TableCell sx={{fontSize:'18px'}}>{row.time}</TableCell>
-                    <TableCell sx={{fontSize:'18px'}}>{row.name}</TableCell>
-                    <TableCell sx={{fontSize:'18px'}}>{row.count}</TableCell>
-                    <TableCell sx={{fontSize:'18px'}}>{row.price}</TableCell>
-                    <TableCell sx={{fontSize:'18px'}}>{row.status}</TableCell>
-                    <TableCell sx={{fontSize:'18px'}}>{row.type}</TableCell>
+                    <TableCell sx={{fontSize:'22px'}}>{row.date}</TableCell>
+                    <TableCell sx={{fontSize:'22px'}}>{row.time}</TableCell>
+                    <TableCell sx={{fontSize:'22px'}}>{row.name}</TableCell>
+                    <TableCell sx={{fontSize:'22px'}}>{row.count}</TableCell>
+                    <TableCell sx={{fontSize:'22px'}}>{row.price}</TableCell>
+                    <TableCell sx={{fontSize:'22px'}}>{row.status}</TableCell>
+                    <TableCell sx={{fontSize:'22px'}}>{row.type}</TableCell>
                     {row.type == 'ตัวเลือก' ? <TableCell>
                           <IconButton
                             aria-label="expand row"
@@ -244,15 +244,15 @@ export default function Report2(){
                         <Collapse in={open[index]} timeout="auto" unmountOnExit>
                           <Box sx={{ margin: 1 }}>
                             <Table size="small" aria-label="purchases">
-                                <TableRow>
-                                  <TableCell sx={{fontSize:'18px'}}>ตัวเลือก</TableCell>
-                                  <TableCell sx={{fontSize:'18px'}}>ราคา</TableCell>
-                                  <TableCell sx={{fontSize:'18px'}}>จำนวน</TableCell>
-                                  <TableCell sx={{fontSize:'18px'}}>หน่วย</TableCell>
+                                <TableRow style={{backgroundColor:'#EADDCD'}}>
+                                  <TableCell sx={{fontSize:'20px'}}>ตัวเลือก</TableCell>
+                                  <TableCell sx={{fontSize:'20px'}}>ราคา</TableCell>
+                                  <TableCell sx={{fontSize:'20px'}}>จำนวน</TableCell>
+                                  <TableCell sx={{fontSize:'20px'}}>หน่วย</TableCell>
                                 </TableRow>
                               <TableBody>
                                 {row.detail.map((AddonRow) => (
-                                  <TableRow key={AddonRow.id}>
+                                  <TableRow style={{backgroundColor:'#FCF6EE'}} key={AddonRow.id}>
                                     <TableCell component="th" scope="row" sx={{fontSize:'18px'}}>
                                       {AddonRow.name}
                                     </TableCell>

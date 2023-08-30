@@ -368,6 +368,7 @@ export default function BasicTabs() {
             <Tab sx={{fontSize:'25px'}} label="ชำระเงินแล้ว" {...a11yProps(0)} />
             <Tab sx={{fontSize:'25px'}} label="รอการชำระเงิน" {...a11yProps(1)} />
           </Tabs>
+          <br/>
           </Box>
             <CustomTabPanel value={value} index={0}>
 
@@ -375,23 +376,23 @@ export default function BasicTabs() {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell width="20%"> <Button sx={{fontSize:'22px'}} onClick={() => {sortByInt(paidOrders, "id", sortOrder, setSortOrder);}}>เลขที่ออเดอร์</Button></TableCell>
-                  <TableCell width="20%"> <Button sx={{fontSize:'22px'}} onClick={() => {sortByString(paidOrders, "menu", sortMenu, setSortMenu);}}>เมนู</Button></TableCell>
-                  <TableCell width="20%"> <Button sx={{fontSize:'22px'}} onClick={() => {sortByTime(paidOrders, "time", sortTime, setSortTime);}}> เวลา </Button></TableCell>
-                  <TableCell width="20%"> <Button sx={{fontSize:'22px'}} onClick={() => {sortByString(paidOrders, "status", sortStatus, setSortStatus);}}> สถานะ</Button></TableCell>
+                  <TableCell width="20%"> <Button sx={{fontSize:'25px'}} onClick={() => {sortByInt(paidOrders, "id", sortOrder, setSortOrder);}}>เลขที่ออเดอร์</Button></TableCell>
+                  <TableCell width="20%"> <Button sx={{fontSize:'25px'}} onClick={() => {sortByString(paidOrders, "menu", sortMenu, setSortMenu);}}>เมนู</Button></TableCell>
+                  <TableCell width="20%"> <Button sx={{fontSize:'25px'}} onClick={() => {sortByTime(paidOrders, "time", sortTime, setSortTime);}}> เวลา </Button></TableCell>
+                  <TableCell width="20%"> <Button sx={{fontSize:'25px'}} onClick={() => {sortByString(paidOrders, "status", sortStatus, setSortStatus);}}> สถานะ</Button></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {paidOrders.map((row) => (
                   <TableRow key={row._id}
                   /* onClick={() => handlePopUpPaid(row)} */>
-                    <TableCell sx={{fontSize:'18px'}}>
+                    <TableCell sx={{fontSize:'22px'}}>
                     <p style={{marginLeft:'60px'}}>{row.id}</p>
                     </TableCell>
-                    <TableCell sx={{fontSize:'18px'}}>{row.menu}</TableCell>
-                    <TableCell sx={{fontSize:'18px'}}>{row.time}</TableCell>
+                    <TableCell sx={{fontSize:'22px'}}>{row.menu}</TableCell>
+                    <TableCell sx={{fontSize:'22px'}}>{row.time}</TableCell>
                     <TableCell>
-                      <SeverityPill sx={{fontSize:'18px'}} onClick={() => handlePopUpPaid(row)} color={statusMap[row.status]}>
+                      <SeverityPill sx={{fontSize:'22px'}} onClick={() => handlePopUpPaid(row)} color={statusMap[row.status]}>
                         {row.status}
                       </SeverityPill>
                     </TableCell>
@@ -411,11 +412,11 @@ export default function BasicTabs() {
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                   <TableRow>
-                    <TableCell  width="20%"> <Button sx={{fontSize:'22px'}} onClick={() => {sortByInt(paginatedRows, "id", sortOrder, setSortOrder);}}>เลขที่ออเดอร์</Button></TableCell>
-                    <TableCell  width="20%"> <Button sx={{fontSize:'22px'}} onClick={() => {sortByString(paginatedRows, "menu", sortMenu, setSortMenu);}}> เมนู </Button> </TableCell>
+                    <TableCell  width="20%"> <Button sx={{fontSize:'25px'}} onClick={() => {sortByInt(paginatedRows, "id", sortOrder, setSortOrder);}}>เลขที่ออเดอร์</Button></TableCell>
+                    <TableCell  width="20%"> <Button sx={{fontSize:'25px'}} onClick={() => {sortByString(paginatedRows, "menu", sortMenu, setSortMenu);}}> เมนู </Button> </TableCell>
                     {/* <TableCell> <Button onClick={() => {sortByDate(rows, "date", sortDate, setSortDate);}}> วันที่ </Button> </TableCell> */}
-                    <TableCell  width="20%"> <Button sx={{fontSize:'22px'}} onClick={() => {sortByTime(paginatedRows, "time", sortTime, setSortTime);}}> เวลา </Button> </TableCell>
-                    <TableCell  width="20%"> <Button sx={{fontSize:'22px'}} onClick={() => {sortByString(paginatedRows, "status", sortStatus, setSortStatus);}}> สถานะ</Button> </TableCell>
+                    <TableCell  width="20%"> <Button sx={{fontSize:'25px'}} onClick={() => {sortByTime(paginatedRows, "time", sortTime, setSortTime);}}> เวลา </Button> </TableCell>
+                    <TableCell  width="20%"> <Button sx={{fontSize:'25px'}} onClick={() => {sortByString(paginatedRows, "status", sortStatus, setSortStatus);}}> สถานะ</Button> </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -425,14 +426,14 @@ export default function BasicTabs() {
                       key={row._id}
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                     >
-                      <TableCell sx={{fontSize:'18px'}}>
+                      <TableCell sx={{fontSize:'22px'}}>
                       <p style={{marginLeft:'60px'}}>{row.id}</p>
                       </TableCell>
-                      <TableCell sx={{fontSize:'18px'}}>{row.menu}</TableCell>
+                      <TableCell sx={{fontSize:'22px'}}>{row.menu}</TableCell>
                       {/* <TableCell>{row.date}</TableCell> */}
-                      <TableCell sx={{fontSize:'18px'}}>{row.time}</TableCell>
+                      <TableCell sx={{fontSize:'22px'}}>{row.time}</TableCell>
                       <TableCell>
-                        <SeverityPill sx={{fontSize:'18px'}} onClick={() => handlePopUp(row)} color={statusMap[row.status]}>
+                        <SeverityPill sx={{fontSize:'22px'}} onClick={() => handlePopUp(row)} color={statusMap[row.status]}>
                         {row.status}
                       </SeverityPill>
                         </TableCell>

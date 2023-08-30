@@ -19,7 +19,7 @@ export const items = [
     title: 'Overview',
     path: '/',
     icon: (
-      <SvgIcon fontSize="small">
+      <SvgIcon sx={{fontSize: '26px'}} fontSize="small">
         <ChartBarIcon />
       </SvgIcon>
     )
@@ -28,7 +28,7 @@ export const items = [
     title: 'Order',
     path: '/order',
     icon: (
-      <SvgIcon fontSize="small">
+      <SvgIcon sx={{fontSize: '26px'}} fontSize="small">
         <EyeIcon />
       </SvgIcon>
     )
@@ -37,7 +37,7 @@ export const items = [
     title: 'Menu',
     path: '/menu',
     icon: (
-      <SvgIcon fontSize="small">
+      <SvgIcon sx={{fontSize: '26px'}} fontSize="small">
         <BuildingStorefrontIcon />
       </SvgIcon>
     )
@@ -46,7 +46,7 @@ export const items = [
     title: 'Addon',
     path: '/addon',
     icon: (
-      <SvgIcon fontSize="small">
+      <SvgIcon sx={{fontSize: '26px'}} fontSize="small">
         <CakeIcon />
       </SvgIcon>
     )
@@ -55,7 +55,7 @@ export const items = [
     title: 'Promotion',
     path: '/promotion',
     icon: (
-      <SvgIcon fontSize="small">
+      <SvgIcon sx={{fontSize: '26px'}} fontSize="small">
         <PhotoIcon />
       </SvgIcon>
     )
@@ -64,7 +64,7 @@ export const items = [
     title: 'Report',
     path: '/report',
     icon: (
-      <SvgIcon fontSize="small">
+      <SvgIcon sx={{fontSize: '26px'}} fontSize="small">
         <DocIcon />
       </SvgIcon>
     )
