@@ -157,7 +157,7 @@ function Addon(){
     </Head>
     <Box
       component="main"
-      sx={{ backgroundColor: '#EEF8F7'}}
+      /* sx={{ backgroundColor: '#EEF8F7'}} */
       /* sx={{ backgroundColor: '#f5f5f5'}} */
     >
       <Container maxWidth="xl" sx={{marginTop: '40px'}}>

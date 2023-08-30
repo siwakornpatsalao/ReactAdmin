@@ -30,10 +30,11 @@ export const MenuCard = (props) => {
         flexDirection: 'column',
         height: '100%',
         maxWidth: 350,
+        border: '1px solid #ccc', 
       }}
-      /* style={{
-        boxShadow: '10px rgba(0, 0, 0, 0.2)',
-      }} */
+      style={{
+        boxShadow: ' 2px 9px #EADDCD',
+      }}
     >
       <CardContent>
         <Box

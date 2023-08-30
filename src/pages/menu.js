@@ -208,14 +208,16 @@ function Menu() {
       <Head>
         <title>Menu | Devias Kit</title>
       </Head>
-      <Box component="main" sx={{ backgroundColor: '#EEF8F7'}}>
-        <Container maxWidth="xl" sx={{marginTop: '40px'}}>
+      <Box component="main" /* sx={{ backgroundColor: '#EEF8F7'}} */>
+        <Container maxWidth="xl" sx={{marginTop: '70px'}}>
           <Stack spacing={3}>
-            <Stack direction="row" justifyContent="space-between" spacing={4}>
+            <Stack direction="row" justifyContent="space-between" spacing={4} /* sx={{backgroundColor:'white',borderRadius:'20px'}} */>
 
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <Stack spacing={1}>
+              
                   <Typography style={{marginLeft:'20px'}} variant="h4">Menu</Typography>
+                  
                 </Stack>
               </div>
 
@@ -301,7 +303,7 @@ function Menu() {
       </div>
 
 
-            <Grid style={{marginLeft:"15px"}}  container spacing={3}>
+            <Grid style={{marginLeft:"15px" , backgroundColor: '#FCF6EE'}} sx={{borderRadius:'20px'}} container spacing={3}>
               {paginatedMenus.map((menu) => (
                 <Grid
                   xs={12}

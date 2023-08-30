@@ -54,8 +54,8 @@ export const Layout = withAuthGuard((props) => {
         open={openNav}
       />
       <LayoutRoot>
-        <LayoutContainer>
-          {children}
+        <LayoutContainer /* sx={{backgroundColor:'#F2FBFD'}} */>
+          {children }
         </LayoutContainer>
       </LayoutRoot>
     </>

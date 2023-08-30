@@ -353,8 +353,8 @@ export default function BasicTabs() {
     // tab 2  ยังไม่ชำระเงิน
 
     return(
-        <DashboardLayout>
-            <Box sx={{ width: "100%",pl:'50px' }}>
+        <DashboardLayout >
+            <Box sx={{ width: "100%",pl:'50px'}}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <Tabs
             textColor="secondary"

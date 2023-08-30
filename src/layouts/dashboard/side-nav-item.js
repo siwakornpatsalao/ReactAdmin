@@ -31,6 +31,7 @@ export const SideNavItem = (props) => {
           py: '6px',
           textAlign: 'left',
           width: '100%',
+          
           ...(active && {
             backgroundColor: 'rgba(255, 255, 255, 0.04)'
           }),
@@ -63,7 +64,7 @@ export const SideNavItem = (props) => {
             color: 'neutral.400',
             flexGrow: 1,
             fontFamily: (theme) => theme.typography.fontFamily,
-            fontSize: 14,
+            fontSize: 25,
             fontWeight: 600,
             lineHeight: '24px',
             whiteSpace: 'nowrap',
@@ -78,6 +79,7 @@ export const SideNavItem = (props) => {
           {title}
         </Box>
       </ButtonBase>
+      <br/>
     </li>
   );
 };
