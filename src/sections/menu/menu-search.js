@@ -24,7 +24,7 @@ export const MenuSearch = ({ onSearch }) => {
             </SvgIcon>
           </InputAdornment>
         )}
-        sx={{ maxWidth: 1200 }}
+        sx={{ maxWidth: 1200,border: '1px solid #EADDCD' }}
       />
     </Card>
   );

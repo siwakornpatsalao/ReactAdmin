@@ -124,7 +124,7 @@ export default function BasicTabs() {
           const resJson = await response.json();
           console.log(resJson);
           Swal.fire(`แก้ไขสินค้าชิ้นนี้แล้ว`, "", "success");
-          router.push('/menu')
+          router.push('/')
 
         } catch (error) {
           console.log("Error:", error.message);
@@ -155,7 +155,7 @@ export default function BasicTabs() {
           setDescription("");
           setPrice(0);
           setCategory("");
-          router.push("/menu");
+          router.push("/");
         } catch (error) {
           console.log("Error:", error.message);
         }

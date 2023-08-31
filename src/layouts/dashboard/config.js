@@ -16,11 +16,11 @@ import EyeIcon from '@heroicons/react/24/solid/EyeIcon';
 
 export const items = [
   {
-    title: 'Overview',
+    title: 'Menu',
     path: '/',
     icon: (
       <SvgIcon sx={{fontSize: '26px'}} fontSize="small">
-        <ChartBarIcon />
+        <BuildingStorefrontIcon />
       </SvgIcon>
     )
   },
@@ -33,7 +33,7 @@ export const items = [
       </SvgIcon>
     )
   },
-  {
+/*   {
     title: 'Menu',
     path: '/menu',
     icon: (
@@ -41,7 +41,7 @@ export const items = [
         <BuildingStorefrontIcon />
       </SvgIcon>
     )
-  },
+  }, */
   {
     title: 'Addon',
     path: '/addon',
@@ -63,6 +63,15 @@ export const items = [
   {
     title: 'Report',
     path: '/report',
+    icon: (
+      <SvgIcon sx={{fontSize: '26px'}} fontSize="small">
+        <DocIcon />
+      </SvgIcon>
+    )
+  },
+  {
+    title: 'Index2',
+    path: '/index2',
     icon: (
       <SvgIcon sx={{fontSize: '26px'}} fontSize="small">
         <DocIcon />
