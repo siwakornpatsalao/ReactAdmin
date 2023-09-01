@@ -263,7 +263,9 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
             }
             label={<span style={{fontSize:24}}>{menu.name}</span>}
           />
-        </FormGroup>
+          
+          </FormGroup>
+        
       ))
     };
 
@@ -289,70 +291,72 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
       ))
     };
 
+    const handleStartDateChange = (date) => {
+      setSelectedStartDate(date);
+    
+      if (selectedFinishDate && dayjs(date).isAfter(selectedFinishDate)) {
+        Swal.fire('วันเริ่มต้นห้ามมากกว่าวันสิ้นสุด');
+        setSelectedStartDate(null);
+      }
+    };
+    
+    const handleFinishDateChange = (date) => {
+      setSelectedFinishDate(date);
+    
+      if (date && dayjs(date).isBefore(selectedStartDate)) {
+        Swal.fire('วันเริ่มต้นห้ามมากกว่าวันสิ้นสุด');
+        setSelectedFinishDate(null);
+      }
+    };
+    
+
+    const handleStartTimeChange = (event) => {
+      const newTime = event.target.value;
+      setSelectedStartTime(newTime);
+    
+      if (selectedFinishTime && dayjs(newTime, 'HH:mm').isAfter(dayjs(selectedFinishTime, 'HH:mm'))) {
+        Swal.fire('เวลาเริ่มห้ามมากกว่าเวลาสิ้นสุด');
+        setSelectedStartTime('');
+      }
+    };
+    
+    const handleFinishTimeChange = (event) => {
+      const newTime = event.target.value;
+      setSelectedFinishTime(newTime);
+    
+      if (newTime && dayjs(newTime, 'HH:mm').isBefore(dayjs(selectedStartTime, 'HH:mm'))) {
+        Swal.fire('เวลาเริ่มห้ามมากกว่าเวลาสิ้นสุด');
+        setSelectedFinishTime('');
+      }
+    };
+
     const renderPromotionDetails = () => {
-
-      const handleStartDateChange = (date) => {
-        setSelectedStartDate(date);
       
-        if (selectedFinishDate && dayjs(date).isAfter(selectedFinishDate)) {
-          Swal.fire('วันเริ่มต้นห้ามมากกว่าวันสิ้นสุด');
-          setSelectedStartDate(null);
-        }
-      };
-      
-      const handleFinishDateChange = (date) => {
-        setSelectedFinishDate(date);
-      
-        if (date && dayjs(date).isBefore(selectedStartDate)) {
-          Swal.fire('วันเริ่มต้นห้ามมากกว่าวันสิ้นสุด');
-          setSelectedFinishDate(null);
-        }
-      };
-      
-
-      const handleStartTimeChange = (event) => {
-        const newTime = event.target.value;
-        setSelectedStartTime(newTime);
-      
-        if (selectedFinishTime && dayjs(newTime, 'HH:mm').isAfter(dayjs(selectedFinishTime, 'HH:mm'))) {
-          Swal.fire('เวลาเริ่มห้ามมากกว่าเวลาสิ้นสุด');
-          setSelectedStartTime('');
-        }
-      };
-      
-      const handleFinishTimeChange = (event) => {
-        const newTime = event.target.value;
-        setSelectedFinishTime(newTime);
-      
-        if (newTime && dayjs(newTime, 'HH:mm').isBefore(dayjs(selectedStartTime, 'HH:mm'))) {
-          Swal.fire('เวลาเริ่มห้ามมากกว่าเวลาสิ้นสุด');
-          setSelectedFinishTime('');
-        }
-      };
-      
-
       return (
         /* left */
         <div>
+
            <Grid container
             justifyContent="space-evenly"
             alignItems="flex-start"  
             spacing={3}
             rowSpacing={1}
-            columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+            columnSpacing={{ xs: 1, sm: 2, md: 7 }}>
               <Box sx={{
                 "& > :not(style)": { m: 2 },
               }} noValidate autoComplete="off">
           <Typography variant="h4" component="h4">
                   ระยะเวลาโปรโมชั่น
           </Typography>
+          
           <Typography variant="h5" component="h5">
                   วันเริ่มต้น
           </Typography>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
-              renderInput={(props) => <TextField {...props} />}
+              renderInput={(props) => <TextField sx={{ border: '1px solid black', }} {...props} />}
               value={selectedStartDate}
+              label="วันเริ่มต้น"
               onChange={handleStartDateChange} 
             />
           </LocalizationProvider>
@@ -360,13 +364,15 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
                   วันสิ้นสุด
           </Typography>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              renderInput={(props) => <TextField {...props} />}
+            <DatePicker 
+              label="วันสิ้นสุด"
+              renderInput={(props) => <TextField sx={{ border: '1px solid black', }} {...props} />}
               value={selectedFinishDate}
               onChange={handleFinishDateChange} 
             />
           </LocalizationProvider>
 
+{/* เปลี่ยนไปฝั่งขวา , renderPromotionDetailsRight */}
           <Typography variant="h4" component="h4">
                   วัน
           </Typography>
@@ -376,13 +382,15 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
             aria-label="Days of Week"
           >
             {daysOfWeek.map((day) => (
-              <ToggleButton  sx={{ "&.Mui-selected, &.Mui-selected:hover": {color: "green"}}} 
+              <ToggleButton sx={{ "&.Mui-selected, &.Mui-selected:hover": {color: "green"}, border: '1px solid #ccc', }} 
               key={day} value={day}>
                 {day}
               </ToggleButton>
             ))}
           </ToggleButtonGroup>
 
+          <div style={{display:'flex'}}>
+            <div style={{ marginRight: 'auto' }}>
           <Typography variant="h5" component="h5">
                   เวลาเริ่ม
           </Typography>
@@ -398,7 +406,9 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
               step: 300, 
             }}
           />
+          </div>
 
+          <div>
           <Typography variant="h5" component="h5">
                  เวลาสิ้นสุด
           </Typography>
@@ -414,6 +424,9 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
               step: 300, 
             }}
           />
+          </div>
+          </div>
+
           </Box>
         </Grid>
         </div>
@@ -421,7 +434,6 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
     };
   
     return (
-      //left side
       <Card sx={{
         marginTop:'20px',
         display: 'flex',
@@ -433,7 +445,9 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
       }}>
         <Container>
       <div style={{ display: 'flex',marginTop:'20px' }}>
-        <Box style={{ flex: 1 }}>
+        
+      {/* left side */}
+      <Box style={{ flex: 1 }}>
         <div>
         {type === "percent" ? (
           <>
@@ -496,9 +510,9 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
         </div>
         </Box>
 
-       {/*  right */}
-        <Box style={{ flex: 1 }}>
-        <div>
+
+        {/*  right */}
+      <Box style={{ flex: 1 }}>
           {productType === 'menu' ? (
             <div>
                <Typography variant="h4" component="h4">
@@ -506,6 +520,7 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
           </Typography>
           <br/>
               {renderMenus()}
+              
             </div>
           ): productType === 'category' ? (
             <div>
@@ -534,8 +549,9 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
               />
             </div>
           ):null}
-        </div>
         </Box>
+      
+        
       </div>
       </Container>
       </Card>
