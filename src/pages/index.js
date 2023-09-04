@@ -25,6 +25,7 @@ import TablePagination from '@mui/material/TablePagination';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import { SeverityPill } from "../components/severity-pill";
+import { useRouter } from "next/router";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -45,6 +46,7 @@ function Menu() {
   const [rowsPerPage, setRowsPerPage] = useState(8);
   const [paginatedMenus, setPaginatedMenus] = useState(menus);
   const [promotion, setPromotion] = useState([]);
+  const router = useRouter();
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -74,6 +76,7 @@ function Menu() {
 
         Swal.fire(`เพิ่มหมวดหมู่แล้ว`, "", "success");
         console.log(result.value);
+        //window.location.reload(false);
 
         const response = await fetch("http://localhost:5000/category", {
           method: "POST",

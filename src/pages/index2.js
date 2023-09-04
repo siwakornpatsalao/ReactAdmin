@@ -6,7 +6,7 @@ import StepLabel from '@mui/material/StepLabel';
 import Typography from '@mui/material/Typography';
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { TextField, MenuItem, Button, Radio, RadioGroup, Card, CardContent} from '@mui/material';
+import { TextField, MenuItem, Button, Radio, RadioGroup, Card, CardContent, Select, InputLabel} from '@mui/material';
 import { useState, useEffect, useRef } from 'react';
 import FormGroup from "@mui/material/FormGroup";
 import Checkbox from "@mui/material/Checkbox";
@@ -25,7 +25,20 @@ import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import IconButton from '@mui/material/IconButton';
+import ClearIcon from '@mui/icons-material/Clear';
+import ListItemText from '@mui/material/ListItemText';
+import OutlinedInput from '@mui/material/OutlinedInput';
 
+
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: 48 * 4.5 + 8,
+      width: 250,
+    },
+  },
+};
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -208,88 +221,27 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
 
 
     const isDataValid = (data) => typeof data === 'number' && data > 0;
-
-    useEffect(() => {
-      async function fetchMenus() {
-        try {
-          const res = await fetch("http://localhost:5000/menus");
-          const data = await res.json();
-          setMenus(data);
-          console.log(data);
-        } catch (error) {
-          console.error("Error fetching menus:", error);
-        }
-      }
-
-      async function fetchCategories() {
-        try {
-          const res = await fetch("http://localhost:5000/category");
-          const data = await res.json();
-          setCategories(data);
-          console.log(data);
-        } catch (error) {
-          console.error("Error fetching menus:", error);
-        }
-      }
-  
-      if (!initial.current) {
-        initial.current = true;
-        console.log(initial.current);
-        fetchMenus();
-        fetchCategories();
-      }
-    }, []);
   
     const handleDaySelect = (event, newSelectedDays) => {
       setSelectedDays(newSelectedDays);
     };
-  
-    const renderMenus = () => {
-      return menus.map((menu) => (
-        <FormGroup key={menu._id}>
-          <FormControlLabel
-          style={{ fontSize: 25 }}
-            control={
-              <Checkbox
-                checked={selectedMenus.includes(menu._id)}
-                onChange={() =>
-                  setSelectedMenus((prev) =>
-                    prev.includes(menu._id)
-                      ? prev.filter((id) => id !== menu._id)
-                      : [...prev, menu._id]
-                  )
-                }
-              />
-            }
-            label={<span style={{fontSize:24}}>{menu.name}</span>}
-          />
-          
-          </FormGroup>
-        
-      ))
+
+    const handleMenuChange = (event) => {
+      setSelectedMenus(event.target.value);
     };
 
-    const renderCategories = () => {
-      return categories.map((category) => (
-        <FormGroup key={category._id}>
-          <FormControlLabel
-            control={
-              <Checkbox 
-                checked={selectedCategories.includes(category.name)}
-                onChange={() =>
-                  setSelectedCategories((prev) =>
-                    prev.includes(category.name)
-                      ? prev.filter((id) => id !== category.name)
-                      : [...prev, category.name]
-                  )
-                }
-              />
-            }
-            label={<span style={{fontSize:24}}>{category.name}</span>}
-          />
-        </FormGroup>
-      ))
+    const handleCategoryChange = (event) => {
+      setSelectedCategories(event.target.value);
     };
+
+    function handleClearCategorySelection(){
+      setSelectedCategories([]);
+    }
+
+  
+    function handleClearSelection(){
+      setSelectedMenus([]);
+    }
 
     const handleStartDateChange = (date) => {
       setSelectedStartDate(date);
@@ -330,31 +282,127 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
       }
     };
 
+    //menu
+    const renderMenus = () => {
+      return (
+        <div style={{ display: 'flex'}}>
+      <FormGroup sx={{ m: 1, width: 400 }}>
+      <Select
+      fullWidth
+        variant="standard"
+        id="menu-select"
+        multiple
+        value={selectedMenus}
+        onChange={handleMenuChange}
+        label="Select Menus"
+        renderValue={(selected) =>
+          selected
+            .map((menuId) =>
+              menus.find((menu) => menu._id === menuId)?.name || ""
+            )
+            .join(", ")
+        }
+        MenuProps={MenuProps}
+      >
+        {menus.map((menu) => (
+          <MenuItem key={menu._id} value={menu._id} style={{
+            color: selectedMenus.includes(menu._id) ? 'green' : 'black',
+            backgroundColor:'#E2E3E3',
+          }}>
+            <Checkbox checked={selectedMenus.indexOf(menu._id) > -1} />
+              <ListItemText primary={menu.name} />
+          </MenuItem>
+        ))}
+        
+      </Select>
+        </FormGroup>
+        <IconButton
+          aria-label="Clear Selection"
+          onClick={handleClearSelection}
+          size="small"
+        >
+          <ClearIcon />
+        </IconButton>
+          </div>
+      )
+    };
+
+    //category
+    const renderCategories = () => {
+      return (
+        <div style={{ display: 'flex'}}>
+      <FormGroup sx={{ m: 1, width: 400 }}>
+      <Select
+      fullWidth
+        variant="standard"
+        id="menu-select"
+        multiple
+        value={selectedCategories}
+        onChange={handleCategoryChange}
+        label="Select Category"
+        renderValue={(selected) =>
+          selected
+            .map((categoryId) =>
+              categories.find((category) => category._id === categoryId)?.name || ""
+            )
+            .join(", ")
+        }
+        MenuProps={MenuProps}
+      >
+        {categories.map((category) => (
+          <MenuItem key={category._id} value={category._id} style={{
+            color: selectedCategories.includes(category._id) ? 'green' : 'black',
+            backgroundColor:'#E2E3E3',
+          }}>
+            <Checkbox checked={selectedCategories.indexOf(category._id) > -1} />
+              <ListItemText primary={category.name} />
+          </MenuItem>
+        ))}
+        
+      </Select>
+        </FormGroup>
+        <IconButton
+          aria-label="Clear Selection"
+          onClick={handleClearSelection}
+          size="small"
+        >
+          <ClearIcon />
+        </IconButton>
+          </div>
+      )
+    };
+
     const renderPromotionDetails = () => {
-      
       return (
         /* left */
         <div>
-
-           <Grid container
-            justifyContent="space-evenly"
-            alignItems="flex-start"  
-            spacing={3}
-            rowSpacing={1}
-            columnSpacing={{ xs: 1, sm: 2, md: 7 }}>
               <Box sx={{
                 "& > :not(style)": { m: 2 },
               }} noValidate autoComplete="off">
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
           <Typography variant="h4" component="h4">
                   ระยะเวลาโปรโมชั่น
           </Typography>
-          
+          <br/>
           <Typography variant="h5" component="h5">
                   วันเริ่มต้น
           </Typography>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
-              renderInput={(props) => <TextField sx={{ border: '1px solid black', }} {...props} />}
+              renderInput={(props) => <TextField
+                sx={{
+                  border: '3px solid orange', 
+                  borderRadius: '8px', 
+                }}
+                {...props}
+              />}
               value={selectedStartDate}
               label="วันเริ่มต้น"
               onChange={handleStartDateChange} 
@@ -366,72 +414,54 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker 
               label="วันสิ้นสุด"
-              renderInput={(props) => <TextField sx={{ border: '1px solid black', }} {...props} />}
+              renderInput={(props) => <TextField
+                sx={{
+                  border: '3px solid orange', 
+                  borderRadius: '8px', 
+                }}
+                {...props}
+              />}
               value={selectedFinishDate}
               onChange={handleFinishDateChange} 
             />
           </LocalizationProvider>
 
-{/* เปลี่ยนไปฝั่งขวา , renderPromotionDetailsRight */}
-          <Typography variant="h4" component="h4">
-                  วัน
-          </Typography>
-          <ToggleButtonGroup
-            value={selectedDays}
-            onChange={handleDaySelect}
-            aria-label="Days of Week"
-          >
-            {daysOfWeek.map((day) => (
-              <ToggleButton sx={{ "&.Mui-selected, &.Mui-selected:hover": {color: "green"}, border: '1px solid #ccc', }} 
-              key={day} value={day}>
-                {day}
-              </ToggleButton>
-            ))}
-          </ToggleButtonGroup>
-
-          <div style={{display:'flex'}}>
-            <div style={{ marginRight: 'auto' }}>
-          <Typography variant="h5" component="h5">
-                  เวลาเริ่ม
-          </Typography>
-          <TextField
-            focused
-            label="เวลาเริ่ม"
-            name="start_time"
-            type="time"
-            error={!selectedStartTime}
-            onChange={handleStartTimeChange}
-            value={selectedStartTime}
-            inputProps={{
-              step: 300, 
-            }}
-          />
-          </div>
-
-          <div>
-          <Typography variant="h5" component="h5">
-                 เวลาสิ้นสุด
-          </Typography>
-          <TextField
-            focused
-            label="เวลาสิ้นสุด"
-            name="finish_time"
-            type="time"
-            error={!selectedFinishTime}
-            onChange={handleFinishTimeChange}
-            value={selectedFinishTime}
-            inputProps={{
-              step: 300, 
-            }}
-          />
-          </div>
-          </div>
-
           </Box>
-        </Grid>
+        
         </div>
       );
     };
+
+    useEffect(() => {
+      async function fetchMenus() {
+        try {
+          const res = await fetch("http://localhost:5000/menus");
+          const data = await res.json();
+          setMenus(data);
+          console.log(data);
+        } catch (error) {
+          console.error("Error fetching menus:", error);
+        }
+      }
+
+      async function fetchCategories() {
+        try {
+          const res = await fetch("http://localhost:5000/category");
+          const data = await res.json();
+          setCategories(data);
+          console.log(data);
+        } catch (error) {
+          console.error("Error fetching menus:", error);
+        }
+      }
+  
+      if (!initial.current) {
+        initial.current = true;
+        console.log(initial.current);
+        fetchMenus();
+        fetchCategories();
+      }
+    }, []);
   
     return (
       <Card sx={{
@@ -444,11 +474,80 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
         boxShadow: ' 2px 9px #EADDCD',/* #D8E8DC */
       }}>
         <Container>
-      <div style={{ display: 'flex',marginTop:'20px' }}>
-        
+      <div style={{ display: 'flex',marginTop:'30px' }}>
+      <Grid container
+            justifyContent="space-evenly"
+            alignItems="flex-start"  
+            spacing={3}
+            rowSpacing={1}
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
       {/* left side */}
-      <Box style={{ flex: 1 }}>
-        <div>
+      <Box style={{ flex: 1.5 }}>
+      {productType === 'menu' ? (
+            <div style={{marginTop:'5px'}}>
+            <Grid container
+            justifyContent="space-evenly"
+            alignItems="flex-start"  
+            spacing={3}
+            rowSpacing={1}
+            >
+              <Grid item xs={11}>
+                <Typography variant="h4" component="h4">
+                  เลือกเมนู
+                </Typography>
+                <br/>
+              </Grid>
+            </Grid>
+            {renderMenus()}
+            </div>
+          ): productType === 'category' ? (
+            <div  style={{marginTop:'5px'}}>
+              <Grid container
+            justifyContent="space-evenly"
+            alignItems="flex-start"  
+            spacing={3}
+            rowSpacing={1}
+            >
+              <Grid item xs={11}>
+               <Typography variant="h4" component="h4">
+                  เลือกหมวดหมู่
+                </Typography>
+                <br/>
+              </Grid>
+            </Grid>
+              {renderCategories()}
+            </div>
+          ): productType === 'amount' ? (
+            <div style={{marginTop:'5px'}}>
+              <Grid container>
+              <Grid item xs={11}>
+               <Typography variant="h4" component="h4">
+                  คำสั่งซื้อ
+               </Typography>
+               <br/>
+               </Grid>
+              <TextField
+                inputProps={{style: {fontSize: 25}}}
+                InputLabelProps={{style: {fontSize: 20}}}
+                label="free"
+                color="secondary"
+                helperText="ขั้นต่ำคำสั่งซื้อ"
+                error={amount<0 && typeof amount !== 'number'}
+                value= {amount}
+                onChange={(e) => setAmount(e.target.value)}
+                focused
+              />
+              </Grid>
+            </div>
+          ):null}
+          {renderPromotionDetails()}
+        </Box>
+
+        
+
+
+        {/*  right */}
+      <Box style={{ flex: 1.2}}>
         {type === "percent" ? (
           <>
             <Typography variant="h4" component="h4">
@@ -466,7 +565,6 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
                 focused
                 onChange={(e) => setData(e.target.value)}
               />
-            {renderPromotionDetails()}
           </>
         ) : type === "specific" ? (
           <div>
@@ -485,7 +583,6 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
                 focused
                 onChange={(e) => setData(e.target.value)}
               />
-            {renderPromotionDetails()}
           </div>
         ) : type === "free" ? (
           <div>
@@ -504,54 +601,71 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
                 focused
                 onChange={(e) => setData(e.target.value)}
               />
-            {renderPromotionDetails()}
           </div>
         ) : null}
-        </div>
-        </Box>
+
+          <br/>
+          <br/>
+          <Typography variant="h4" component="h4">
+                  วัน
+          </Typography>
+          <br/>
+          <ToggleButtonGroup
+            value={selectedDays}
+            onChange={handleDaySelect}
+            aria-label="Days of Week"
+          >
+            {daysOfWeek.map((day) => (
+              <ToggleButton sx={{ "&.Mui-selected, &.Mui-selected:hover": {color: "green"}, border: '1px solid #ccc', }} 
+              key={day} value={day}>
+                {day}
+              </ToggleButton>
+            ))}
+          </ToggleButtonGroup>
 
 
-        {/*  right */}
-      <Box style={{ flex: 1 }}>
-          {productType === 'menu' ? (
-            <div>
-               <Typography variant="h4" component="h4">
-                  เลือกเมนู
+          <div style={{marginTop:'105px'}}>
+            <div style={{ marginRight: 'auto' }}>
+          <Typography variant="h5" component="h5">
+                  เวลาเริ่ม
           </Typography>
           <br/>
-              {renderMenus()}
-              
-            </div>
-          ): productType === 'category' ? (
-            <div>
-               <Typography variant="h4" component="h4">
-                  เลือกหมวดหมู่
-          </Typography>
+          <TextField
+            focused
+            style={{width:250, marginTop:'18px'}}
+            label="เวลาเริ่ม"
+            name="start_time"
+            type="time"
+            error={!selectedStartTime}
+            onChange={handleStartTimeChange}
+            value={selectedStartTime}
+            inputProps={{
+              step: 300, 
+            }}
+          />
+          </div>
           <br/>
-              {renderCategories()}
-            </div>
-          ): productType === 'amount' ? (
-            <div>
-               <Typography variant="h4" component="h4">
-                  คำสั่งซื้อ
+          <div style={{marginRight:'60px',marginTop:'8px',marginBottom:'80px'}}>
+          <Typography variant="h5" component="h5">
+                 เวลาสิ้นสุด
           </Typography>
-          <br/>
-              <TextField
-                inputProps={{style: {fontSize: 25}}}
-                InputLabelProps={{style: {fontSize: 20}}}
-                label="free"
-                color="secondary"
-                helperText="ขั้นต่ำคำสั่งซื้อ"
-                error={amount<0 && typeof amount !== 'number'}
-                value= {amount}
-                onChange={(e) => setAmount(e.target.value)}
-                focused
-              />
-            </div>
-          ):null}
-        </Box>
-      
-        
+          <TextField
+            focused
+            style={{width:250, marginTop:'35px'}}
+            label="เวลาสิ้นสุด"
+            name="finish_time"
+            type="time"
+            error={!selectedFinishTime}
+            onChange={handleFinishTimeChange}
+            value={selectedFinishTime}
+            inputProps={{
+              step: 300, 
+            }}
+          />
+          </div>
+          </div>
+        </Box>      
+        </Grid>
       </div>
       </Container>
       </Card>
