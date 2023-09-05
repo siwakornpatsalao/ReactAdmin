@@ -28,7 +28,7 @@ import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import IconButton from '@mui/material/IconButton';
 import ClearIcon from '@mui/icons-material/Clear';
 import ListItemText from '@mui/material/ListItemText';
-import Chip from '@mui/material/Chip';
+import OutlinedInput from '@mui/material/OutlinedInput';
 
 
 const MenuProps = {
@@ -285,28 +285,23 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
     //menu
     const renderMenus = () => {
       return (
-      <div style={{ display: 'flex'}}>
+        <div style={{ display: 'flex'}}>
       <FormGroup sx={{ m: 1, width: 400 }}>
       <Select
-        fullWidth
-        focused
-        style={{border: '3px solid #EDA03B', }}
+      fullWidth
+        variant="standard"
+        id="menu-select"
         multiple
         value={selectedMenus}
         onChange={handleMenuChange}
         label="Select Menus"
-        renderValue={(selected) => (
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-            {selected.map((menuId) => (
-      <Chip
-        key={menuId}
-        label={
-          menus.find((menu) => menu._id === menuId)?.name || 'Unknown' 
+        renderValue={(selected) =>
+          selected
+            .map((menuId) =>
+              menus.find((menu) => menu._id === menuId)?.name || ""
+            )
+            .join(", ")
         }
-      />
-    ))}
-          </Box>
-        )}
         MenuProps={MenuProps}
       >
         {menus.map((menu) => (
@@ -335,28 +330,23 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
     //category
     const renderCategories = () => {
       return (
-      <div style={{ display: 'flex'}}>
-      <FormGroup sx={{ m: 1, width: 350 }}>
+        <div style={{ display: 'flex'}}>
+      <FormGroup sx={{ m: 1, width: 400 }}>
       <Select
-        fullWidth
-        focused
-        style={{border: '3px solid #EDA03B', }}
+      fullWidth
+        variant="standard"
+        id="menu-select"
         multiple
         value={selectedCategories}
         onChange={handleCategoryChange}
         label="Select Category"
-        renderValue={(selected) => (
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-            {selected.map((categoryId) => (
-          <Chip
-            key={categoryId}
-            label={
-              categories.find((category) => category._id === categoryId)?.name || 'Unknown'
-            }
-          />
-        ))}
-          </Box>
-        )}
+        renderValue={(selected) =>
+          selected
+            .map((categoryId) =>
+              categories.find((category) => category._id === categoryId)?.name || ""
+            )
+            .join(", ")
+        }
         MenuProps={MenuProps}
       >
         {categories.map((category) => (
@@ -373,7 +363,7 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
         </FormGroup>
         <IconButton
           aria-label="Clear Selection"
-          onClick={handleClearCategorySelection}
+          onClick={handleClearSelection}
           size="small"
         >
           <ClearIcon />
@@ -382,88 +372,25 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
       )
     };
 
-    const renderDays = () => {
-      return (
-        <>
-        <br/><br/>
-        <Typography variant="h4" component="h4">
-                  วัน
-          </Typography>
-          <br/>
-          <ToggleButtonGroup
-            value={selectedDays}
-            onChange={handleDaySelect}
-            aria-label="Days of Week"
-          >
-            {daysOfWeek.map((day) => (
-              <ToggleButton sx={{ "&.Mui-selected, &.Mui-selected:hover": {color: "green"}, border: '1px solid #ccc', }} 
-              key={day} value={day}>
-                {day}
-              </ToggleButton>
-            ))}
-          </ToggleButtonGroup>
-          </>
-      )
-    }
-
-    const renderTimes = () => {
-      return (
-        <Box sx={{
-          "& > :not(style)": { m: 2,ml:{xs: "30px",
-                  sm: "40px",
-                  md: "50px",
-                  lg: "60px",
-                  xl: "70px",} },
-        }} noValidate autoComplete="off">
-            <div>
-          <Typography variant="h5" component="h5">
-                  เวลาเริ่ม
-          </Typography>
-          <br/>
-          <TextField
-            focused
-            fullWidth
-            style={{width:'100%', marginTop:'18px'}}
-            label="เวลาเริ่ม"
-            name="start_time"
-            type="time"
-            error={!selectedStartTime}
-            onChange={handleStartTimeChange}
-            value={selectedStartTime}
-            inputProps={{
-              step: 300, 
-            }}
-          />
-          </div>
-          <br/>
-          <div style={{marginTop:'8px',marginBottom:'80px'}}>
-          <Typography variant="h5" component="h5">
-                 เวลาสิ้นสุด
-          </Typography>
-          <TextField
-            focused
-            style={{width:250, marginTop:'35px'}}
-            label="เวลาสิ้นสุด"
-            name="finish_time"
-            type="time"
-            error={!selectedFinishTime}
-            onChange={handleFinishTimeChange}
-            value={selectedFinishTime}
-            inputProps={{
-              step: 300, 
-            }}
-          />
-          </div>
-          </Box>
-      )
-    }
-
     const renderPromotionDetails = () => {
       return (
-
+        /* left */
+        <div>
               <Box sx={{
                 "& > :not(style)": { m: 2 },
               }} noValidate autoComplete="off">
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+          <Typography variant="h4" component="h4">
+                  ระยะเวลาโปรโมชั่น
+          </Typography>
+          <br/>
           <Typography variant="h5" component="h5">
                   วันเริ่มต้น
           </Typography>
@@ -473,7 +400,6 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
                 sx={{
                   border: '3px solid orange', 
                   borderRadius: '8px', 
-                  width:'73%'
                 }}
                 {...props}
               />}
@@ -492,7 +418,6 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
                 sx={{
                   border: '3px solid orange', 
                   borderRadius: '8px', 
-                  width:'73%'
                 }}
                 {...props}
               />}
@@ -503,7 +428,7 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
 
           </Box>
         
-
+        </div>
       );
     };
 
@@ -549,7 +474,7 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
         boxShadow: ' 2px 9px #EADDCD',/* #D8E8DC */
       }}>
         <Container>
-      <Box sx={{ width: "100%",display:'flex',marginTop:'30px' }}>
+      <div style={{ display: 'flex',marginTop:'30px' }}>
       <Grid container
             justifyContent="space-evenly"
             alignItems="flex-start"  
@@ -557,51 +482,50 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
             rowSpacing={1}
             columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
       {/* left side */}
-      <Box sx={{m:1}}>
+      <Box style={{ flex: 1.5 }}>
       {productType === 'menu' ? (
+            <div style={{marginTop:'5px'}}>
             <Grid container
             justifyContent="space-evenly"
+            alignItems="flex-start"  
             spacing={3}
             rowSpacing={1}
-            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
             >
-              <Grid item xs={11.3}>
+              <Grid item xs={11}>
                 <Typography variant="h4" component="h4">
                   เลือกเมนู
                 </Typography>
                 <br/>
-                </Grid>
-                <Grid item xs={11}>
-              {renderMenus()}
               </Grid>
-
             </Grid>
+            {renderMenus()}
+            </div>
           ): productType === 'category' ? (
+            <div  style={{marginTop:'5px'}}>
               <Grid container
-              justifyContent="space-evenly"
-              spacing={3}
-              rowSpacing={1}
-            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            justifyContent="space-evenly"
+            alignItems="flex-start"  
+            spacing={3}
+            rowSpacing={1}
             >
-              <Grid item xs={11.3}>
+              <Grid item xs={11}>
                <Typography variant="h4" component="h4">
                   เลือกหมวดหมู่
                 </Typography>
                 <br/>
-                </Grid>
-                <Grid item xs={11}>
-                {renderCategories()}
               </Grid>
             </Grid>
+              {renderCategories()}
+            </div>
           ): productType === 'amount' ? (
-              <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-              <Grid item xs={11.3}>
+            <div style={{marginTop:'5px'}}>
+              <Grid container>
+              <Grid item xs={11}>
                <Typography variant="h4" component="h4">
                   คำสั่งซื้อ
                </Typography>
-              <br/>
-              </Grid>
-              <Grid item xs={11}>
+               <br/>
+               </Grid>
               <TextField
                 inputProps={{style: {fontSize: 25}}}
                 InputLabelProps={{style: {fontSize: 20}}}
@@ -614,14 +538,18 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
                 focused
               />
               </Grid>
-              </Grid>
+            </div>
           ):null}
-        </Box>  
+          {renderPromotionDetails()}
+        </Box>
+
+        
+
 
         {/*  right */}
-        <Box sx={{m:1}}>
+      <Box style={{ flex: 1.2}}>
         {type === "percent" ? (
-          <div>
+          <>
             <Typography variant="h4" component="h4">
                   เปอร์เซ็นต์
           </Typography>
@@ -637,8 +565,7 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
                 focused
                 onChange={(e) => setData(e.target.value)}
               />
-              {renderDays()}
-          </div>
+          </>
         ) : type === "specific" ? (
           <div>
              <Typography variant="h4" component="h4">
@@ -656,7 +583,6 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
                 focused
                 onChange={(e) => setData(e.target.value)}
               />
-              {renderDays()}
           </div>
         ) : type === "free" ? (
           <div>
@@ -675,38 +601,72 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
                 focused
                 onChange={(e) => setData(e.target.value)}
               />
-              {renderDays()}
           </div>
         ) : null}
-        </Box>
-        </Grid>
-        </Box>
 
-<br/>
-<br/>
-
-<Box sx={{ width: "100%",display:'flex' }}>
-        <Grid container
-            alignItems="flex-start"  
-            spacing={3}
-            rowSpacing={1}
-            columnSpacing={{ xs: 1, sm: 2,md:3 }}>
-              <Grid item xs={11}>
-              <Typography variant="h4" component="h4">
-                  ระยะเวลาโปรโมชั่น
+          <br/>
+          <br/>
+          <Typography variant="h4" component="h4">
+                  วัน
           </Typography>
           <br/>
-              </Grid>
-        <Grid item xs={6}>
+          <ToggleButtonGroup
+            value={selectedDays}
+            onChange={handleDaySelect}
+            aria-label="Days of Week"
+          >
+            {daysOfWeek.map((day) => (
+              <ToggleButton sx={{ "&.Mui-selected, &.Mui-selected:hover": {color: "green"}, border: '1px solid #ccc', }} 
+              key={day} value={day}>
+                {day}
+              </ToggleButton>
+            ))}
+          </ToggleButtonGroup>
 
-            {renderPromotionDetails()}
+
+          <div style={{marginTop:'105px'}}>
+            <div style={{ marginRight: 'auto' }}>
+          <Typography variant="h5" component="h5">
+                  เวลาเริ่ม
+          </Typography>
+          <br/>
+          <TextField
+            focused
+            style={{width:250, marginTop:'18px'}}
+            label="เวลาเริ่ม"
+            name="start_time"
+            type="time"
+            error={!selectedStartTime}
+            onChange={handleStartTimeChange}
+            value={selectedStartTime}
+            inputProps={{
+              step: 300, 
+            }}
+          />
+          </div>
+          <br/>
+          <div style={{marginRight:'60px',marginTop:'8px',marginBottom:'80px'}}>
+          <Typography variant="h5" component="h5">
+                 เวลาสิ้นสุด
+          </Typography>
+          <TextField
+            focused
+            style={{width:250, marginTop:'35px'}}
+            label="เวลาสิ้นสุด"
+            name="finish_time"
+            type="time"
+            error={!selectedFinishTime}
+            onChange={handleFinishTimeChange}
+            value={selectedFinishTime}
+            inputProps={{
+              step: 300, 
+            }}
+          />
+          </div>
+          </div>
+        </Box>      
         </Grid>
-        <Box>
-            {renderTimes()}
-        </Box>
-        </Grid>
-        </Box>
-       
+      </div>
       </Container>
       </Card>
     );
@@ -729,7 +689,7 @@ function Step3({formik,image,setImage}) {
   }
 
   function handleReset(){
-    formik.resetForm()
+    formik2.resetForm()
     setImage(null)
   }
 
