@@ -17,6 +17,13 @@ import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import ClearIcon from '@mui/icons-material/Clear';
+import IconButton from "@mui/material/IconButton";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import ListItemText from '@mui/material/ListItemText';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -75,6 +82,8 @@ export default function BasicTabs() {
   const [selectedOptionGroups, setSelectedOptionGroups] = useState([]);
   const [menus, setMenus] = useState([]);
   const [id, setId] = useState(0);
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedDeletedCategory, setSelectedDeletedCategory] = useState([]);
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("กรุณาใส่ชื่อสินค้า"),
@@ -143,6 +152,119 @@ export default function BasicTabs() {
     },
   });
 
+  function handleAddCategory(){
+    Swal.fire({
+      title: "เพิ่มหมวดหมู่",
+      html: '<span style="font-size: 28px;">ชื่อหมวดหมู่</span>',
+      input: "text",
+      showDenyButton: true,
+      confirmButtonText: '<span style="font-size: 20px; border-radius: 20px;">ยืนยัน</span>',
+      denyButtonText: '<span style="font-size: 20px; border-radius: 20px;">ยกเลิก</span>',
+    }).then(async (result) => {
+      if (result.isConfirmed && result.value !== "") {
+        const categoryName = result.value;
+      
+        if (categories.some(category => category.name === categoryName)) {
+          Swal.fire("ชื่อหมวดหมู่ซ้ำ", "", "error");
+          return;
+        }  
+
+        console.log(categories);
+
+        Swal.fire(`เพิ่มหมวดหมู่แล้ว`, "", "success");
+        //window.location.reload(false);
+
+        const response = await fetch("http://localhost:5000/category", {
+          method: "POST",
+          body: JSON.stringify({
+            name: result.value,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (!response.ok) {
+          throw new Error("Failed to add new menu");
+        }
+        //setCategories(response)
+        fetchData("http://localhost:5000/category", setCategories);
+        
+        const resJson = await response.json();
+        console.log(resJson);
+      }
+    });
+  }
+
+  async function handleDeleteCategories() {
+    console.log(selectedDeletedCategory,'testtt')
+    try {
+      const response = await fetch("http://localhost:5000/category/delete-categories", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ categoryNames: selectedDeletedCategory }),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to delete categories");
+      }
+  
+      setCategories((prevCategories) =>
+        prevCategories.filter((category) => !selectedDeletedCategory.includes(category.name))
+      );
+      setDeleteDialogOpen(false);
+    } catch (error) {
+      console.error("Error deleting categories:", error,selectedDeletedCategory);
+    }
+  }
+
+  /* async function handleDeleteCategory(categoryId){
+        try {
+          const response = await fetch(`http://localhost:5000/category/${categoryId}`, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+  
+          if (!response.ok) {
+            throw new Error("Failed to delete category");
+          }
+
+          setCategories((prevCategories) =>
+            prevCategories.filter((category) => category._id !== categoryId)
+          );
+
+        } catch (error) {
+          console.error("Error deleting category:", error);
+        }
+  } */
+
+  function handleReset(){
+    setDeleteDialogOpen(false);
+    setSelectedDeletedCategory([]);
+  }
+
+  function handleCheckboxChange(name){
+    setSelectedDeletedCategory((prevSelectedCategories) => {
+      if (prevSelectedCategories.includes(name)) {
+        return prevSelectedCategories.filter((category) => category !== name);
+      } else {
+        return [...prevSelectedCategories, name];
+      }
+    });
+  }
+
+  function handleOpenDeleteDialog(){
+    setDeleteDialogOpen(true);
+  }
+
+  const handleCategory = (event) => {
+    setCategory(event.target.value)
+    console.log('dasdsadsadsada',event.target.value)
+  }
+
   function handleChangeFile(e) {
     const file = e.target.files[0];
     const reader = new FileReader();
@@ -177,17 +299,18 @@ export default function BasicTabs() {
     }
   };
 
-  useEffect(() => {
-    async function fetchData(url, setter) {
-      try {
-        const res = await fetch(url);
-        const data = await res.json();
-        setter(data);
-        console.log(data);
-      } catch (error) {
-        console.error(`Error fetching data from ${url}:`, error);
-      }
+  async function fetchData(url, setter) {
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      setter(data);
+      console.log(data,url);
+    } catch (error) {
+      console.error(`Error fetching data from ${url}:`, error);
     }
+  }
+
+  useEffect(() => {
 
     if (!categories.length) {
       fetchData("http://localhost:5000/addons", setAddons);
@@ -200,7 +323,7 @@ export default function BasicTabs() {
       initial.current = true;
       console.log(initial.current);
     }
-  }, []);
+  }, [categories]);
 
   useEffect(() => {
     fetchMenus();
@@ -353,16 +476,33 @@ export default function BasicTabs() {
                     label="หมวดหมู่"
                     defaultValue="เครื่องดื่ม"
                     helperText="Please select your category"
-                    onChange={(e) => setCategory(e.target.value)}
+                    onChange={handleCategory}
                   >
                     {categories.map((option) => (
-                      <MenuItem key={option._id} value={option._id}>
+                      <MenuItem key={option.name} value={option.name}>
                         <span style={{fontSize:20}}>{option.name}</span>
+                        {/* <IconButton onClick={() => handleDeleteCategory(option._id)}>
+                          <ClearIcon />
+                        </IconButton> */}
                       </MenuItem>
                     ))}
                   </TextField>
                   </Item>
                   </Box>
+
+                  <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center',flexWrap: 'wrap' }}>
+                    <Item style={{ flex: 1 }}>
+                      <Button sx={{ fontSize: 25, width: '100%'}}  variant="outlined" onClick={handleAddCategory}>
+                        เพิ่มหมวดหมู่
+                      </Button>
+                    </Item>
+                    <Item style={{ flex: 1 }}>
+                      <Button sx={{ fontSize: 25, backgroundColor: 'red', width: '100%'}}  variant="contained" onClick={handleOpenDeleteDialog}/* onClick={handleDeleteCategory} */>
+                        ลบหมวดหมู่
+                      </Button>
+                    </Item>
+                </Box>
+
                   
                   <Item>
                   <Button sx={{fontSize:25}} fullWidth variant="contained" type="submit">
@@ -407,6 +547,30 @@ export default function BasicTabs() {
             </Box>
           </form>
         </CustomTabPanel>
+
+        <Dialog
+          sx={{ '& .MuiDialog-paper': { width: '80%', maxHeight: 435 } }}
+          maxWidth="xs"
+          open={isDeleteDialogOpen}
+          onClose={() => setDeleteDialogOpen(false)}
+        >
+          <DialogTitle sx={{fontSize:25}}>เลือกหมวดหมู่ที่ต้องการลบ</DialogTitle>
+          <DialogContent>
+            {categories.map((option) => (
+                  <MenuItem key={option.name} value={option.name}>
+                    <Checkbox checked={selectedDeletedCategory.indexOf(option.name) > -1} 
+                    onChange={() => handleCheckboxChange(option.name)}/>
+                    <ListItemText primary={option.name} />
+                  </MenuItem>
+            ))}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleReset}>ยกเลิก</Button>
+            <Button onClick={handleDeleteCategories} color="error">
+              ยืนยัน
+            </Button>
+          </DialogActions>
+        </Dialog>
 
         <CustomTabPanel value={value} index={1}>
           <Box

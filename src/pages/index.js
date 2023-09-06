@@ -74,6 +74,9 @@ function Menu() {
           return;
         }  
 
+        const newCategory = { name: categoryName };
+        setCategories(prevCategories => [...prevCategories, newCategory]);
+
         Swal.fire(`เพิ่มหมวดหมู่แล้ว`, "", "success");
         console.log(result.value);
         //window.location.reload(false);
@@ -238,24 +241,11 @@ function Menu() {
                       </SvgIcon>
                     }
                     variant="contained"
-                    sx={{fontSize:'20px'}}
+                    sx={{fontSize:'25px',width:'210px'}}
                   >
                     เพิ่มเมนู
                   </Button>
                 </Link>
-                <span style={{ marginRight: "20px" }}></span>
-                <Button
-                  startIcon={
-                    <SvgIcon fontSize="small">
-                      <PlusIcon />
-                    </SvgIcon>
-                  }
-                  sx={{backgroundColor: 'white',width:'210px',fontSize:'20px'}}
-                  variant="outlined"
-                  onClick={handleAddCategory}
-                >
-                  เพิ่มหมวดหมู่
-                </Button>
               </div>
               </Grid>
 
