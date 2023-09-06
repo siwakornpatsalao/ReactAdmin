@@ -215,7 +215,7 @@ function Menu() {
         <title>Menu | Devias Kit</title>
       </Head>
       <Box component="main" /* sx={{ backgroundColor: '#EEF8F7'}} */>
-        <Container maxWidth="xl" sx={{marginTop: '70px'}}>
+        <Container maxWidth="xl" sx={{marginTop: '50px'}}>
           <Stack spacing={3}>
             <Stack direction="row" justifyContent="space-between" spacing={4} /* sx={{backgroundColor:'white',borderRadius:'20px'}} */>
 
@@ -306,7 +306,7 @@ function Menu() {
                   key={menu._id}
                 >
                    <MenuCard menu={menu} hasPromotion={hasPromotion(menu._id)} promoData={promoData(menu._id)} 
-                   hasPromotionCategory={hasPromotionCategory(menu.category)} promoCategoryData={promoCategoryData(menu.category)}/>
+                   hasPromotionCategory={hasPromotionCategory(menu.category)} promoCategoryData={promoCategoryData(menu.category)} />
                 </Grid>
               ))}
             </Grid>

@@ -8,20 +8,46 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useEffect, useState, useRef } from "react";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import CelebrationIcon from '@mui/icons-material/Celebration';
-import { fontWeight } from '@mui/system';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import IconButton from '@mui/material/IconButton';
+import { styled } from '@mui/material/styles';
+
+const ExpandMore = styled((props) => {
+  const { expand, ...other } = props;
+  return <IconButton {...other} />;
+})(({ theme, expand }) => ({
+  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+  marginLeft: 'auto',
+  transition: theme.transitions.create('transform', {
+    duration: theme.transitions.duration.shortest,
+  }),
+}));
 
 export const MenuCard = (props) => {
   const { menu, hasPromotion, promoData, hasPromotionCategory, promoCategoryData } = props;
 
+  const [expanded, setExpanded] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+/*   const handleAccordionChange = () => {
+    setExpanded(!expanded); 
+  }; */
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
+
 
   return (
     <Card
@@ -101,7 +127,7 @@ export const MenuCard = (props) => {
             อัพเดต: {new Date(menu.updated_at).toLocaleDateString('th-TH')}
           </Typography>
 
-          {hasPromotion && (
+{/*           {hasPromotion && (
             <div>
               <Button
                 id="basic-button"
@@ -137,8 +163,8 @@ export const MenuCard = (props) => {
 
               </Menu>
             </div>
-          )}
-          
+          )} */}
+
         </Stack>
         <Stack
           alignItems="center"
@@ -158,6 +184,41 @@ export const MenuCard = (props) => {
           </Typography>
         </Stack>
       </Stack>
+      
+      {hasPromotion && (
+          <div>
+          <Accordion expanded={expanded} onChange={handleExpandClick}>
+            <AccordionSummary
+              expandIcon={<KeyboardArrowDownIcon />}
+              aria-controls="menu-details"
+              id="menu-summary"
+            >
+            </AccordionSummary>
+            <AccordionDetails>
+              <div>
+                {/* Add your menu items here */}
+                โปรโมชั่น
+                {promoData.map((promo) => (
+                  <MenuItem key={promo.id}>
+                    <p>หัวข้อ: {promo.topic}</p>
+                  </MenuItem>
+                ))}
+                {hasPromotionCategory && (
+                  <div>
+                    <p>โปรโมชั่นสำหรับหมวดหมู่:</p>
+                    {promoCategoryData.map((promo) => (
+                      <MenuItem key={promo.id} sx={{ color: 'text.secondary' }}>
+                        หัวข้อ: {promo.topic}
+                      </MenuItem>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </AccordionDetails>
+          </Accordion>
+        </div> 
+      )}
+      
     </Card>
   );
 };
@@ -166,4 +227,6 @@ MenuCard.propTypes = {
   menu: PropTypes.object.isRequired,
   hasPromotion: PropTypes.bool.isRequired,
   promoData: PropTypes.func.isRequired,
+  hasPromotionCategory: PropTypes.bool.isRequired,
+  promoCategoryData: PropTypes.func.isRequired,
 };

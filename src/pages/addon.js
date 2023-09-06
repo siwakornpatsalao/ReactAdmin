@@ -180,7 +180,7 @@ function Addon(){
                   </SvgIcon>
                 )}
                 variant="contained"
-                sx={{fontSize:'20px'}}
+                sx={{fontSize:'25px'}}
               >
                 เพิ่ม Addon
               </Button>

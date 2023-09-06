@@ -352,11 +352,10 @@ export default function BasicTabs() {
               sx={{
                 display: "flex",
                 marginTop: {
-                  xs: "30px",
-                  sm: "40px",
-                  md: "50px",
-                  lg: "60px",
-                  xl: "70px",
+                  sm: "10px",
+                  md: "20px",
+                  lg: "30px",
+                  xl: "40px",
                 },
               }}
             >
