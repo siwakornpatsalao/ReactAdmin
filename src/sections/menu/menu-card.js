@@ -13,6 +13,12 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
+import CampaignIcon from '@mui/icons-material/Campaign';
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import ListItemText from '@mui/material/ListItemText';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -26,27 +32,28 @@ const ExpandMore = styled((props) => {
 }));
 
 export const MenuCard = (props) => {
-  const { menu, hasPromotion, promoData, hasPromotionCategory, promoCategoryData } = props;
+  const { menu, hasPromotion, promoData, hasPromotionCategory, promoCategoryData, id } = props;
 
   const [expanded, setExpanded] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-/*   const handleAccordionChange = () => {
-    setExpanded(!expanded); 
-  }; */
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [isDeleteDialogOpenCategory, setDeleteDialogOpenCategory] = useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+
+  function handleOpenDeleteDialog(){
+    setDeleteDialogOpen(true);
+  }
+
+  function handleOpenDeleteDialogCategory(){
+    setDeleteDialogOpenCategory(true);
+  }
+
+  function handleReset(){
+    setDeleteDialogOpen(false);
+    setDeleteDialogOpenCategory(false);
+  }
 
 
   return (
@@ -54,7 +61,7 @@ export const MenuCard = (props) => {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        height: '100%',
+        height: expanded ? 'auto' : '100%',
         maxWidth: 350,
         border: '1px solid #ccc', 
       }}
@@ -184,41 +191,78 @@ export const MenuCard = (props) => {
           </Typography>
         </Stack>
       </Stack>
-      
-      {hasPromotion && (
-          <div>
-          <Accordion expanded={expanded} onChange={handleExpandClick}>
-            <AccordionSummary
-              expandIcon={<KeyboardArrowDownIcon />}
-              aria-controls="menu-details"
-              id="menu-summary"
-            >
-            </AccordionSummary>
-            <AccordionDetails>
-              <div>
-                {/* Add your menu items here */}
-                โปรโมชั่น
-                {promoData.map((promo) => (
-                  <MenuItem key={promo.id}>
-                    <p>หัวข้อ: {promo.topic}</p>
-                  </MenuItem>
-                ))}
-                {hasPromotionCategory && (
-                  <div>
-                    <p>โปรโมชั่นสำหรับหมวดหมู่:</p>
-                    {promoCategoryData.map((promo) => (
-                      <MenuItem key={promo.id} sx={{ color: 'text.secondary' }}>
-                        หัวข้อ: {promo.topic}
-                      </MenuItem>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </AccordionDetails>
-          </Accordion>
-        </div> 
+      <div style={{ textAlign: 'right', marginRight: '10px' }}>
+      {hasPromotion &&(
+            <SvgIcon sx={{fontSize:35}} onClick={handleOpenDeleteDialog}>
+              <CampaignIcon sx={{color:'orange'}}/>
+            </SvgIcon>
       )}
       
+      {!hasPromotion && hasPromotionCategory && (
+            <SvgIcon sx={{fontSize:35}} onClick={handleOpenDeleteDialogCategory}>
+              <CampaignIcon sx={{color:'orange'}}/>
+            </SvgIcon>
+      )}
+
+      </div>
+
+          <Dialog
+          sx={{ '& .MuiDialog-paper': { width: '80%', maxHeight: 600 } }}
+          maxWidth="xs"
+          open={isDeleteDialogOpen}
+          onClose={() => setDeleteDialogOpen(false)}
+        >
+          <DialogTitle sx={{fontSize:25,backgroundColor:'#EDA03B',color:'white'}}>โปรโมชั่น</DialogTitle>
+          <DialogContent>
+            <br/>
+          <Typography sx={{textAlign: 'center'}} variant="h5" component="h5">โปรโมชั่นสำหรับเมนู</Typography>
+          <br/>
+          {promoData.map((promo) => (
+                  <MenuItem key={promo.id}>
+                    <p style={{fontSize:20}}>หัวข้อ: {promo.topic}</p>
+                  </MenuItem>
+                ))}
+                <br/>
+                {hasPromotionCategory && (
+                  <div>
+                  <Typography sx={{textAlign: 'center'}} variant="h5" component="h5">โปรโมชั่นสำหรับหมวดหมู่</Typography>
+                  <br/>
+                  {promoCategoryData.map((promo) => (
+                    <MenuItem key={promo.id} sx={{ color: 'text.secondary' }}>
+                      <p style={{fontSize:20}}>หัวข้อ: {promo.topic}</p>
+                    </MenuItem>
+                  ))}
+                </div>
+              )}       
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleReset}>ยกเลิก</Button>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog
+          sx={{ '& .MuiDialog-paper': { width: '80%', maxHeight: 600 } }}
+          maxWidth="xs"
+          open={isDeleteDialogOpenCategory}
+          onClose={() => setDeleteDialogOpenCategory(false)}
+        >
+          <DialogTitle style={{backgroundColor:'#EDA03B',color:'white'}} sx={{fontSize:25}}>โปรโมชั่น</DialogTitle>
+          <DialogContent>
+            <br/>
+            <Typography sx={{textAlign: 'center'}} variant="h5" component="h5">โปรโมชั่นสำหรับหมวดหมู่</Typography>
+            <br/>
+              {promoCategoryData.map((promo) => (
+                <MenuItem key={promo.id} sx={{ color: 'text.secondary' }}>
+                  <p style={{fontSize:20}}>หัวข้อ: {promo.topic}</p>
+                </MenuItem>
+              ))}    
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleReset}>ยกเลิก</Button>
+          </DialogActions>
+        </Dialog>
+
+
     </Card>
   );
 };
@@ -229,4 +273,5 @@ MenuCard.propTypes = {
   promoData: PropTypes.func.isRequired,
   hasPromotionCategory: PropTypes.bool.isRequired,
   promoCategoryData: PropTypes.func.isRequired,
+  id: PropTypes.string.isRequired,
 };

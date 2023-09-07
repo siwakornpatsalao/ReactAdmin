@@ -306,7 +306,7 @@ function Menu() {
                   key={menu._id}
                 >
                    <MenuCard menu={menu} hasPromotion={hasPromotion(menu._id)} promoData={promoData(menu._id)} 
-                   hasPromotionCategory={hasPromotionCategory(menu.category)} promoCategoryData={promoCategoryData(menu.category)} />
+                   hasPromotionCategory={hasPromotionCategory(menu.category)} promoCategoryData={promoCategoryData(menu.category)} id={menu._id}/>
                 </Grid>
               ))}
             </Grid>

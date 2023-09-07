@@ -49,7 +49,7 @@ const Item = styled(Paper)(({ theme }) => ({
 const steps = ['เลือกรูปแบบโปรโมชั่น', 'เพิ่มรายละเอียดโปรโมชั่น', 'ตัวอย่างโปรโมชั่น'];
 const daysOfWeek = ['วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัส', 'วันศุกร์', 'วันเสาร์', 'วันอาทิตย์'];
 
-function Step1({setType,type,setProductType,productType}) {
+function Step2({setType,type,setProductType,productType}) {
 
     const handleSelectedChange = (event) => {
       setType(event.target.value)
@@ -210,7 +210,7 @@ function Step1({setType,type,setProductType,productType}) {
 }
 
 
-function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,start_date,setStart_Date,finish_date,setFinish_Date,start_time,setStart_Time,finish_time,setFinish_Time
+function Step3({ type,productType,selectedDays,setSelectedDays,data,setData,start_date,setStart_Date,finish_date,setFinish_Date,start_time,setStart_Time,finish_time,setFinish_Time
                 ,selectedMenus,setSelectedMenus,selectedCategories,setSelectedCategories,amount,setAmount }) {
     const [menus, setMenus] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -717,7 +717,7 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,star
   
 
 
-function Step3({topic,setTopic,message,setMessage,image,setImage}) {
+function Step1({topic,setTopic,message,setMessage,image,setImage,handleDeletePromotion}) {
 
   const isTopicValid = (topic) => topic=='';
   const isMessageValid = (message) => message=='';
@@ -840,9 +840,12 @@ function Step3({topic,setTopic,message,setMessage,image,setImage}) {
             fullWidth
           />
       </Item>
+      <Item>
+      <Button sx={{ fontSize: 25 }} style={{ background: 'red' }} fullWidth variant="contained" onClick={handleDeletePromotion}>ลบ Promotion</Button>
+      </Item>
+    
       </Box>
       </Box>
-
       </Grid>
       </div>
       </Container>
@@ -915,7 +918,7 @@ export default function HorizontalLinearStepper() {
 
   const handleNext = () => {
     let newSkipped = skipped;
-    if(!type && !productType){
+    if(activeStep==1 && !type && !productType){
       Swal.fire("Error",'คุณยังไม่ได้เลือกรูปแบบโปรโมชั่น','error');
       return;
     }
@@ -951,10 +954,10 @@ export default function HorizontalLinearStepper() {
 
   const renderStepContent = (step) => {
     switch (step) {
-      case 0:
-        return <Step1 setType={setType} type={type} setProductType={setProductType} productType={productType} />;
       case 1:
-        return  <Step2
+        return <Step2 setType={setType} type={type} setProductType={setProductType} productType={productType} />;
+      case 2:
+        return  <Step3
             type={type}
             productType={productType}
             selectedDays={selectedDays}
@@ -976,8 +979,8 @@ export default function HorizontalLinearStepper() {
             amount={amount}
             setAmount={setAmount}
           />
-      case 2:
-        return <Step3 topic={topic} setTopic={setTopic} message={message} setMessage={setMessage} image={image} setImage={setImage}/>;
+      case 0:
+        return <Step1 topic={topic} setTopic={setTopic} message={message} setMessage={setMessage} image={image} setImage={setImage} handleDeletePromotion={handleDeletePromotion}/>;
       default:
         return null;
     }
@@ -1075,7 +1078,6 @@ export default function HorizontalLinearStepper() {
   return (
     <DashboardLayout>
       <Box sx={{ width: '100%', padding: '25px' }}>
-      <Button sx={{fontSize:25}} style={{ background: 'red' }} variant="contained" onClick={handleDeletePromotion}>ลบ Promotion</Button>
         <Stepper activeStep={activeStep} sx={{ mt: '20px',padding: '10px' }}>
           {steps.map((label, index) => {
             const stepProps = {};
@@ -1116,9 +1118,11 @@ export default function HorizontalLinearStepper() {
                 Back
               </Button>
 
-              <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', pt: 2 }}>
-              
-              </Box>
+{/*               {activeStep === 0 && (
+            <Box sx={{ marginLeft:'600px'}}>
+              <Button sx={{ fontSize: 25 }} style={{ background: 'red' }} variant="contained" onClick={handleDeletePromotion}>ลบ Promotion</Button>
+            </Box>
+          )} */}
 
               <Box sx={{ flex: '1 1 auto' }} />
               {/* {isStepOptional(activeStep) && (

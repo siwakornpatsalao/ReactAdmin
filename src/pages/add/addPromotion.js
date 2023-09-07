@@ -51,7 +51,7 @@ const Item = styled(Paper)(({ theme }) => ({
 const steps = ['เลือกรูปแบบโปรโมชั่น', 'เพิ่มรายละเอียดโปรโมชั่น', 'ตัวอย่างโปรโมชั่น'];
 const daysOfWeek = ['วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัส', 'วันศุกร์', 'วันเสาร์', 'วันอาทิตย์'];
 
-function Step1({setType,type,setProductType,productType}) {
+function Step2({setType,type,setProductType,productType}) {
 
     const handleSelectedChange = (event) => {
       setType(event.target.value)
@@ -212,7 +212,7 @@ function Step1({setType,type,setProductType,productType}) {
 }
 
 
-function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,selectedMenus,setSelectedMenus,
+function Step3({ type,productType,selectedDays,setSelectedDays,data,setData,selectedMenus,setSelectedMenus,
                  selectedCategories,setSelectedCategories,amount,setAmount,selectedStartDate,setSelectedStartDate,
                  selectedFinishDate,setSelectedFinishDate,selectedStartTime,setSelectedStartTime,selectedFinishTime,setSelectedFinishTime }) {
     const [menus, setMenus] = useState([]);
@@ -714,7 +714,7 @@ function Step2({ type,productType,selectedDays,setSelectedDays,data,setData,sele
   
 
 
-function Step3({formik,image,setImage}) {
+function Step1({formik,image,setImage}) {
 
   function handleChangeFile(e) {
     const file = e.target.files[0];
@@ -905,7 +905,7 @@ export default function HorizontalLinearStepper() {
 
   const handleNext = () => {
     let newSkipped = skipped;
-    if(!type && !productType){
+    if(activeStep==1 && (!type || !productType)){
       Swal.fire("Error",'คุณยังไม่ได้เลือกรูปแบบโปรโมชั่น','error');
       return;
     }
@@ -941,17 +941,17 @@ export default function HorizontalLinearStepper() {
 
   const renderStepContent = (step) => {
     switch (step) {
-      case 0:
-        return <Step1 setType={setType} type={type} setProductType={setProductType} productType={productType} />;
       case 1:
-        return <Step2 type={type} productType={productType} selectedDays={selectedDays} setSelectedDays={setSelectedDays} 
+        return <Step2 setType={setType} type={type} setProductType={setProductType} productType={productType} />;
+      case 2:
+        return <Step3 type={type} productType={productType} selectedDays={selectedDays} setSelectedDays={setSelectedDays} 
         data={data} setData={setData} selectedMenus={selectedMenus} setSelectedMenus={setSelectedMenus}
         selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories} amount={amount} setAmount={setAmount}
         selectedStartDate={selectedStartDate} setSelectedStartDate={setSelectedStartDate} selectedFinishDate={selectedFinishDate} setSelectedFinishDate={setSelectedFinishDate}
         selectedStartTime={selectedStartTime} setSelectedStartTime={setSelectedStartTime} selectedFinishTime={selectedFinishTime} setSelectedFinishTime={setSelectedFinishTime}
         />;
-      case 2:
-        return <Step3 formik={formik} image={image} setImage={setImage}/>;
+      case 0:
+        return <Step1 formik={formik} image={image} setImage={setImage}/>;
       default:
         return null;
     }
@@ -1022,6 +1022,10 @@ export default function HorizontalLinearStepper() {
             setSelectedCategories([]);
             setSelectedMenus([]);
             setAmount(0);
+            setSelectedStartDate('');
+            setSelectedFinishDate('');
+            setSelectedStartTime('');
+            setSelectedFinishTime('');
             fetchPromotions();
         }catch(error){
           console.log("Error:", error.message);
